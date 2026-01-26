@@ -1,0 +1,183 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|c:\\users\\sky\\onedrive\\\uBC14\uD0D5 \uD654\uBA74\\kovis\\waferalign\\application\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|solutionrelative:application\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\emotionalign\\classalign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|solutionrelative:emotionalign\\classalign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\application\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|solutionrelative:application\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\application\\formmain.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|solutionrelative:application\\formmain.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\emotionalign\\classwafer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|solutionrelative:emotionalign\\classwafer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\emotionalign\\classlight.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|solutionrelative:emotionalign\\classlight.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\application\\turntable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F7729CA6-B1D6-45C2-AFFD-4610EF9F3B88}|Application\\Application.csproj|solutionrelative:application\\turntable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\emotionalign\\classtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|solutionrelative:emotionalign\\classtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Application||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\emotionalign\\_history.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{67F20B50-4B1C-4D69-B764-878A97EB62BB}|eMotionAlign\\eMotionAlign.csproj|solutionrelative:emotionalign\\_history.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 2966,
+          "SelectedChildIndex": 9,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FormMain.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\FormMain.Designer.cs",
+              "RelativeDocumentMoniker": "Application\\FormMain.Designer.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\FormMain.Designer.cs",
+              "RelativeToolTip": "Application\\FormMain.Designer.cs",
+              "ViewState": "AgIAAHoBAAAAAAAAAIAwwJUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-20T15:35:04.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ClassTest.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassTest.cs",
+              "RelativeDocumentMoniker": "eMotionAlign\\ClassTest.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassTest.cs",
+              "RelativeToolTip": "eMotionAlign\\ClassTest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-20T14:22:26.323Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ClassWafer.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassWafer.cs",
+              "RelativeDocumentMoniker": "eMotionAlign\\ClassWafer.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassWafer.cs",
+              "RelativeToolTip": "eMotionAlign\\ClassWafer.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAiwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-20T14:06:03.579Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TurnTable.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\TurnTable.cs",
+              "RelativeDocumentMoniker": "Application\\TurnTable.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\TurnTable.cs",
+              "RelativeToolTip": "Application\\TurnTable.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAowCIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-20T13:59:27.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ClassLight.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassLight.cs",
+              "RelativeDocumentMoniker": "eMotionAlign\\ClassLight.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassLight.cs",
+              "RelativeToolTip": "eMotionAlign\\ClassLight.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAIwB0AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-20T13:58:56.958Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Application",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\Application.csproj",
+              "RelativeDocumentMoniker": "Application\\Application.csproj",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\Application.csproj",
+              "RelativeToolTip": "Application\\Application.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-01-20T13:58:41.561Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "_History.txt",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\_History.txt",
+              "RelativeDocumentMoniker": "eMotionAlign\\_History.txt",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\_History.txt",
+              "RelativeToolTip": "eMotionAlign\\_History.txt",
+              "ViewState": "AgIAADsAAAAAAAAAAAAqwFEAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-01-17T01:23:33.114Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ClassAlign.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassAlign.cs",
+              "RelativeDocumentMoniker": "eMotionAlign\\ClassAlign.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\eMotionAlign\\ClassAlign.cs",
+              "RelativeToolTip": "eMotionAlign\\ClassAlign.cs",
+              "ViewState": "AgIAALIAAAAAAAAAAAArwLoAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-16T17:01:03.834Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormMain.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\FormMain.cs",
+              "RelativeDocumentMoniker": "Application\\FormMain.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\FormMain.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "Application\\FormMain.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T04:40:04.014Z",
+              "EditorCaption": " [\uB514\uC790\uC778]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FormMain.cs",
+              "DocumentMoniker": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\FormMain.cs",
+              "RelativeDocumentMoniker": "Application\\FormMain.cs",
+              "ToolTip": "C:\\Users\\SKY\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\KOVIS\\WaferAlign\\Application\\FormMain.cs",
+              "RelativeToolTip": "Application\\FormMain.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAASwCgAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-13T08:17:08.918Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

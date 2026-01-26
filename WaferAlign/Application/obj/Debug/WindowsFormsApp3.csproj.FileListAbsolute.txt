@@ -1,0 +1,52 @@
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.exe.config
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.exe
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.pdb
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.AssemblyReference.cache
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.Form1.resources
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.Properties.Resources.resources
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.GenerateResource.cache
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.CoreCompileInputs.cache
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.exe
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.pdb
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\Newtonsoft.Json.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\Newtonsoft.Json.xml
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsF.90B8DF9B.Up2Date
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\dll\x86\OpenCvSharpExtern.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\dll\x86\opencv_videoio_ffmpeg4110.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\dll\x64\OpenCvSharpExtern.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\dll\x64\opencv_videoio_ffmpeg4110_64.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\OpenCvSharp.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Buffers.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Memory.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\OpenCvSharp.xml
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Buffers.xml
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Memory.xml
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.AssemblyReference.cache
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.Form1.resources
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.Properties.Resources.resources
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.GenerateResource.cache
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.CoreCompileInputs.cache
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.exe
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.pdb
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.exe.config
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.exe
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.pdb
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\Newtonsoft.Json.dll
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\Newtonsoft.Json.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsF.90B8DF9B.Up2Date
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\eMotionAlign.pdb
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\OpenCvSharp.dll
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Memory.dll
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Buffers.dll
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\OpenCvSharp.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Memory.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\System.Buffers.xml
+C:\Users\SKY\OneDrive\바탕 화면\코비스\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.exe.config

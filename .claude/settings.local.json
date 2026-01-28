@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"[System.Reflection.Assembly]::LoadFrom\\(''eMotionAlign.dll''\\).GetTypes\\(\\) | ForEach-Object { Write-Host ''=== '' $_FullName '' ===''; $_GetMethods\\(\\) | ForEach-Object { Write-Host $_Name } }\")",
+      "Bash(powershell -Command \"$asm = [System.Reflection.Assembly]::LoadFrom\\(\\(Get-Location\\).Path + ''\\\\eMotionAlign.dll''\\); $asm.GetExportedTypes\\(\\) | ForEach-Object { $_FullName }\")",
+      "Bash(powershell \"[Reflection.Assembly]::LoadFrom\\(''D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll''\\).GetExportedTypes\\(\\)\")",
+      "Bash(powershell \"$a = [Reflection.Assembly]::LoadFrom\\(''D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll''\\); $t = $a.GetType\\(''eMotion.ClassAlign''\\); $t.GetMethods\\(\\) | Select-Object Name | Sort-Object Name -Unique\")",
+      "Bash(powershell -NoProfile -Command \"$a = [Reflection.Assembly]::LoadFrom\\(''D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll''\\); $t = $a.GetType\\(''eMotion.ClassAlign''\\); $t.GetMethods\\(\\) | ForEach-Object { $_Name } | Sort-Object -Unique\")",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\check_dll.ps1\")",
+      "Bash(copy \"D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll\" \"C:\\\\temp\\\\eMotionAlign.dll\")",
+      "Bash(cmd /c \"if not exist C:\\\\temp mkdir C:\\\\temp && copy \"\"D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll\"\" \"\"C:\\\\temp\\\\eMotionAlign.dll\"\"\")",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\temp\\\\check_dll.ps1\")",
+      "Bash(cmd /c \"dir C:\\\\temp\\\\*.dll\")",
+      "Bash(cmd /c \"xcopy /Y \"\"D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll\"\" \"\"C:\\\\temp\\\\\"\")",
+      "Bash(xcopy:*)",
+      "Bash(powershell -Command \"Copy-Item ''D:\\\\#01_프로젝트\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Vision\\\\eMotion\\\\DLLs\\\\eMotionAlign.dll'' -Destination ''C:\\\\temp\\\\'' -Force\")",
+      "Bash(powershell:*)"
+    ]
+  }
+}

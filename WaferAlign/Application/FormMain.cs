@@ -92,8 +92,8 @@ namespace eMotion
             DispInfo(listInfo, checkFlat.Checked);
             InitGrid(dataGrid, checkFlat.Checked);
 
-            Table.PortOpen(7);
-            Light.PortOpen(1);
+            //Table.PortOpen(7);
+            //Light.PortOpen(1);
             timer.Start();
 
             textSet.Text = Aligner.Setting.ImageCount.ToString();

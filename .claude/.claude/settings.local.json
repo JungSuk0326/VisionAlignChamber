@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__filesystem__directory_tree",
+      "mcp__filesystem__write_file",
+      "Bash(move \"D:\\\\#01_Projects\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Settings.ini\" \"D:\\\\#01_Projects\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Config\\\\Settings.ini\")",
+      "Bash(cmd /c move \"D:\\\\#01_Projects\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Settings.ini\" \"D:\\\\#01_Projects\\\\VisionAlignChamber_Repository\\\\VisionAlignChamber\\\\Config\\\\Settings.ini\")",
+      "Bash(dir /s /b \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D---01-Projects-VisionAlignChamber-Repository--claude\\\\2286cd4a-5dd3-42e6-87a6-3df12528ab36\\\\scratchpad\\\\pptx_extracted\")",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File:*)"
+    ]
+  }
+}

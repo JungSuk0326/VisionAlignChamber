@@ -895,4 +895,219 @@
       </root>
     </mxGraphModel>
   </diagram>
+  <diagram id="mvvm-architecture" name="MVVM Architecture">
+    <mxGraphModel dx="1434" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mvvm-title" value="VisionAlignChamber - MVVM Architecture (WinForms)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-view-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1976d2;strokeWidth=2;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="1320" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-view-label" value="Views (WinForms)" style="text;html=1;strokeColor=none;fillColor=#1976d2;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="90" width="140" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="view-main" value="MainForm.cs&#xa;(메인 윈도우)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=#0d47a1;fontColor=#ffffff;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="125" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="view-motion" value="MotionControlView&#xa;(모션 제어 UC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="125" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="view-io" value="IOMonitorView&#xa;(I/O 모니터 UC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="490" y="125" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="view-vision" value="VisionView&#xa;(비전 검사 UC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="125" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="view-sequence" value="SequenceView&#xa;(시퀀스 UC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="125" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="view-log" value="LogView&#xa;(로그/이력 UC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="125" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="view-note" value="UserControl 기반&#xa;수동 바인딩" style="text;html=1;strokeColor=none;fillColor=#bbdefb;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontColor=#0d47a1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="135" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="bind-arrow" value="" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#1976d2;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="210" as="sourcePoint" />
+            <mxPoint x="690" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bind-label" value="Data Binding (INotifyPropertyChanged)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#1976d2;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="700" y="210" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-vm-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#388e3c;strokeWidth=2;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="1320" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-vm-label" value="ViewModels" style="text;html=1;strokeColor=none;fillColor=#388e3c;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="250" width="100" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-base-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#81c784;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="285" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-base-title" value="Base Classes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1;fontColor=#2e7d32;" vertex="1" parent="1">
+          <mxGeometry x="60" y="285" width="170" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-base1" value="ViewModelBase&#xa;INotifyPropertyChanged" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#66bb6a;fontColor=#1b5e20;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="70" y="305" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-base2" value="RelayCommand (ICommand)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#66bb6a;fontColor=#1b5e20;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="70" y="340" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-main" value="MainViewModel&#xa;• 전체 상태 관리&#xa;• 서브 VM 조율" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#43a047;strokeColor=#2e7d32;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="285" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-motion" value="MotionViewModel&#xa;• 축별 위치/상태&#xa;• Jog/Home 명령&#xa;• 서보 On/Off" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#43a047;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="390" y="285" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-io" value="IOViewModel&#xa;• DI/DO 상태&#xa;• Vacuum/Blow&#xa;• Light 제어" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#43a047;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="530" y="285" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-vision" value="VisionViewModel&#xa;• 검사 실행&#xa;• 결과 표시&#xa;• 이미지 관리" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#43a047;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="670" y="285" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-sequence" value="SequenceViewModel&#xa;• 시퀀스 상태&#xa;• Start/Stop&#xa;• Progress 표시" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#43a047;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="810" y="285" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-log" value="LogViewModel&#xa;• 로그 리스트&#xa;• 필터링&#xa;• Export" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#43a047;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="950" y="285" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="vm-note" value="PropertyChanged&#xa;이벤트 발생" style="text;html=1;strokeColor=none;fillColor=#c8e6c9;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontColor=#1b5e20;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="310" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-svc-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff9800;strokeWidth=2;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="1320" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-svc-label" value="Services" style="text;html=1;strokeColor=none;fillColor=#ff9800;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="420" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-motion" value="MotionService&#xa;• VisionAlignerMotion 래핑&#xa;• 비동기 이동 지원" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa726;strokeColor=#f57c00;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="150" y="455" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-io" value="IOService&#xa;• VisionAlignerIO 래핑&#xa;• 상태 모니터링" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa726;strokeColor=#f57c00;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="320" y="455" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-vision" value="VisionService&#xa;• VisionAlignWrapper 래핑&#xa;• 검사 실행" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa726;strokeColor=#f57c00;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="490" y="455" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-sequence" value="SequenceEngine&#xa;• 시퀀스 실행 엔진&#xa;• Step 기반 처리" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffb74d;strokeColor=#ffa726;fontColor=#e65100;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="660" y="455" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-log" value="LogService&#xa;• 로그 기록&#xa;• 파일 저장" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa726;strokeColor=#f57c00;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="455" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-config" value="ConfigService&#xa;• Settings.ini 관리" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa726;strokeColor=#f57c00;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="990" y="455" width="130" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-hw-abs-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;strokeWidth=2;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="1320" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-hw-abs-label" value="Hardware Abstraction (기존)" style="text;html=1;strokeColor=none;fillColor=#7b1fa2;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="570" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-va-motion" value="VisionAlignerMotion&#xa;축별 고수준 API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9c27b0;strokeColor=#7b1fa2;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="270" y="605" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-va-io" value="VisionAlignerIO&#xa;기능별 I/O API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9c27b0;strokeColor=#7b1fa2;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="605" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-mapping" value="IOMapping&#xa;Settings.ini" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ba68c8;strokeColor=#9c27b0;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="610" y="605" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-vision-wrap" value="VisionAlignWrapper&#xa;eMotionAlign.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9c27b0;strokeColor=#7b1fa2;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="750" y="605" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-hw-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eceff1;strokeColor=#607d8b;strokeWidth=2;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="690" width="1320" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-hw-label" value="Hardware Layer (기존)" style="text;html=1;strokeColor=none;fillColor=#607d8b;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="700" width="170" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-ajin-motion" value="AjinMotionController&#xa;IMotionController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#78909c;strokeColor=#546e7a;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="735" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-ajin-dio" value="AjinDigitalIO&#xa;IDigitalIO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#78909c;strokeColor=#546e7a;fontColor=#ffffff;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="735" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-wrapper" value="P/Invoke Wrapper&#xa;AXL, AXM, AXD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90a4ae;strokeColor=#78909c;fontColor=#37474f;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="580" y="735" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hw-dll" value="Native DLLs&#xa;AXL.dll, eMotionAlign.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90a4ae;strokeColor=#78909c;fontColor=#37474f;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="740" y="735" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="arr-v-vm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="view-motion" target="vm-motion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr-vm-svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="vm-motion" target="svc-motion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr-svc-hw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="svc-motion" target="hw-va-motion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr-hw-impl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="hw-va-motion" target="hw-ajin-motion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-detail-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#ffb300;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="420" width="210" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-detail-title" value="Sequence Engine" style="text;html=1;strokeColor=none;fillColor=#ffb300;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="425" width="100" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-base" value="SequenceBase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe082;strokeColor=#ffb300;fontColor=#e65100;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="450" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-align" value="AlignSequence" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff59d;strokeColor=#ffee58;fontColor=#f57f17;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="480" width="90" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-home" value="HomeSequence" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff59d;strokeColor=#ffee58;fontColor=#f57f17;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="507" width="90" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="seq-step" value="SequenceStep" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe082;strokeColor=#ffb300;fontColor=#e65100;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1255" y="450" width="85" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#e0e0e0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="820" width="500" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="825" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-new" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#43a047;" vertex="1" parent="1">
+          <mxGeometry x="50" y="855" width="20" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-new-txt" value="신규 개발" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="75" y="852" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-exist" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9c27b0;strokeColor=#7b1fa2;" vertex="1" parent="1">
+          <mxGeometry x="150" y="855" width="20" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-exist-txt" value="기존 유지" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="175" y="852" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-svc" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa726;strokeColor=#f57c00;" vertex="1" parent="1">
+          <mxGeometry x="250" y="855" width="20" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-svc-txt" value="Service Layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="275" y="852" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-seq" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffb74d;strokeColor=#ffa726;" vertex="1" parent="1">
+          <mxGeometry x="370" y="855" width="20" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-seq-txt" value="Sequence Engine" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="395" y="852" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="files-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#e0e0e0;" vertex="1" parent="1">
+          <mxGeometry x="560" y="820" width="800" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="files-title" value="신규 폴더 구조" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="570" y="825" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="files-txt" value="ViewModels/Base/ - ViewModelBase.cs, RelayCommand.cs&#xa;ViewModels/ - MainViewModel, MotionViewModel, IOViewModel, VisionViewModel, SequenceViewModel&#xa;Services/ - MotionService, IOService, VisionService, SequenceEngine, LogService&#xa;Views/ - MotionControlView, IOMonitorView, VisionView, SequenceView (UserControl)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#555555;fontFamily=Consolas;" vertex="1" parent="1">
+          <mxGeometry x="570" y="845" width="780" height="45" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
 </mxfile>

@@ -64,6 +64,8 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <!-- MVVM ICommand 지원 -->
+    <Reference Include="PresentationCore" />
     <!-- eMotionAlign.dll 참조 -->
     <Reference Include="eMotionAlign">
       <HintPath>Vision\eMotion\DLLs\eMotionAlign.dll</HintPath>
@@ -118,9 +120,21 @@
     <Compile Include="Vision\VisionAlignWrapper.cs" />
     <!-- 모델 -->
     <Compile Include="Models\WaferAlignResult.cs" />
-    <Compile Include="Models\IOMap.cs" />
+    <Compile Include="Models\SystemState.cs" />
+    <Compile Include="Models\AxisSettings.cs" />
+    <Compile Include="Models\AlignParameters.cs" />
+    <Compile Include="Models\AlarmInfo.cs" />
     <!-- 설정 -->
     <Compile Include="Config\AppSettings.cs" />
+    <!-- MVVM 인프라 -->
+    <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="ViewModels\Base\RelayCommand.cs" />
+    <!-- ViewModels -->
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\AxisViewModel.cs" />
+    <Compile Include="ViewModels\MotionViewModel.cs" />
+    <Compile Include="ViewModels\IOViewModel.cs" />
+    <Compile Include="ViewModels\VisionViewModel.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

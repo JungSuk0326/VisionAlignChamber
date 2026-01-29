@@ -158,40 +158,30 @@ namespace VisionAlignChamber.Hardware.IO
 
         #endregion
 
-        #region Centering Roller
+        #region PN Check Sensor
 
         /// <summary>
-        /// Centering Roller 열기
+        /// PN Check P 센서 상태 확인
         /// </summary>
-        public void OpenCenteringRoller()
+        public bool IsPNCheckP()
         {
-            SetOutput(VADigitalOutput.CenteringRoller_Close, false);
-            SetOutput(VADigitalOutput.CenteringRoller_Open, true);
+            return GetInput(VADigitalInput.PN_Check_P);
         }
 
         /// <summary>
-        /// Centering Roller 닫기
+        /// PN Check N 센서 상태 확인
         /// </summary>
-        public void CloseCenteringRoller()
+        public bool IsPNCheckN()
         {
-            SetOutput(VADigitalOutput.CenteringRoller_Open, false);
-            SetOutput(VADigitalOutput.CenteringRoller_Close, true);
+            return GetInput(VADigitalInput.PN_Check_N);
         }
 
         /// <summary>
-        /// Centering Roller 열림 상태 확인
+        /// PN Check 상태 확인 (P와 N 모두 확인)
         /// </summary>
-        public bool IsCenteringRollerOpen()
+        public (bool P, bool N) GetPNCheckStatus()
         {
-            return GetOutput(VADigitalOutput.CenteringRoller_Open);
-        }
-
-        /// <summary>
-        /// Centering Roller 닫힘 상태 확인
-        /// </summary>
-        public bool IsCenteringRollerClose()
-        {
-            return GetOutput(VADigitalOutput.CenteringRoller_Close);
+            return (IsPNCheckP(), IsPNCheckN());
         }
 
         #endregion
@@ -227,12 +217,12 @@ namespace VisionAlignChamber.Hardware.IO
             {
                 Sensor1WaferDetected = IsSensor1WaferDetected(),
                 Sensor2WaferDetected = IsSensor2WaferDetected(),
+                PNCheckP = IsPNCheckP(),
+                PNCheckN = IsPNCheckN(),
                 LiftPinVacuum = IsLiftPinVacuumOn(),
                 LiftPinBlow = IsLiftPinBlowOn(),
                 ChuckVacuum = IsChuckVacuumOn(),
                 ChuckBlow = IsChuckBlowOn(),
-                CenteringRollerOpen = IsCenteringRollerOpen(),
-                CenteringRollerClose = IsCenteringRollerClose(),
                 VisionLightOn = IsVisionLightOn()
             };
         }
@@ -247,12 +237,12 @@ namespace VisionAlignChamber.Hardware.IO
     {
         public bool Sensor1WaferDetected { get; set; }
         public bool Sensor2WaferDetected { get; set; }
+        public bool PNCheckP { get; set; }
+        public bool PNCheckN { get; set; }
         public bool LiftPinVacuum { get; set; }
         public bool LiftPinBlow { get; set; }
         public bool ChuckVacuum { get; set; }
         public bool ChuckBlow { get; set; }
-        public bool CenteringRollerOpen { get; set; }
-        public bool CenteringRollerClose { get; set; }
         public bool VisionLightOn { get; set; }
     }
 }

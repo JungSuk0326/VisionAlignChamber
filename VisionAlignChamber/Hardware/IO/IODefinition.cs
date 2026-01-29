@@ -9,6 +9,9 @@ namespace VisionAlignChamber.Hardware.IO
     {
         Sensor1_Wafer_Check,
         Sensor2_Wafer_Check,
+
+        PN_Check_P,
+        PN_Check_N,
     }
 
     /// <summary>
@@ -25,10 +28,6 @@ namespace VisionAlignChamber.Hardware.IO
 
         // Vision Light
         Vision_Light,
-
-        // Centering Roller Control
-        CenteringRoller_Open,
-        CenteringRoller_Close
     }
 
     /// <summary>
@@ -49,7 +48,12 @@ namespace VisionAlignChamber.Hardware.IO
         /// <summary>
         /// 센터링 스테이지 (Stepping)
         /// </summary>
-        CenteringStage
+        CenteringStage_1,
+
+        /// <summary>
+        /// 센터링 스테이지2 (Stepping)
+        /// </summary>
+        CenteringStage_2
     }
 
     /// <summary>

@@ -45,7 +45,7 @@ namespace VisionAlignChamber.Hardware.IO
         {
             var info = _mapping.GetAxisInfo(axis);
             double vel = velocity ?? info.DefaultVelocity;
-            return _motion.MoveAbsolute(info.AxisNo, position, vel, info.DefaultAccel, info.DefaultDecel);
+            return _motion.MoveAbs(info.AxisNo, position, vel, info.DefaultAccel, info.DefaultDecel);
         }
 
         /// <summary>
@@ -55,16 +55,16 @@ namespace VisionAlignChamber.Hardware.IO
         {
             var info = _mapping.GetAxisInfo(axis);
             double vel = velocity ?? info.DefaultVelocity;
-            return _motion.MoveRelative(info.AxisNo, distance, vel, info.DefaultAccel, info.DefaultDecel);
+            return _motion.MoveRel(info.AxisNo, distance, vel, info.DefaultAccel, info.DefaultDecel);
         }
 
         /// <summary>
-        /// 현재 위치 읽기
+        /// 현재 위치 읽기 (실제 위치)
         /// </summary>
         public double GetPosition(VAMotionAxis axis)
         {
             var info = _mapping.GetAxisInfo(axis);
-            return _motion.GetPosition(info.AxisNo);
+            return _motion.GetActualPosition(info.AxisNo);
         }
 
         /// <summary>
@@ -91,7 +91,14 @@ namespace VisionAlignChamber.Hardware.IO
         public bool WaitForDone(VAMotionAxis axis, int timeoutMs = 30000)
         {
             var info = _mapping.GetAxisInfo(axis);
-            return _motion.WaitForDone(info.AxisNo, timeoutMs);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < timeoutMs)
+            {
+                if (_motion.IsMotionDone(info.AxisNo))
+                    return true;
+                System.Threading.Thread.Sleep(10);
+            }
+            return false;
         }
 
         /// <summary>
@@ -100,7 +107,7 @@ namespace VisionAlignChamber.Hardware.IO
         public bool IsMoving(VAMotionAxis axis)
         {
             var info = _mapping.GetAxisInfo(axis);
-            return _motion.IsMoving(info.AxisNo);
+            return !_motion.IsMotionDone(info.AxisNo);
         }
 
         /// <summary>
@@ -109,7 +116,7 @@ namespace VisionAlignChamber.Hardware.IO
         public bool MoveHome(VAMotionAxis axis)
         {
             var info = _mapping.GetAxisInfo(axis);
-            return _motion.MoveHome(info.AxisNo);
+            return _motion.HomeMove(info.AxisNo);
         }
 
         #endregion
@@ -232,52 +239,115 @@ namespace VisionAlignChamber.Hardware.IO
 
         #endregion
 
-        #region Centering Stage
+        #region Centering Stage 1
 
         /// <summary>
-        /// Centering Stage 이동
+        /// Centering Stage 1 이동
         /// </summary>
         /// <param name="position">이동 위치 (pulse)</param>
-        public bool CenteringStageMove(double position, double? velocity = null)
+        public bool CenteringStage1Move(double position, double? velocity = null)
         {
-            return MoveAbsolute(VAMotionAxis.CenteringStage, position, velocity);
+            return MoveAbsolute(VAMotionAxis.CenteringStage_1, position, velocity);
         }
 
         /// <summary>
-        /// Centering Stage 상대 이동
+        /// Centering Stage 1 상대 이동
         /// </summary>
-        public bool CenteringStageMoveRelative(double distance, double? velocity = null)
+        public bool CenteringStage1MoveRelative(double distance, double? velocity = null)
         {
-            return MoveRelative(VAMotionAxis.CenteringStage, distance, velocity);
+            return MoveRelative(VAMotionAxis.CenteringStage_1, distance, velocity);
         }
 
         /// <summary>
-        /// Centering Stage 현재 위치
+        /// Centering Stage 1 현재 위치
         /// </summary>
-        public double GetCenteringStagePosition()
+        public double GetCenteringStage1Position()
         {
-            return GetPosition(VAMotionAxis.CenteringStage);
+            return GetPosition(VAMotionAxis.CenteringStage_1);
         }
 
         /// <summary>
-        /// Centering Stage 홈
+        /// Centering Stage 1 홈
         /// </summary>
-        public bool CenteringStageHome()
+        public bool CenteringStage1Home()
         {
-            return MoveHome(VAMotionAxis.CenteringStage);
+            return MoveHome(VAMotionAxis.CenteringStage_1);
+        }
+
+        #endregion
+
+        #region Centering Stage 2
+
+        /// <summary>
+        /// Centering Stage 2 이동
+        /// </summary>
+        /// <param name="position">이동 위치 (pulse)</param>
+        public bool CenteringStage2Move(double position, double? velocity = null)
+        {
+            return MoveAbsolute(VAMotionAxis.CenteringStage_2, position, velocity);
+        }
+
+        /// <summary>
+        /// Centering Stage 2 상대 이동
+        /// </summary>
+        public bool CenteringStage2MoveRelative(double distance, double? velocity = null)
+        {
+            return MoveRelative(VAMotionAxis.CenteringStage_2, distance, velocity);
+        }
+
+        /// <summary>
+        /// Centering Stage 2 현재 위치
+        /// </summary>
+        public double GetCenteringStage2Position()
+        {
+            return GetPosition(VAMotionAxis.CenteringStage_2);
+        }
+
+        /// <summary>
+        /// Centering Stage 2 홈
+        /// </summary>
+        public bool CenteringStage2Home()
+        {
+            return MoveHome(VAMotionAxis.CenteringStage_2);
+        }
+
+        #endregion
+
+        #region Centering Stage (Both)
+
+        /// <summary>
+        /// 두 Centering Stage 동시 이동
+        /// </summary>
+        public bool CenteringStagesMoveSync(double position1, double position2, double? velocity = null)
+        {
+            bool result1 = CenteringStage1Move(position1, velocity);
+            bool result2 = CenteringStage2Move(position2, velocity);
+            return result1 && result2;
+        }
+
+        /// <summary>
+        /// 두 Centering Stage 동시 홈
+        /// </summary>
+        public bool CenteringStagesHomeSync()
+        {
+            bool result1 = CenteringStage1Home();
+            bool result2 = CenteringStage2Home();
+            return result1 && result2;
         }
 
         /// <summary>
         /// Centering Stage Wafer 방향으로 이동 (마진 적용)
         /// </summary>
-        /// <param name="waferEdgePosition">웨이퍼 가장자리 위치</param>
+        /// <param name="waferEdgePosition1">스테이지1 웨이퍼 가장자리 위치</param>
+        /// <param name="waferEdgePosition2">스테이지2 웨이퍼 가장자리 위치</param>
         /// <param name="marginUm">마진 (um)</param>
-        public bool CenteringStageMoveToWafer(double waferEdgePosition, double marginUm = 20)
+        public bool CenteringStagesMoveToWafer(double waferEdgePosition1, double waferEdgePosition2, double marginUm = 20)
         {
             // 마진을 pulse로 변환 (스펙에 따라 조정)
             double marginPulse = marginUm * 10; // 예: 1um = 10 pulse
-            double targetPosition = waferEdgePosition - marginPulse;
-            return CenteringStageMove(targetPosition);
+            double targetPosition1 = waferEdgePosition1 - marginPulse;
+            double targetPosition2 = waferEdgePosition2 - marginPulse;
+            return CenteringStagesMoveSync(targetPosition1, targetPosition2);
         }
 
         #endregion
@@ -291,7 +361,8 @@ namespace VisionAlignChamber.Hardware.IO
         {
             Stop(VAMotionAxis.WedgeUpDown);
             Stop(VAMotionAxis.ChuckRotation);
-            Stop(VAMotionAxis.CenteringStage);
+            Stop(VAMotionAxis.CenteringStage_1);
+            Stop(VAMotionAxis.CenteringStage_2);
         }
 
         /// <summary>
@@ -301,7 +372,8 @@ namespace VisionAlignChamber.Hardware.IO
         {
             EmergencyStop(VAMotionAxis.WedgeUpDown);
             EmergencyStop(VAMotionAxis.ChuckRotation);
-            EmergencyStop(VAMotionAxis.CenteringStage);
+            EmergencyStop(VAMotionAxis.CenteringStage_1);
+            EmergencyStop(VAMotionAxis.CenteringStage_2);
         }
 
         /// <summary>
@@ -312,7 +384,8 @@ namespace VisionAlignChamber.Hardware.IO
             bool result = true;
             result &= WedgeStageHome();
             result &= ChuckHome();
-            result &= CenteringStageHome();
+            result &= CenteringStage1Home();
+            result &= CenteringStage2Home();
             return result;
         }
 
@@ -323,7 +396,8 @@ namespace VisionAlignChamber.Hardware.IO
         {
             return IsMoving(VAMotionAxis.WedgeUpDown) ||
                    IsMoving(VAMotionAxis.ChuckRotation) ||
-                   IsMoving(VAMotionAxis.CenteringStage);
+                   IsMoving(VAMotionAxis.CenteringStage_1) ||
+                   IsMoving(VAMotionAxis.CenteringStage_2);
         }
 
         #endregion
@@ -341,8 +415,10 @@ namespace VisionAlignChamber.Hardware.IO
                 WedgeStageMoving = IsMoving(VAMotionAxis.WedgeUpDown),
                 ChuckAngle = GetChuckAngle(),
                 ChuckMoving = IsMoving(VAMotionAxis.ChuckRotation),
-                CenteringStagePosition = GetCenteringStagePosition(),
-                CenteringStageMoving = IsMoving(VAMotionAxis.CenteringStage)
+                CenteringStage1Position = GetCenteringStage1Position(),
+                CenteringStage1Moving = IsMoving(VAMotionAxis.CenteringStage_1),
+                CenteringStage2Position = GetCenteringStage2Position(),
+                CenteringStage2Moving = IsMoving(VAMotionAxis.CenteringStage_2)
             };
         }
 
@@ -358,7 +434,9 @@ namespace VisionAlignChamber.Hardware.IO
         public bool WedgeStageMoving { get; set; }
         public double ChuckAngle { get; set; }
         public bool ChuckMoving { get; set; }
-        public double CenteringStagePosition { get; set; }
-        public bool CenteringStageMoving { get; set; }
+        public double CenteringStage1Position { get; set; }
+        public bool CenteringStage1Moving { get; set; }
+        public double CenteringStage2Position { get; set; }
+        public bool CenteringStage2Moving { get; set; }
     }
 }

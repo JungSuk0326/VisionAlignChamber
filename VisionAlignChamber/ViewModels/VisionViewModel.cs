@@ -109,11 +109,11 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
-        public double OffsetAngle => _alignResult?.OffAngle ?? 0;
-        public double AbsoluteAngle => _alignResult?.AbsAngle ?? 0;
-        public double WaferCenterX => _alignResult?.Wafer?.CenterX ?? 0;
-        public double WaferCenterY => _alignResult?.Wafer?.CenterY ?? 0;
-        public bool IsResultValid => _alignResult?.IsValid ?? false;
+        public double OffsetAngle => _alignResult.OffAngle;
+        public double AbsoluteAngle => _alignResult.AbsAngle;
+        public double WaferCenterX => _alignResult.Wafer.CenterX;
+        public double WaferCenterY => _alignResult.Wafer.CenterY;
+        public bool IsResultValid => _alignResult.IsValid;
 
         #endregion
 
@@ -229,7 +229,7 @@ namespace VisionAlignChamber.ViewModels
             CurrentImage = null;
             ResultImage = null;
             WaferImage = null;
-            AlignResult = null;
+            AlignResult = WaferAlignResult.Empty;
             StatusMessage = "이미지 클리어 완료";
             RaiseCanExecuteChanged();
         }
@@ -256,7 +256,7 @@ namespace VisionAlignChamber.ViewModels
                     ResultImage = _vision.GetResultImage(isFlat);
                     WaferImage = _vision.GetWaferImage(isFlat);
 
-                    if (AlignResult?.IsValid == true)
+                    if (AlignResult.IsValid)
                     {
                         StatusMessage = $"검사 완료 - 각도: {OffsetAngle:F3}°";
                     }

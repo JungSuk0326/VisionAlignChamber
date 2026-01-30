@@ -94,55 +94,60 @@ namespace VisionAlignChamber.Models
         /// </summary>
         public static AxisSettings CreateDefault(VAMotionAxis axis)
         {
-            return axis switch
+            switch (axis)
             {
-                VAMotionAxis.WedgeUpDown => new AxisSettings
-                {
-                    Axis = axis,
-                    Name = "Wedge Up/Down",
-                    HomePosition = 0,
-                    WaitPosition = 0,
-                    WorkPosition = 50000,
-                    SoftLimitMinus = -1000,
-                    SoftLimitPlus = 100000,
-                    Unit = "pulse"
-                },
-                VAMotionAxis.ChuckRotation => new AxisSettings
-                {
-                    Axis = axis,
-                    Name = "Chuck Rotation",
-                    HomePosition = 0,
-                    WaitPosition = 0,
-                    WorkPosition = 0,
-                    SoftLimitMinus = -3600000,
-                    SoftLimitPlus = 3600000,
-                    PulsePerUnit = 10000,  // 1 degree = 10000 pulse
-                    Unit = "degree"
-                },
-                VAMotionAxis.CenteringStage_1 => new AxisSettings
-                {
-                    Axis = axis,
-                    Name = "Centering Stage 1",
-                    HomePosition = 0,
-                    WaitPosition = 0,
-                    WorkPosition = 0,
-                    SoftLimitMinus = -1000,
-                    SoftLimitPlus = 500000,
-                    Unit = "pulse"
-                },
-                VAMotionAxis.CenteringStage_2 => new AxisSettings
-                {
-                    Axis = axis,
-                    Name = "Centering Stage 2",
-                    HomePosition = 0,
-                    WaitPosition = 0,
-                    WorkPosition = 0,
-                    SoftLimitMinus = -1000,
-                    SoftLimitPlus = 500000,
-                    Unit = "pulse"
-                },
-                _ => new AxisSettings { Axis = axis }
-            };
+                case VAMotionAxis.WedgeUpDown:
+                    return new AxisSettings
+                    {
+                        Axis = axis,
+                        Name = "Wedge Up/Down",
+                        HomePosition = 0,
+                        WaitPosition = 0,
+                        WorkPosition = 50000,
+                        SoftLimitMinus = -1000,
+                        SoftLimitPlus = 100000,
+                        Unit = "pulse"
+                    };
+                case VAMotionAxis.ChuckRotation:
+                    return new AxisSettings
+                    {
+                        Axis = axis,
+                        Name = "Chuck Rotation",
+                        HomePosition = 0,
+                        WaitPosition = 0,
+                        WorkPosition = 0,
+                        SoftLimitMinus = -3600000,
+                        SoftLimitPlus = 3600000,
+                        PulsePerUnit = 10000,  // 1 degree = 10000 pulse
+                        Unit = "degree"
+                    };
+                case VAMotionAxis.CenteringStage_1:
+                    return new AxisSettings
+                    {
+                        Axis = axis,
+                        Name = "Centering Stage 1",
+                        HomePosition = 0,
+                        WaitPosition = 0,
+                        WorkPosition = 0,
+                        SoftLimitMinus = -1000,
+                        SoftLimitPlus = 500000,
+                        Unit = "pulse"
+                    };
+                case VAMotionAxis.CenteringStage_2:
+                    return new AxisSettings
+                    {
+                        Axis = axis,
+                        Name = "Centering Stage 2",
+                        HomePosition = 0,
+                        WaitPosition = 0,
+                        WorkPosition = 0,
+                        SoftLimitMinus = -1000,
+                        SoftLimitPlus = 500000,
+                        Unit = "pulse"
+                    };
+                default:
+                    return new AxisSettings { Axis = axis };
+            }
         }
     }
 }

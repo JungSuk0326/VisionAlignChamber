@@ -183,14 +183,14 @@ namespace VisionAlignChamber.ViewModels
         /// </summary>
         public AxisViewModel GetAxis(VAMotionAxis axis)
         {
-            return axis switch
+            switch (axis)
             {
-                VAMotionAxis.WedgeUpDown => WedgeAxis,
-                VAMotionAxis.ChuckRotation => ChuckAxis,
-                VAMotionAxis.CenteringStage_1 => CenteringStage1Axis,
-                VAMotionAxis.CenteringStage_2 => CenteringStage2Axis,
-                _ => null
-            };
+                case VAMotionAxis.WedgeUpDown: return WedgeAxis;
+                case VAMotionAxis.ChuckRotation: return ChuckAxis;
+                case VAMotionAxis.CenteringStage_1: return CenteringStage1Axis;
+                case VAMotionAxis.CenteringStage_2: return CenteringStage2Axis;
+                default: return null;
+            }
         }
 
         /// <summary>

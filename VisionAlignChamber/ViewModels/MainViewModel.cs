@@ -240,7 +240,7 @@ namespace VisionAlignChamber.ViewModels
 
         private void ExecuteEmergencyStop()
         {
-            Motion?.EmergencyStopCommand?.Execute(null);
+            Motion?.EmergencyStopAllCommand?.Execute(null);
             IO?.AllOutputOffCommand?.Execute(null);
 
             CurrentStatus = SystemStatus.EMO;

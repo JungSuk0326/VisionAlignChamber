@@ -155,29 +155,29 @@ namespace VisionAlignChamber.Models
         /// </summary>
         public static string GetDefaultMessage(int code)
         {
-            return code switch
+            switch (code)
             {
-                EMO_ACTIVATED => "Emergency stop activated",
-                INITIALIZATION_FAILED => "System initialization failed",
-                COMMUNICATION_ERROR => "Communication error",
-                MOTION_ALARM => "Motion alarm occurred",
-                HOME_FAILED => "Home operation failed",
-                POSITION_ERROR => "Position error detected",
-                MOTION_TIMEOUT => "Motion timeout",
-                SOFT_LIMIT_ERROR => "Soft limit error",
-                VACUUM_ERROR => "Vacuum error",
-                SENSOR_ERROR => "Sensor error",
-                INTERLOCK_ERROR => "Interlock error",
-                VISION_INIT_FAILED => "Vision initialization failed",
-                WAFER_NOT_FOUND => "Wafer not found",
-                NOTCH_NOT_FOUND => "Notch/Flat not found",
-                ALIGNMENT_FAILED => "Alignment failed",
-                VISION_TIMEOUT => "Vision timeout",
-                SEQUENCE_ERROR => "Sequence error",
-                STEP_TIMEOUT => "Step timeout",
-                ABORT_REQUESTED => "Abort requested",
-                _ => $"Unknown alarm ({code})"
-            };
+                case EMO_ACTIVATED: return "Emergency stop activated";
+                case INITIALIZATION_FAILED: return "System initialization failed";
+                case COMMUNICATION_ERROR: return "Communication error";
+                case MOTION_ALARM: return "Motion alarm occurred";
+                case HOME_FAILED: return "Home operation failed";
+                case POSITION_ERROR: return "Position error detected";
+                case MOTION_TIMEOUT: return "Motion timeout";
+                case SOFT_LIMIT_ERROR: return "Soft limit error";
+                case VACUUM_ERROR: return "Vacuum error";
+                case SENSOR_ERROR: return "Sensor error";
+                case INTERLOCK_ERROR: return "Interlock error";
+                case VISION_INIT_FAILED: return "Vision initialization failed";
+                case WAFER_NOT_FOUND: return "Wafer not found";
+                case NOTCH_NOT_FOUND: return "Notch/Flat not found";
+                case ALIGNMENT_FAILED: return "Alignment failed";
+                case VISION_TIMEOUT: return "Vision timeout";
+                case SEQUENCE_ERROR: return "Sequence error";
+                case STEP_TIMEOUT: return "Step timeout";
+                case ABORT_REQUESTED: return "Abort requested";
+                default: return $"Unknown alarm ({code})";
+            }
         }
     }
 }

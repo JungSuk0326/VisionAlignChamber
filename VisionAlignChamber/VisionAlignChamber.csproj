@@ -135,6 +135,38 @@
     <Compile Include="ViewModels\MotionViewModel.cs" />
     <Compile Include="ViewModels\IOViewModel.cs" />
     <Compile Include="ViewModels\VisionViewModel.cs" />
+    <!-- Views -->
+    <Compile Include="Views\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <!-- Views/Controls -->
+    <Compile Include="Views\Controls\AxisControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\AxisControlPanel.Designer.cs">
+      <DependentUpon>AxisControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\MotionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\MotionPanel.Designer.cs">
+      <DependentUpon>MotionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\IOPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\IOPanel.Designer.cs">
+      <DependentUpon>IOPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\VisionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\VisionPanel.Designer.cs">
+      <DependentUpon>VisionPanel.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -148,6 +180,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Views\Controls\AxisControlPanel.resx">
+      <DependentUpon>AxisControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

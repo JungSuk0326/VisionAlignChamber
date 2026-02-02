@@ -78,16 +78,29 @@ namespace VisionAlignChamber.Views.Controls
 
         private void UpdateGlobalStatus()
         {
+            // 초기화 상태 표시
+            lblInitStatus.Text = _viewModel.IsInitialized ? "Initialized" : "Not Initialized";
+            lblInitStatus.ForeColor = _viewModel.IsInitialized ?
+                System.Drawing.Color.LimeGreen : System.Drawing.Color.Gray;
+
+            // 홈 상태 표시
             lblAllHomedStatus.Text = _viewModel.IsAllHomed ? "All Homed" : "Not Homed";
             lblAllHomedStatus.ForeColor = _viewModel.IsAllHomed ?
                 System.Drawing.Color.LimeGreen : System.Drawing.Color.Orange;
 
-            btnHomeAll.Enabled = !_viewModel.IsAnyAxisMoving;
+            // 버튼 활성화 상태
+            btnInitialize.Enabled = !_viewModel.IsInitialized;
+            btnHomeAll.Enabled = _viewModel.IsInitialized && !_viewModel.IsAnyAxisMoving;
         }
 
         #endregion
 
         #region Event Handlers
+
+        private void btnInitialize_Click(object sender, EventArgs e)
+        {
+            _viewModel?.InitializeCommand?.Execute(null);
+        }
 
         private void btnHomeAll_Click(object sender, EventArgs e)
         {

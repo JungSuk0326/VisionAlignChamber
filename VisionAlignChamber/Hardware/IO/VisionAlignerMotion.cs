@@ -28,6 +28,105 @@ namespace VisionAlignChamber.Hardware.IO
 
         #endregion
 
+        #region Initialization
+
+        /// <summary>
+        /// 모션 컨트롤러 초기화 상태
+        /// </summary>
+        public bool IsInitialized => _motion.IsInitialized;
+
+        /// <summary>
+        /// 모션 컨트롤러 초기화
+        /// </summary>
+        /// <returns>성공 여부</returns>
+        public bool Initialize()
+        {
+            return _motion.Initialize();
+        }
+
+        /// <summary>
+        /// 모션 컨트롤러 종료
+        /// </summary>
+        public void Close()
+        {
+            _motion.Close();
+        }
+
+        /// <summary>
+        /// 사용 가능한 축 개수
+        /// </summary>
+        public int AxisCount => _motion.AxisCount;
+
+        #endregion
+
+        #region Servo Control
+
+        /// <summary>
+        /// 단일 축 서보 ON
+        /// </summary>
+        public bool ServoOn(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.ServoOn(info.AxisNo);
+        }
+
+        /// <summary>
+        /// 단일 축 서보 OFF
+        /// </summary>
+        public bool ServoOff(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.ServoOff(info.AxisNo);
+        }
+
+        /// <summary>
+        /// 단일 축 서보 ON 상태 확인
+        /// </summary>
+        public bool IsServoOn(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.IsServoOn(info.AxisNo);
+        }
+
+        /// <summary>
+        /// 모든 축 서보 ON
+        /// </summary>
+        public bool ServoOnAll()
+        {
+            bool result = true;
+            result &= ServoOn(VAMotionAxis.WedgeUpDown);
+            result &= ServoOn(VAMotionAxis.ChuckRotation);
+            result &= ServoOn(VAMotionAxis.CenteringStage_1);
+            result &= ServoOn(VAMotionAxis.CenteringStage_2);
+            return result;
+        }
+
+        /// <summary>
+        /// 모든 축 서보 OFF
+        /// </summary>
+        public bool ServoOffAll()
+        {
+            bool result = true;
+            result &= ServoOff(VAMotionAxis.WedgeUpDown);
+            result &= ServoOff(VAMotionAxis.ChuckRotation);
+            result &= ServoOff(VAMotionAxis.CenteringStage_1);
+            result &= ServoOff(VAMotionAxis.CenteringStage_2);
+            return result;
+        }
+
+        /// <summary>
+        /// 모든 축 서보 ON 상태 확인
+        /// </summary>
+        public bool IsAllServoOn()
+        {
+            return IsServoOn(VAMotionAxis.WedgeUpDown) &&
+                   IsServoOn(VAMotionAxis.ChuckRotation) &&
+                   IsServoOn(VAMotionAxis.CenteringStage_1) &&
+                   IsServoOn(VAMotionAxis.CenteringStage_2);
+        }
+
+        #endregion
+
         #region Generic Motion Methods
 
         /// <summary>

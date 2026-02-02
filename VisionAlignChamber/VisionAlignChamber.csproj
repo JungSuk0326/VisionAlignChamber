@@ -116,6 +116,8 @@
     <Compile Include="Hardware\IO\IOMapping.cs" />
     <Compile Include="Hardware\IO\VisionAlignerIO.cs" />
     <Compile Include="Hardware\IO\VisionAlignerMotion.cs" />
+    <!-- Core (비즈니스 로직) -->
+    <Compile Include="Core\VisionAlignerSystem.cs" />
     <!-- 비전 -->
     <Compile Include="Vision\VisionAlignWrapper.cs" />
     <!-- 모델 -->
@@ -215,6 +217,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Vision\eMotion\DLLs\Newtonsoft.Json.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <!-- OpenCvSharp 네이티브 DLL (bin 폴더에 직접 복사) -->
+    <Content Include="Vision\eMotion\DLLs\OpenCvSharpExtern.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Vision\eMotion\DLLs\opencv_videoio_ffmpeg4110_64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

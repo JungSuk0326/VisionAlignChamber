@@ -127,6 +127,16 @@ namespace VisionAlignChamber.ViewModels
             set => SetProperty(ref _hasError, value);
         }
 
+        private bool _isServoOn;
+        /// <summary>
+        /// 서보 ON 상태
+        /// </summary>
+        public bool IsServoOn
+        {
+            get => _isServoOn;
+            set => SetProperty(ref _isServoOn, value);
+        }
+
         private string _statusMessage;
         /// <summary>
         /// 상태 메시지
@@ -176,6 +186,21 @@ namespace VisionAlignChamber.ViewModels
         /// </summary>
         public ICommand EmergencyStopCommand { get; private set; }
 
+        /// <summary>
+        /// 서보 ON 명령
+        /// </summary>
+        public ICommand ServoOnCommand { get; private set; }
+
+        /// <summary>
+        /// 서보 OFF 명령
+        /// </summary>
+        public ICommand ServoOffCommand { get; private set; }
+
+        /// <summary>
+        /// 서보 토글 명령
+        /// </summary>
+        public ICommand ServoToggleCommand { get; private set; }
+
         private void InitializeCommands()
         {
             HomeCommand = new RelayCommand(ExecuteHome, CanExecuteMotion);
@@ -185,6 +210,9 @@ namespace VisionAlignChamber.ViewModels
             JogMinusCommand = new RelayCommand<double>(ExecuteJogMinus, _ => CanExecuteMotion());
             StopCommand = new RelayCommand(ExecuteStop);
             EmergencyStopCommand = new RelayCommand(ExecuteEmergencyStop);
+            ServoOnCommand = new RelayCommand(ExecuteServoOn, () => !IsServoOn);
+            ServoOffCommand = new RelayCommand(ExecuteServoOff, () => IsServoOn);
+            ServoToggleCommand = new RelayCommand(ExecuteServoToggle);
         }
 
         #endregion
@@ -193,7 +221,7 @@ namespace VisionAlignChamber.ViewModels
 
         private bool CanExecuteMotion()
         {
-            return IsEnabled && !IsMoving && !HasError;
+            return IsEnabled && !IsMoving && !HasError && IsServoOn;
         }
 
         private void ExecuteHome()
@@ -276,6 +304,54 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
+        private void ExecuteServoOn()
+        {
+            try
+            {
+                if (_motion.ServoOn(_axis))
+                {
+                    IsServoOn = true;
+                    StatusMessage = "Servo ON";
+                }
+                else
+                {
+                    StatusMessage = "Servo ON 실패";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Servo ON 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteServoOff()
+        {
+            try
+            {
+                if (_motion.ServoOff(_axis))
+                {
+                    IsServoOn = false;
+                    StatusMessage = "Servo OFF";
+                }
+                else
+                {
+                    StatusMessage = "Servo OFF 실패";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Servo OFF 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteServoToggle()
+        {
+            if (IsServoOn)
+                ExecuteServoOff();
+            else
+                ExecuteServoOn();
+        }
+
         #endregion
 
         #region Public Methods
@@ -287,6 +363,7 @@ namespace VisionAlignChamber.ViewModels
         {
             Position = _motion.GetPosition(_axis);
             IsMoving = _motion.IsMoving(_axis);
+            IsServoOn = _motion.IsServoOn(_axis);
 
             // Command 실행 가능 상태 갱신
             RaiseCanExecuteChanged();
@@ -325,6 +402,8 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)HomeCommand).RaiseCanExecuteChanged();
             ((RelayCommand)MoveAbsoluteCommand).RaiseCanExecuteChanged();
             ((RelayCommand)StopCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ServoOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ServoOffCommand).RaiseCanExecuteChanged();
         }
 
         #endregion

@@ -69,8 +69,20 @@ namespace VisionAlignChamber.Views.Controls
             // 홈 상태 표시
             chkHomed.Checked = _viewModel.IsHomed;
 
+            // 서보 상태 표시
+            if (_viewModel.IsServoOn)
+            {
+                btnServo.Text = "ON";
+                btnServo.BackColor = Color.LimeGreen;
+            }
+            else
+            {
+                btnServo.Text = "OFF";
+                btnServo.BackColor = Color.Gray;
+            }
+
             // 버튼 활성화 상태
-            bool canMove = _viewModel.IsEnabled && !_viewModel.IsMoving;
+            bool canMove = _viewModel.IsEnabled && !_viewModel.IsMoving && _viewModel.IsServoOn;
             btnHome.Enabled = canMove;
             btnMove.Enabled = canMove;
             btnJogPlus.Enabled = canMove;
@@ -125,6 +137,11 @@ namespace VisionAlignChamber.Views.Controls
         private void btnStop_Click(object sender, EventArgs e)
         {
             _viewModel?.StopCommand?.Execute(null);
+        }
+
+        private void btnServo_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ServoToggleCommand?.Execute(null);
         }
 
         #endregion

@@ -76,6 +76,11 @@ namespace VisionAlignChamber.ViewModels
 
         #region Common Properties
 
+        /// <summary>
+        /// 모션 컨트롤러 초기화 상태
+        /// </summary>
+        public bool IsInitialized => _motion.IsInitialized;
+
         private bool _isAnyAxisMoving;
         /// <summary>
         /// 어떤 축이든 이동 중인지 여부
@@ -111,6 +116,11 @@ namespace VisionAlignChamber.ViewModels
         #region Commands
 
         /// <summary>
+        /// 모션 컨트롤러 초기화 명령
+        /// </summary>
+        public ICommand InitializeCommand { get; private set; }
+
+        /// <summary>
         /// 전체 축 원점 복귀 명령
         /// </summary>
         public ICommand HomeAllCommand { get; private set; }
@@ -127,7 +137,8 @@ namespace VisionAlignChamber.ViewModels
 
         private void InitializeCommands()
         {
-            HomeAllCommand = new RelayCommand(ExecuteHomeAll, () => !IsAnyAxisMoving);
+            InitializeCommand = new RelayCommand(ExecuteInitialize, () => !IsInitialized);
+            HomeAllCommand = new RelayCommand(ExecuteHomeAll, () => IsInitialized && !IsAnyAxisMoving);
             StopAllCommand = new RelayCommand(ExecuteStopAll);
             EmergencyStopAllCommand = new RelayCommand(ExecuteEmergencyStopAll);
         }
@@ -135,6 +146,22 @@ namespace VisionAlignChamber.ViewModels
         #endregion
 
         #region Command Implementations
+
+        private void ExecuteInitialize()
+        {
+            StatusMessage = "모션 컨트롤러 초기화 중...";
+            if (_motion.Initialize())
+            {
+                StatusMessage = $"모션 컨트롤러 초기화 완료 (축 수: {_motion.AxisCount})";
+                OnPropertyChanged(nameof(IsInitialized));
+                ((RelayCommand)InitializeCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)HomeAllCommand).RaiseCanExecuteChanged();
+            }
+            else
+            {
+                StatusMessage = "모션 컨트롤러 초기화 실패";
+            }
+        }
 
         private void ExecuteHomeAll()
         {

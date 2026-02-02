@@ -30,8 +30,16 @@ namespace VisionAlignChamber.Views.Controls
             this.btnInitialize = new System.Windows.Forms.Button();
             this.grpResult = new System.Windows.Forms.GroupBox();
             this.listResult = new System.Windows.Forms.ListView();
-            this.colName = new System.Windows.Forms.ColumnHeader();
-            this.colValue = new System.Windows.Forms.ColumnHeader();
+            this.colNo = new System.Windows.Forms.ColumnHeader();
+            this.colIndex1st = new System.Windows.Forms.ColumnHeader();
+            this.colIndex2nd = new System.Windows.Forms.ColumnHeader();
+            this.colOffAngle = new System.Windows.Forms.ColumnHeader();
+            this.colAbsAngle = new System.Windows.Forms.ColumnHeader();
+            this.colWidth = new System.Windows.Forms.ColumnHeader();
+            this.colHeight = new System.Windows.Forms.ColumnHeader();
+            this.colCenterX = new System.Windows.Forms.ColumnHeader();
+            this.colCenterY = new System.Windows.Forms.ColumnHeader();
+            this.colRadius = new System.Windows.Forms.ColumnHeader();
             this.pnlStatusBar = new System.Windows.Forms.Panel();
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.grpStatus.SuspendLayout();
@@ -201,8 +209,16 @@ namespace VisionAlignChamber.Views.Controls
             //
             this.listResult.BackColor = System.Drawing.Color.NavajoWhite;
             this.listResult.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colName,
-            this.colValue});
+            this.colNo,
+            this.colIndex1st,
+            this.colIndex2nd,
+            this.colOffAngle,
+            this.colAbsAngle,
+            this.colWidth,
+            this.colHeight,
+            this.colCenterX,
+            this.colCenterY,
+            this.colRadius});
             this.listResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listResult.Font = new System.Drawing.Font("Consolas", 9F);
             this.listResult.FullRowSelect = true;
@@ -215,16 +231,64 @@ namespace VisionAlignChamber.Views.Controls
             this.listResult.UseCompatibleStateImageBehavior = false;
             this.listResult.View = System.Windows.Forms.View.Details;
             //
-            // colName
+            // colNo
             //
-            this.colName.Text = " Name";
-            this.colName.Width = 100;
+            this.colNo.Text = "No";
+            this.colNo.Width = 35;
             //
-            // colValue
+            // colIndex1st
             //
-            this.colValue.Text = " Value";
-            this.colValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.colValue.Width = 120;
+            this.colIndex1st.Text = "Idx1";
+            this.colIndex1st.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colIndex1st.Width = 45;
+            //
+            // colIndex2nd
+            //
+            this.colIndex2nd.Text = "Idx2";
+            this.colIndex2nd.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colIndex2nd.Width = 45;
+            //
+            // colOffAngle
+            //
+            this.colOffAngle.Text = "OffAngle";
+            this.colOffAngle.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colOffAngle.Width = 70;
+            //
+            // colAbsAngle
+            //
+            this.colAbsAngle.Text = "AbsAngle";
+            this.colAbsAngle.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colAbsAngle.Width = 70;
+            //
+            // colWidth
+            //
+            this.colWidth.Text = "Width";
+            this.colWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colWidth.Width = 65;
+            //
+            // colHeight
+            //
+            this.colHeight.Text = "Height";
+            this.colHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colHeight.Width = 65;
+            //
+            // colCenterX
+            //
+            this.colCenterX.Text = "CenterX";
+            this.colCenterX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colCenterX.Width = 70;
+            //
+            // colCenterY
+            //
+            this.colCenterY.Text = "CenterY";
+            this.colCenterY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colCenterY.Width = 70;
+            //
+            // colRadius
+            //
+            this.colRadius.Text = "Radius";
+            this.colRadius.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.colRadius.Width = 65;
             //
             // pnlStatusBar
             //
@@ -287,8 +351,16 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnInitialize;
         private System.Windows.Forms.GroupBox grpResult;
         private System.Windows.Forms.ListView listResult;
-        private System.Windows.Forms.ColumnHeader colName;
-        private System.Windows.Forms.ColumnHeader colValue;
+        private System.Windows.Forms.ColumnHeader colNo;
+        private System.Windows.Forms.ColumnHeader colIndex1st;
+        private System.Windows.Forms.ColumnHeader colIndex2nd;
+        private System.Windows.Forms.ColumnHeader colOffAngle;
+        private System.Windows.Forms.ColumnHeader colAbsAngle;
+        private System.Windows.Forms.ColumnHeader colWidth;
+        private System.Windows.Forms.ColumnHeader colHeight;
+        private System.Windows.Forms.ColumnHeader colCenterX;
+        private System.Windows.Forms.ColumnHeader colCenterY;
+        private System.Windows.Forms.ColumnHeader colRadius;
         private System.Windows.Forms.Panel pnlStatusBar;
         private System.Windows.Forms.Label lblStatusMessage;
     }

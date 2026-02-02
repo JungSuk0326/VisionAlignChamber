@@ -14,20 +14,9 @@ namespace VisionAlignChamber.Views.Controls
 
         private VisionViewModel _viewModel;
         private Timer _updateTimer;
-
-        // Result item names (same as WaferAlign)
-        private static readonly string[] ResultItemNames = new string[]
-        {
-            "Index1st",
-            "Index2nd",
-            "OffAngle",
-            "AbsAngle",
-            "Width",
-            "Height",
-            "CenterX",
-            "CenterY",
-            "Radius"
-        };
+        private int _resultCounter;
+        private object _lastResultKey;  // To detect new results
+        private const int MaxHistoryCount = 100;
 
         #endregion
 
@@ -37,7 +26,6 @@ namespace VisionAlignChamber.Views.Controls
         {
             InitializeComponent();
             InitializeTimer();
-            InitializeResultList();
         }
 
         #endregion
@@ -49,20 +37,6 @@ namespace VisionAlignChamber.Views.Controls
             _updateTimer = new Timer();
             _updateTimer.Interval = 100;
             _updateTimer.Tick += UpdateTimer_Tick;
-        }
-
-        private void InitializeResultList()
-        {
-            listResult.Items.Clear();
-
-            foreach (var name in ResultItemNames)
-            {
-                var item = new ListViewItem(name);
-                item.SubItems.Add("-");
-                item.SubItems[1].BackColor = Color.LightBlue;
-                item.UseItemStyleForSubItems = false;
-                listResult.Items.Add(item);
-            }
         }
 
         #endregion
@@ -121,25 +95,41 @@ namespace VisionAlignChamber.Views.Controls
             var result = _viewModel.AlignResult;
 
             if (!result.IsValid)
-            {
-                // Clear all values
-                for (int i = 0; i < listResult.Items.Count; i++)
-                {
-                    listResult.Items[i].SubItems[1].Text = "-";
-                }
                 return;
+
+            // Create a key to detect if this is a new result
+            var currentKey = $"{result.Index1st}_{result.Index2nd}_{result.OffAngle}_{result.AbsAngle}";
+            if (currentKey.Equals(_lastResultKey))
+                return;
+
+            _lastResultKey = currentKey;
+            _resultCounter++;
+
+            // Add new result row at the top
+            var item = new ListViewItem(_resultCounter.ToString());
+            item.SubItems.Add(result.Index1st.ToString());
+            item.SubItems.Add(result.Index2nd.ToString());
+            item.SubItems.Add(result.OffAngle.ToString("F3"));
+            item.SubItems.Add(result.AbsAngle.ToString("F3"));
+            item.SubItems.Add(result.Width.ToString("F3"));
+            item.SubItems.Add(result.Height.ToString("F3"));
+            item.SubItems.Add(result.Wafer.CenterX.ToString("F3"));
+            item.SubItems.Add(result.Wafer.CenterY.ToString("F3"));
+            item.SubItems.Add(result.Wafer.Radius.ToString("F3"));
+
+            // Alternate row color for readability
+            if (_resultCounter % 2 == 0)
+            {
+                item.BackColor = Color.LightBlue;
             }
 
-            // Update all result items (same format as WaferAlign: F3 for doubles)
-            listResult.Items[0].SubItems[1].Text = result.Index1st.ToString();      // Index1st
-            listResult.Items[1].SubItems[1].Text = result.Index2nd.ToString();      // Index2nd
-            listResult.Items[2].SubItems[1].Text = result.OffAngle.ToString("F3");  // OffAngle
-            listResult.Items[3].SubItems[1].Text = result.AbsAngle.ToString("F3");  // AbsAngle
-            listResult.Items[4].SubItems[1].Text = result.Width.ToString("F3");     // Width
-            listResult.Items[5].SubItems[1].Text = result.Height.ToString("F3");    // Height
-            listResult.Items[6].SubItems[1].Text = result.Wafer.CenterX.ToString("F3"); // CenterX
-            listResult.Items[7].SubItems[1].Text = result.Wafer.CenterY.ToString("F3"); // CenterY
-            listResult.Items[8].SubItems[1].Text = result.Wafer.Radius.ToString("F3");  // Radius
+            listResult.Items.Insert(0, item);
+
+            // Limit history count
+            while (listResult.Items.Count > MaxHistoryCount)
+            {
+                listResult.Items.RemoveAt(listResult.Items.Count - 1);
+            }
         }
 
         #endregion
@@ -166,6 +156,14 @@ namespace VisionAlignChamber.Views.Controls
         private void btnClearImages_Click(object sender, EventArgs e)
         {
             _viewModel?.ClearImagesCommand?.Execute(null);
+            ClearResultHistory();
+        }
+
+        private void ClearResultHistory()
+        {
+            listResult.Items.Clear();
+            _resultCounter = 0;
+            _lastResultKey = null;
         }
 
         private void btnExecute_Click(object sender, EventArgs e)

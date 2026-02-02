@@ -27,6 +27,37 @@ namespace VisionAlignChamber.Hardware.IO
 
         #endregion
 
+        #region Initialization
+
+        /// <summary>
+        /// 디지털 IO 초기화 상태
+        /// </summary>
+        public bool IsInitialized => _dio.IsInitialized;
+
+        /// <summary>
+        /// 디지털 IO 초기화
+        /// </summary>
+        /// <returns>성공 여부</returns>
+        public bool Initialize()
+        {
+            return _dio.Initialize();
+        }
+
+        /// <summary>
+        /// 디지털 IO 종료
+        /// </summary>
+        public void Close()
+        {
+            _dio.Close();
+        }
+
+        /// <summary>
+        /// IO 모듈 개수
+        /// </summary>
+        public int ModuleCount => _dio.ModuleCount;
+
+        #endregion
+
         #region Generic I/O Methods
 
         /// <summary>

@@ -8,6 +8,9 @@ namespace VisionAlignChamber.Views.Controls
 
         private void InitializeComponent()
         {
+            this.grpInitialize = new System.Windows.Forms.GroupBox();
+            this.lblInitStatus = new System.Windows.Forms.Label();
+            this.btnInitialize = new System.Windows.Forms.Button();
             this.grpInputs = new System.Windows.Forms.GroupBox();
             this.tableInputs = new System.Windows.Forms.TableLayoutPanel();
             this.lblSensor1Label = new System.Windows.Forms.Label();
@@ -42,6 +45,7 @@ namespace VisionAlignChamber.Views.Controls
 
             this.btnAllOff = new System.Windows.Forms.Button();
 
+            this.grpInitialize.SuspendLayout();
             this.grpInputs.SuspendLayout();
             this.tableInputs.SuspendLayout();
             this.grpLiftPin.SuspendLayout();
@@ -50,11 +54,51 @@ namespace VisionAlignChamber.Views.Controls
             this.SuspendLayout();
 
             //
+            // grpInitialize
+            //
+            this.grpInitialize.Controls.Add(this.lblInitStatus);
+            this.grpInitialize.Controls.Add(this.btnInitialize);
+            this.grpInitialize.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.grpInitialize.Location = new System.Drawing.Point(10, 10);
+            this.grpInitialize.Name = "grpInitialize";
+            this.grpInitialize.Size = new System.Drawing.Size(350, 60);
+            this.grpInitialize.TabIndex = 0;
+            this.grpInitialize.TabStop = false;
+            this.grpInitialize.Text = "Initialization";
+
+            //
+            // btnInitialize
+            //
+            this.btnInitialize.BackColor = System.Drawing.Color.ForestGreen;
+            this.btnInitialize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInitialize.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnInitialize.ForeColor = System.Drawing.Color.White;
+            this.btnInitialize.Location = new System.Drawing.Point(15, 22);
+            this.btnInitialize.Name = "btnInitialize";
+            this.btnInitialize.Size = new System.Drawing.Size(100, 30);
+            this.btnInitialize.TabIndex = 0;
+            this.btnInitialize.Text = "Initialize";
+            this.btnInitialize.UseVisualStyleBackColor = false;
+            this.btnInitialize.Click += new System.EventHandler(this.btnInitialize_Click);
+
+            //
+            // lblInitStatus
+            //
+            this.lblInitStatus.AutoSize = true;
+            this.lblInitStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblInitStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblInitStatus.Location = new System.Drawing.Point(130, 27);
+            this.lblInitStatus.Name = "lblInitStatus";
+            this.lblInitStatus.Size = new System.Drawing.Size(108, 19);
+            this.lblInitStatus.TabIndex = 1;
+            this.lblInitStatus.Text = "Not Initialized";
+
+            //
             // grpInputs
             //
             this.grpInputs.Controls.Add(this.tableInputs);
             this.grpInputs.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.grpInputs.Location = new System.Drawing.Point(10, 10);
+            this.grpInputs.Location = new System.Drawing.Point(10, 80);
             this.grpInputs.Name = "grpInputs";
             this.grpInputs.Size = new System.Drawing.Size(350, 150);
             this.grpInputs.TabIndex = 0;
@@ -188,7 +232,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpLiftPin.Controls.Add(this.btnLiftPinBlowOn);
             this.grpLiftPin.Controls.Add(this.btnLiftPinBlowOff);
             this.grpLiftPin.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.grpLiftPin.Location = new System.Drawing.Point(10, 170);
+            this.grpLiftPin.Location = new System.Drawing.Point(10, 240);
             this.grpLiftPin.Name = "grpLiftPin";
             this.grpLiftPin.Size = new System.Drawing.Size(350, 100);
             this.grpLiftPin.TabIndex = 1;
@@ -279,7 +323,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpChuck.Controls.Add(this.btnChuckBlowOn);
             this.grpChuck.Controls.Add(this.btnChuckBlowOff);
             this.grpChuck.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.grpChuck.Location = new System.Drawing.Point(10, 280);
+            this.grpChuck.Location = new System.Drawing.Point(10, 350);
             this.grpChuck.Name = "grpChuck";
             this.grpChuck.Size = new System.Drawing.Size(350, 100);
             this.grpChuck.TabIndex = 2;
@@ -367,7 +411,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpVisionLight.Controls.Add(this.btnVisionLightOn);
             this.grpVisionLight.Controls.Add(this.btnVisionLightOff);
             this.grpVisionLight.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.grpVisionLight.Location = new System.Drawing.Point(10, 390);
+            this.grpVisionLight.Location = new System.Drawing.Point(10, 460);
             this.grpVisionLight.Name = "grpVisionLight";
             this.grpVisionLight.Size = new System.Drawing.Size(350, 65);
             this.grpVisionLight.TabIndex = 3;
@@ -418,7 +462,7 @@ namespace VisionAlignChamber.Views.Controls
             this.btnAllOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAllOff.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAllOff.ForeColor = System.Drawing.Color.White;
-            this.btnAllOff.Location = new System.Drawing.Point(10, 470);
+            this.btnAllOff.Location = new System.Drawing.Point(10, 535);
             this.btnAllOff.Name = "btnAllOff";
             this.btnAllOff.Size = new System.Drawing.Size(350, 40);
             this.btnAllOff.TabIndex = 4;
@@ -431,6 +475,7 @@ namespace VisionAlignChamber.Views.Controls
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.grpInitialize);
             this.Controls.Add(this.grpInputs);
             this.Controls.Add(this.grpLiftPin);
             this.Controls.Add(this.grpChuck);
@@ -440,6 +485,8 @@ namespace VisionAlignChamber.Views.Controls
             this.Name = "IOPanel";
             this.Size = new System.Drawing.Size(780, 660);
 
+            this.grpInitialize.ResumeLayout(false);
+            this.grpInitialize.PerformLayout();
             this.grpInputs.ResumeLayout(false);
             this.tableInputs.ResumeLayout(false);
             this.grpLiftPin.ResumeLayout(false);
@@ -453,6 +500,9 @@ namespace VisionAlignChamber.Views.Controls
 
         #endregion
 
+        private System.Windows.Forms.GroupBox grpInitialize;
+        private System.Windows.Forms.Button btnInitialize;
+        private System.Windows.Forms.Label lblInitStatus;
         private System.Windows.Forms.GroupBox grpInputs;
         private System.Windows.Forms.TableLayoutPanel tableInputs;
         private System.Windows.Forms.Label lblSensor1Label;

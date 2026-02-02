@@ -21,6 +21,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.lblAxisName = new System.Windows.Forms.Label();
             this.panelStatus = new System.Windows.Forms.Panel();
+            this.btnServo = new System.Windows.Forms.Button();
             this.lblMovingStatus = new System.Windows.Forms.Label();
             this.chkHomed = new System.Windows.Forms.CheckBox();
             this.panelButtons = new System.Windows.Forms.Panel();
@@ -52,7 +53,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpAxis.Location = new System.Drawing.Point(0, 0);
             this.grpAxis.Name = "grpAxis";
             this.grpAxis.Padding = new System.Windows.Forms.Padding(5);
-            this.grpAxis.Size = new System.Drawing.Size(380, 120);
+            this.grpAxis.Size = new System.Drawing.Size(380, 139);
             this.grpAxis.TabIndex = 0;
             this.grpAxis.TabStop = false;
             // 
@@ -83,7 +84,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tableLayout.Size = new System.Drawing.Size(370, 94);
+            this.tableLayout.Size = new System.Drawing.Size(370, 113);
             this.tableLayout.TabIndex = 0;
             // 
             // lblAxisName
@@ -100,6 +101,7 @@ namespace VisionAlignChamber.Views.Controls
             // panelStatus
             // 
             this.tableLayout.SetColumnSpan(this.panelStatus, 2);
+            this.panelStatus.Controls.Add(this.btnServo);
             this.panelStatus.Controls.Add(this.lblMovingStatus);
             this.panelStatus.Controls.Add(this.chkHomed);
             this.panelStatus.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -107,6 +109,20 @@ namespace VisionAlignChamber.Views.Controls
             this.panelStatus.Name = "panelStatus";
             this.panelStatus.Size = new System.Drawing.Size(184, 22);
             this.panelStatus.TabIndex = 1;
+            // 
+            // btnServo
+            // 
+            this.btnServo.BackColor = System.Drawing.Color.Gray;
+            this.btnServo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnServo.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
+            this.btnServo.ForeColor = System.Drawing.Color.White;
+            this.btnServo.Location = new System.Drawing.Point(140, 0);
+            this.btnServo.Name = "btnServo";
+            this.btnServo.Size = new System.Drawing.Size(42, 20);
+            this.btnServo.TabIndex = 2;
+            this.btnServo.Text = "OFF";
+            this.btnServo.UseVisualStyleBackColor = false;
+            this.btnServo.Click += new System.EventHandler(this.btnServo_Click);
             // 
             // lblMovingStatus
             // 
@@ -240,7 +256,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblJogLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblJogLabel.Location = new System.Drawing.Point(3, 84);
             this.lblJogLabel.Name = "lblJogLabel";
-            this.lblJogLabel.Size = new System.Drawing.Size(74, 28);
+            this.lblJogLabel.Size = new System.Drawing.Size(74, 29);
             this.lblJogLabel.TabIndex = 9;
             this.lblJogLabel.Text = "Jog";
             this.lblJogLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -264,7 +280,7 @@ namespace VisionAlignChamber.Views.Controls
             this.panelJog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelJog.Location = new System.Drawing.Point(273, 87);
             this.panelJog.Name = "panelJog";
-            this.panelJog.Size = new System.Drawing.Size(94, 22);
+            this.panelJog.Size = new System.Drawing.Size(94, 23);
             this.panelJog.TabIndex = 11;
             // 
             // btnJogPlus
@@ -296,7 +312,7 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpAxis);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "AxisControlPanel";
-            this.Size = new System.Drawing.Size(380, 120);
+            this.Size = new System.Drawing.Size(380, 139);
             this.grpAxis.ResumeLayout(false);
             this.tableLayout.ResumeLayout(false);
             this.tableLayout.PerformLayout();
@@ -314,6 +330,7 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TableLayoutPanel tableLayout;
         private System.Windows.Forms.Label lblAxisName;
         private System.Windows.Forms.Panel panelStatus;
+        private System.Windows.Forms.Button btnServo;
         private System.Windows.Forms.Label lblMovingStatus;
         private System.Windows.Forms.CheckBox chkHomed;
         private System.Windows.Forms.Panel panelButtons;

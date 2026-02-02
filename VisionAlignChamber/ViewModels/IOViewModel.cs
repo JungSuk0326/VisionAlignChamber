@@ -26,6 +26,15 @@ namespace VisionAlignChamber.ViewModels
 
         #endregion
 
+        #region Initialization Properties
+
+        /// <summary>
+        /// 디지털 IO 초기화 상태
+        /// </summary>
+        public bool IsInitialized => _io.IsInitialized;
+
+        #endregion
+
         #region Sensor Input Properties (Read-Only)
 
         private bool _sensor1WaferDetected;
@@ -153,6 +162,8 @@ namespace VisionAlignChamber.ViewModels
 
         #region Commands
 
+        public ICommand InitializeCommand { get; private set; }
+
         public ICommand LiftPinVacuumOnCommand { get; private set; }
         public ICommand LiftPinVacuumOffCommand { get; private set; }
         public ICommand LiftPinBlowOnCommand { get; private set; }
@@ -170,29 +181,47 @@ namespace VisionAlignChamber.ViewModels
 
         private void InitializeCommands()
         {
+            // Initialize Command
+            InitializeCommand = new RelayCommand(ExecuteInitialize, () => !IsInitialized);
+
             // Lift Pin Commands
-            LiftPinVacuumOnCommand = new RelayCommand(() => LiftPinVacuum = true);
-            LiftPinVacuumOffCommand = new RelayCommand(() => LiftPinVacuum = false);
-            LiftPinBlowOnCommand = new RelayCommand(() => LiftPinBlow = true);
-            LiftPinBlowOffCommand = new RelayCommand(() => LiftPinBlow = false);
+            LiftPinVacuumOnCommand = new RelayCommand(() => LiftPinVacuum = true, () => IsInitialized);
+            LiftPinVacuumOffCommand = new RelayCommand(() => LiftPinVacuum = false, () => IsInitialized);
+            LiftPinBlowOnCommand = new RelayCommand(() => LiftPinBlow = true, () => IsInitialized);
+            LiftPinBlowOffCommand = new RelayCommand(() => LiftPinBlow = false, () => IsInitialized);
 
             // Chuck Commands
-            ChuckVacuumOnCommand = new RelayCommand(() => ChuckVacuum = true);
-            ChuckVacuumOffCommand = new RelayCommand(() => ChuckVacuum = false);
-            ChuckBlowOnCommand = new RelayCommand(() => ChuckBlow = true);
-            ChuckBlowOffCommand = new RelayCommand(() => ChuckBlow = false);
+            ChuckVacuumOnCommand = new RelayCommand(() => ChuckVacuum = true, () => IsInitialized);
+            ChuckVacuumOffCommand = new RelayCommand(() => ChuckVacuum = false, () => IsInitialized);
+            ChuckBlowOnCommand = new RelayCommand(() => ChuckBlow = true, () => IsInitialized);
+            ChuckBlowOffCommand = new RelayCommand(() => ChuckBlow = false, () => IsInitialized);
 
             // Vision Light Commands
-            VisionLightOnCommand = new RelayCommand(() => VisionLightOn = true);
-            VisionLightOffCommand = new RelayCommand(() => VisionLightOn = false);
+            VisionLightOnCommand = new RelayCommand(() => VisionLightOn = true, () => IsInitialized);
+            VisionLightOffCommand = new RelayCommand(() => VisionLightOn = false, () => IsInitialized);
 
             // All Off Command
-            AllOutputOffCommand = new RelayCommand(ExecuteAllOutputOff);
+            AllOutputOffCommand = new RelayCommand(ExecuteAllOutputOff, () => IsInitialized);
         }
 
         #endregion
 
         #region Command Implementations
+
+        private void ExecuteInitialize()
+        {
+            StatusMessage = "디지털 IO 초기화 중...";
+            if (_io.Initialize())
+            {
+                StatusMessage = $"디지털 IO 초기화 완료 (모듈 수: {_io.ModuleCount})";
+                OnPropertyChanged(nameof(IsInitialized));
+                RaiseAllCommandsCanExecuteChanged();
+            }
+            else
+            {
+                StatusMessage = "디지털 IO 초기화 실패";
+            }
+        }
 
         private void ExecuteAllOutputOff()
         {
@@ -202,6 +231,22 @@ namespace VisionAlignChamber.ViewModels
             ChuckBlow = false;
             VisionLightOn = false;
             StatusMessage = "모든 출력 OFF";
+        }
+
+        private void RaiseAllCommandsCanExecuteChanged()
+        {
+            ((RelayCommand)InitializeCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)LiftPinVacuumOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)LiftPinVacuumOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)LiftPinBlowOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)LiftPinBlowOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ChuckVacuumOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ChuckVacuumOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ChuckBlowOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ChuckBlowOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)VisionLightOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)VisionLightOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)AllOutputOffCommand).RaiseCanExecuteChanged();
         }
 
         #endregion

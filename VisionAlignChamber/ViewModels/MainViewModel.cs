@@ -3,8 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Models;
-using VisionAlignChamber.Hardware.IO;
-using VisionAlignChamber.Vision;
+using VisionAlignChamber.Core;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -13,6 +12,12 @@ namespace VisionAlignChamber.ViewModels
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        #region Fields
+
+        private VisionAlignerSystem _system;
+
+        #endregion
+
         #region Child ViewModels
 
         public MotionViewModel Motion { get; private set; }
@@ -149,17 +154,28 @@ namespace VisionAlignChamber.ViewModels
         /// <summary>
         /// 하드웨어 연결 후 ViewModel 초기화
         /// </summary>
-        public void Initialize(VisionAlignerMotion motion, VisionAlignerIO io, VisionAlignWrapper vision)
+        public void Initialize(VisionAlignerSystem system)
         {
-            Motion = new MotionViewModel(motion);
-            IO = new IOViewModel(io);
-            Vision = new VisionViewModel(vision);
+            _system = system ?? throw new ArgumentNullException(nameof(system));
+
+            // 이벤트 구독
+            _system.InitializationProgress += OnInitializationProgress;
+
+            // Child ViewModel 생성
+            Motion = new MotionViewModel(_system.Motion);
+            IO = new IOViewModel(_system.IO);
+            Vision = new VisionViewModel(_system.Vision);
 
             OnPropertyChanged(nameof(Motion));
             OnPropertyChanged(nameof(IO));
             OnPropertyChanged(nameof(Vision));
 
             StatusMessage = "시스템 준비 완료";
+        }
+
+        private void OnInitializationProgress(object sender, InitializationProgressEventArgs e)
+        {
+            StatusMessage = e.Message;
         }
 
         #endregion
@@ -198,8 +214,21 @@ namespace VisionAlignChamber.ViewModels
                 CurrentStatus = SystemStatus.Running;
                 StatusMessage = "시스템 초기화 중...";
 
-                // Vision 초기화
-                Vision?.UpdateStatus();
+                // VisionAlignerSystem을 통해 초기화 (비즈니스 로직)
+                if (_system == null)
+                {
+                    throw new InvalidOperationException("VisionAlignerSystem이 설정되지 않았습니다.");
+                }
+
+                if (!_system.InitializeAll())
+                {
+                    throw new Exception(_system.LastError ?? "시스템 초기화 실패");
+                }
+
+                // ViewModel 상태 갱신
+                OnPropertyChanged(nameof(Motion));
+                OnPropertyChanged(nameof(IO));
+                OnPropertyChanged(nameof(Vision));
 
                 IsInitialized = true;
                 CurrentStatus = SystemStatus.Idle;
@@ -222,7 +251,11 @@ namespace VisionAlignChamber.ViewModels
                 CurrentStatus = SystemStatus.Running;
                 StatusMessage = "원점 복귀 중...";
 
-                Motion?.HomeAllCommand?.Execute(null);
+                // VisionAlignerSystem을 통해 원점 복귀 (비즈니스 로직)
+                if (!_system.HomeAll())
+                {
+                    throw new Exception(_system.LastError ?? "원점 복귀 실패");
+                }
 
                 IsHomed = true;
                 CurrentStatus = SystemStatus.Idle;
@@ -240,8 +273,8 @@ namespace VisionAlignChamber.ViewModels
 
         private void ExecuteEmergencyStop()
         {
-            Motion?.EmergencyStopAllCommand?.Execute(null);
-            IO?.AllOutputOffCommand?.Execute(null);
+            // VisionAlignerSystem을 통해 비상 정지 (비즈니스 로직)
+            _system?.EmergencyStop();
 
             CurrentStatus = SystemStatus.EMO;
             StatusMessage = "비상 정지!";
@@ -317,9 +350,18 @@ namespace VisionAlignChamber.ViewModels
 
         protected override void OnDisposing()
         {
+            // 이벤트 구독 해제
+            if (_system != null)
+            {
+                _system.InitializationProgress -= OnInitializationProgress;
+            }
+
+            // Child ViewModel Dispose
             Motion?.Dispose();
             IO?.Dispose();
             Vision?.Dispose();
+
+            // VisionAlignerSystem은 MainForm에서 관리 (여기서 Dispose하지 않음)
             base.OnDisposing();
         }
 

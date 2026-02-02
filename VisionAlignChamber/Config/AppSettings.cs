@@ -236,6 +236,45 @@ namespace VisionAlignChamber.Config
                     AddDllDirectory(ezDir);
                 }
             }
+
+            // Vision (OpenCvSharp) 네이티브 DLL 경로 설정
+            SetVisionDllSearchPath();
+        }
+
+        /// <summary>
+        /// Vision 관련 네이티브 DLL 검색 경로 설정
+        /// OpenCvSharpExtern.dll 등 네이티브 DLL 로딩에 필요
+        /// </summary>
+        private static void SetVisionDllSearchPath()
+        {
+            // Settings.ini에서 경로 읽기
+            string visionNativePath = ReadValue("Vision", "OpenCvNative_Path", "");
+
+            if (string.IsNullOrEmpty(visionNativePath))
+            {
+                // 기본 경로: 실행파일 폴더 또는 x64 하위 폴더
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string x64Dir = Path.Combine(baseDir, "x64");
+
+                if (Directory.Exists(x64Dir))
+                {
+                    visionNativePath = x64Dir;
+                }
+                else
+                {
+                    visionNativePath = baseDir;
+                }
+            }
+            else if (!Path.IsPathRooted(visionNativePath))
+            {
+                visionNativePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, visionNativePath);
+            }
+
+            if (Directory.Exists(visionNativePath))
+            {
+                AddDllDirectory(visionNativePath);
+                System.Diagnostics.Debug.WriteLine($"Vision DLL path added: {visionNativePath}");
+            }
         }
 
         #endregion
@@ -340,6 +379,10 @@ eMotionAlign_Path=
 
 ; OpenCvSharp.dll 경로 (비어있으면 기본 경로 사용)
 OpenCvSharp_Path=
+
+; OpenCvSharpExtern.dll 네이티브 DLL 폴더 경로
+; 비어있으면 실행파일 폴더 또는 x64 하위 폴더 사용
+OpenCvNative_Path=
 
 [Motion]
 ; 기본 모션 파라미터

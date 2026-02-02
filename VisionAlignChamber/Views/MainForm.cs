@@ -5,6 +5,7 @@ using VisionAlignChamber.ViewModels;
 using VisionAlignChamber.Hardware.IO;
 using VisionAlignChamber.Hardware.Ajin;
 using VisionAlignChamber.Vision;
+using VisionAlignChamber.Core;
 
 namespace VisionAlignChamber.Views
 {
@@ -27,6 +28,9 @@ namespace VisionAlignChamber.Views
         private VisionAlignerMotion _vaMotion;
         private VisionAlignerIO _vaIO;
         private VisionAlignWrapper _vision;
+
+        // 비즈니스 로직 (Core)
+        private VisionAlignerSystem _system;
 
         #endregion
 
@@ -62,9 +66,12 @@ namespace VisionAlignChamber.Views
                 _vaIO = new VisionAlignerIO(_digitalIO, _ioMapping);
                 _vision = new VisionAlignWrapper();
 
+                // VisionAlignerSystem 생성 (비즈니스 로직 레이어)
+                _system = new VisionAlignerSystem(_vaMotion, _vaIO, _vision);
+
                 // ViewModel 생성 및 초기화
                 _viewModel = new MainViewModel();
-                _viewModel.Initialize(_vaMotion, _vaIO, _vision);
+                _viewModel.Initialize(_system);
 
                 UpdateStatusMessage("시스템 준비 완료");
             }
@@ -202,9 +209,9 @@ namespace VisionAlignChamber.Views
             _updateTimer?.Dispose();
 
             _viewModel?.Dispose();
-            _vision?.Dispose();
-            _motionController?.Dispose();
-            _digitalIO?.Dispose();
+
+            // VisionAlignerSystem이 내부적으로 모든 하드웨어 종료 처리
+            _system?.Dispose();
         }
 
         #endregion

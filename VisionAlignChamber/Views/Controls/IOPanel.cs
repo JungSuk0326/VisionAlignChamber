@@ -60,8 +60,19 @@ namespace VisionAlignChamber.Views.Controls
         {
             if (_viewModel == null) return;
 
+            UpdateInitStatus();
             UpdateInputStatus();
             UpdateOutputStatus();
+        }
+
+        private void UpdateInitStatus()
+        {
+            // 초기화 상태 표시
+            lblInitStatus.Text = _viewModel.IsInitialized ? "Initialized" : "Not Initialized";
+            lblInitStatus.ForeColor = _viewModel.IsInitialized ? Color.LimeGreen : Color.Gray;
+
+            // 버튼 활성화 상태
+            btnInitialize.Enabled = !_viewModel.IsInitialized;
         }
 
         private void UpdateInputStatus()
@@ -92,6 +103,15 @@ namespace VisionAlignChamber.Views.Controls
         private void UpdateIndicator(Label label, bool isOn)
         {
             label.BackColor = isOn ? Color.LimeGreen : Color.Gray;
+        }
+
+        #endregion
+
+        #region Event Handlers - Initialize
+
+        private void btnInitialize_Click(object sender, EventArgs e)
+        {
+            _viewModel?.InitializeCommand?.Execute(null);
         }
 
         #endregion

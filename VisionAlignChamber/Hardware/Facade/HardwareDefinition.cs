@@ -1,6 +1,6 @@
 using System;
 
-namespace VisionAlignChamber.Hardware.IO
+namespace VisionAlignChamber.Hardware.Facade
 {
     /// <summary>
     /// Vision Aligner Digital Input 정의
@@ -102,6 +102,11 @@ namespace VisionAlignChamber.Hardware.IO
         public string Description { get; set; }
 
         /// <summary>
+        /// 축 활성화 여부 (INI 설정으로 테스트 시 특정 축만 사용 가능)
+        /// </summary>
+        public bool Enabled { get; set; }
+
+        /// <summary>
         /// 기본 속도 (pulse/sec)
         /// </summary>
         public double DefaultVelocity { get; set; }
@@ -120,6 +125,7 @@ namespace VisionAlignChamber.Hardware.IO
         {
             AxisNo = axisNo;
             Description = description;
+            Enabled = true;
             DefaultVelocity = 10000;
             DefaultAccel = 50000;
             DefaultDecel = 50000;

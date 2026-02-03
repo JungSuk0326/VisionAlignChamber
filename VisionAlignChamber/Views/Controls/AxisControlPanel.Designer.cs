@@ -22,6 +22,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblAxisName = new System.Windows.Forms.Label();
             this.panelStatus = new System.Windows.Forms.Panel();
             this.btnServo = new System.Windows.Forms.Button();
+            this.btnAlarmClear = new System.Windows.Forms.Button();
             this.lblMovingStatus = new System.Windows.Forms.Label();
             this.chkHomed = new System.Windows.Forms.CheckBox();
             this.panelButtons = new System.Windows.Forms.Panel();
@@ -102,6 +103,7 @@ namespace VisionAlignChamber.Views.Controls
             // 
             this.tableLayout.SetColumnSpan(this.panelStatus, 2);
             this.panelStatus.Controls.Add(this.btnServo);
+            this.panelStatus.Controls.Add(this.btnAlarmClear);
             this.panelStatus.Controls.Add(this.lblMovingStatus);
             this.panelStatus.Controls.Add(this.chkHomed);
             this.panelStatus.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -116,13 +118,28 @@ namespace VisionAlignChamber.Views.Controls
             this.btnServo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnServo.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
             this.btnServo.ForeColor = System.Drawing.Color.White;
-            this.btnServo.Location = new System.Drawing.Point(140, 0);
+            this.btnServo.Location = new System.Drawing.Point(115, 0);
             this.btnServo.Name = "btnServo";
-            this.btnServo.Size = new System.Drawing.Size(42, 20);
+            this.btnServo.Size = new System.Drawing.Size(32, 20);
             this.btnServo.TabIndex = 2;
             this.btnServo.Text = "OFF";
             this.btnServo.UseVisualStyleBackColor = false;
             this.btnServo.Click += new System.EventHandler(this.btnServo_Click);
+            // 
+            // btnAlarmClear
+            // 
+            this.btnAlarmClear.BackColor = System.Drawing.Color.DarkGray;
+            this.btnAlarmClear.Enabled = false;
+            this.btnAlarmClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAlarmClear.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
+            this.btnAlarmClear.ForeColor = System.Drawing.Color.White;
+            this.btnAlarmClear.Location = new System.Drawing.Point(150, 0);
+            this.btnAlarmClear.Name = "btnAlarmClear";
+            this.btnAlarmClear.Size = new System.Drawing.Size(32, 20);
+            this.btnAlarmClear.TabIndex = 4;
+            this.btnAlarmClear.Text = "CLR";
+            this.btnAlarmClear.UseVisualStyleBackColor = false;
+            this.btnAlarmClear.Click += new System.EventHandler(this.btnAlarmClear_Click);
             // 
             // lblMovingStatus
             // 
@@ -139,7 +156,7 @@ namespace VisionAlignChamber.Views.Controls
             // 
             this.chkHomed.AutoSize = true;
             this.chkHomed.Enabled = false;
-            this.chkHomed.Location = new System.Drawing.Point(70, 2);
+            this.chkHomed.Location = new System.Drawing.Point(50, 2);
             this.chkHomed.Name = "chkHomed";
             this.chkHomed.Size = new System.Drawing.Size(66, 19);
             this.chkHomed.TabIndex = 1;
@@ -347,5 +364,6 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Panel panelJog;
         private System.Windows.Forms.Button btnJogMinus;
         private System.Windows.Forms.Button btnJogPlus;
+        private System.Windows.Forms.Button btnAlarmClear;
     }
 }

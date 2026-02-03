@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VisionAlignChamber.Interfaces;
 
-namespace VisionAlignChamber.Hardware.IO
+namespace VisionAlignChamber.Hardware.Facade
 {
     /// <summary>
     /// Vision Aligner 전용 Motion Facade
@@ -14,13 +14,13 @@ namespace VisionAlignChamber.Hardware.IO
         #region Fields
 
         private readonly IMotionController _motion;
-        private readonly IOMapping _mapping;
+        private readonly HardwareMapping _mapping;
 
         #endregion
 
         #region Constructor
 
-        public VisionAlignerMotion(IMotionController motionController, IOMapping mapping)
+        public VisionAlignerMotion(IMotionController motionController, HardwareMapping mapping)
         {
             _motion = motionController ?? throw new ArgumentNullException(nameof(motionController));
             _mapping = mapping ?? throw new ArgumentNullException(nameof(mapping));
@@ -56,6 +56,15 @@ namespace VisionAlignChamber.Hardware.IO
         /// 사용 가능한 축 개수
         /// </summary>
         public int AxisCount => _motion.AxisCount;
+
+        /// <summary>
+        /// 축 활성화 여부 확인 (INI 설정)
+        /// </summary>
+        public bool IsAxisEnabled(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return info.Enabled;
+        }
 
         #endregion
 
@@ -123,6 +132,52 @@ namespace VisionAlignChamber.Hardware.IO
                    IsServoOn(VAMotionAxis.ChuckRotation) &&
                    IsServoOn(VAMotionAxis.CenteringStage_1) &&
                    IsServoOn(VAMotionAxis.CenteringStage_2);
+        }
+
+        #endregion
+
+        #region Alarm Control
+
+        /// <summary>
+        /// 단일 축 알람 상태 확인
+        /// </summary>
+        public bool IsAlarm(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.IsAlarm(info.AxisNo);
+        }
+
+        /// <summary>
+        /// 단일 축 알람 클리어
+        /// </summary>
+        public bool ClearAlarm(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.ClearAlarm(info.AxisNo);
+        }
+
+        /// <summary>
+        /// 모든 축 알람 상태 확인
+        /// </summary>
+        public bool IsAnyAlarm()
+        {
+            return IsAlarm(VAMotionAxis.WedgeUpDown) ||
+                   IsAlarm(VAMotionAxis.ChuckRotation) ||
+                   IsAlarm(VAMotionAxis.CenteringStage_1) ||
+                   IsAlarm(VAMotionAxis.CenteringStage_2);
+        }
+
+        /// <summary>
+        /// 모든 축 알람 클리어
+        /// </summary>
+        public bool ClearAlarmAll()
+        {
+            bool result = true;
+            result &= ClearAlarm(VAMotionAxis.WedgeUpDown);
+            result &= ClearAlarm(VAMotionAxis.ChuckRotation);
+            result &= ClearAlarm(VAMotionAxis.CenteringStage_1);
+            result &= ClearAlarm(VAMotionAxis.CenteringStage_2);
+            return result;
         }
 
         #endregion

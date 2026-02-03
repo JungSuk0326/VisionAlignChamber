@@ -1,0 +1,446 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6" pages="3">
+  <diagram id="architecture-overview" name="Architecture Overview">
+    <mxGraphModel dx="1020" dy="993" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="VisionAlignChamber Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="384" y="20" width="400" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="80" y="80" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1-label" value="Presentation Layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#1a3c6e;" parent="1" vertex="1">
+          <mxGeometry x="90" y="85" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="form1" value="Form1.cs&#xa;(Windows Forms UI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565c0;strokeColor=#003c8f;fontColor=#ffffff;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="480" y="110" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="80" y="200" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2-label" value="Abstraction Layer (Interfaces)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#2e7d32;" parent="1" vertex="1">
+          <mxGeometry x="90" y="205" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="imotion" value="IMotionController&#xa;- ServoOn/Off&#xa;- MoveAbs/Rel&#xa;- HomeMove" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#388e3c;strokeColor=#1b5e20;fontColor=#ffffff;fontSize=11;align=center;" parent="1" vertex="1">
+          <mxGeometry x="160" y="230" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="idio" value="IDigitalIO&#xa;- ReadInputBit&#xa;- WriteOutputBit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#388e3c;strokeColor=#1b5e20;fontColor=#ffffff;fontSize=11;align=center;" parent="1" vertex="1">
+          <mxGeometry x="500" y="230" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ivision" value="IVisionProcessor&#xa;- AddImage&#xa;- ExecuteInspection&#xa;- GetResult" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#388e3c;strokeColor=#1b5e20;fontColor=#ffffff;fontSize=11;align=center;" parent="1" vertex="1">
+          <mxGeometry x="840" y="230" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="layer3-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="80" y="320" width="1000" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="layer3-label" value="Implementation Layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#bf8f00;" parent="1" vertex="1">
+          <mxGeometry x="90" y="325" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ajinmotion" value="AjinMotionController&#xa;&#xa;- AJIN EtherCAT 모션&#xa;- 다축 제어&#xa;- 서보 On/Off" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa000;strokeColor=#c67700;fontColor=#ffffff;fontSize=11;align=center;" parent="1" vertex="1">
+          <mxGeometry x="140" y="350" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ajindio" value="AjinDigitalIO&#xa;&#xa;- AJIN EtherCAT DIO&#xa;- Bit/Byte/Word I/O" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa000;strokeColor=#c67700;fontColor=#ffffff;fontSize=11;align=center;" parent="1" vertex="1">
+          <mxGeometry x="480" y="350" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="visionwrapper" value="VisionAlignWrapper&#xa;&#xa;- eMotionAlign.dll 래퍼&#xa;- 노치/플랫 검출&#xa;- 결과 추출" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffa000;strokeColor=#c67700;fontColor=#ffffff;fontSize=11;align=center;" parent="1" vertex="1">
+          <mxGeometry x="820" y="350" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="layer4-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="80" y="460" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="layer4-label" value="P/Invoke Wrapper Layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#b71c1c;" parent="1" vertex="1">
+          <mxGeometry x="90" y="465" width="180" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="caxm" value="CAXM.cs&#xa;(Motion API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#8e0000;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="120" y="490" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="caxl" value="CAXL.cs&#xa;(Library API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#8e0000;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="240" y="490" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="caxd" value="CAXD.cs&#xa;(DIO API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#8e0000;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="530" y="490" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emotionclass" value="eMotion.ClassAlign&#xa;(C++ Interop)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c62828;strokeColor=#8e0000;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="860" y="490" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="layer5-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="80" y="580" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="layer5-label" value="Native DLL Layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#6a1b9a;" parent="1" vertex="1">
+          <mxGeometry x="90" y="585" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="axldll" value="AXL.dll&#xa;(AJIN EtherCAT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7b1fa2;strokeColor=#4a0072;fontColor=#ffffff;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="610" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ezbasicdll" value="EzBasicAxl.dll&#xa;(AJIN Utility)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7b1fa2;strokeColor=#4a0072;fontColor=#ffffff;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="610" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="emotiondll" value="eMotionAlign.dll&#xa;(Vision Engine)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7b1fa2;strokeColor=#4a0072;fontColor=#ffffff;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="780" y="610" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="opencvdll" value="OpenCvSharp.dll&#xa;(OpenCV)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7b1fa2;strokeColor=#4a0072;fontColor=#ffffff;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="940" y="610" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="layer6-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#9e9e9e;opacity=50;" parent="1" vertex="1">
+          <mxGeometry x="80" y="700" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="layer6-label" value="Hardware Layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#424242;" parent="1" vertex="1">
+          <mxGeometry x="90" y="705" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ethercat" value="AJIN EtherCAT&#xa;Motion Controller" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#616161;strokeColor=#424242;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="170" y="725" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="diomodule" value="AJIN EtherCAT&#xa;DIO Module" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#616161;strokeColor=#424242;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="330" y="725" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="camera" value="Camera&#xa;(Image Sensor)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#616161;strokeColor=#424242;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="870" y="725" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="conn1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="form1" target="imotion" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="form1" target="idio" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" parent="1" source="form1" target="ivision" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;dashed=1;endArrow=block;endFill=0;" parent="1" source="imotion" target="ajinmotion" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;dashed=1;endArrow=block;endFill=0;" parent="1" source="idio" target="ajindio" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;dashed=1;endArrow=block;endFill=0;" parent="1" source="ivision" target="visionwrapper" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="ajinmotion" target="caxm" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="ajinmotion" target="caxl" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="ajindio" target="caxd" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="visionwrapper" target="emotionclass" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="caxm" target="axldll" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="caxl" target="ezbasicdll" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="caxd" target="axldll" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="570" />
+              <mxPoint x="230" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="emotionclass" target="emotiondll" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;endArrow=classic;endFill=1;" parent="1" source="emotiondll" target="opencvdll" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="axldll" target="ethercat" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="ezbasicdll" target="diomodule" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=classic;endFill=1;" parent="1" source="opencvdll" target="camera" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;" parent="1" vertex="1">
+          <mxGeometry x="80" y="820" width="400" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="90" y="825" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" value="" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;endFill=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="100" y="860" as="sourcePoint" />
+            <mxPoint x="150" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend1-text" value="Uses" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="160" y="850" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" value="" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;dashed=1;endFill=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="220" y="860" as="sourcePoint" />
+            <mxPoint x="270" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend2-text" value="Implements" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="280" y="850" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3" value="" style="endArrow=classic;html=1;strokeColor=#999999;strokeWidth=1;endFill=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="860" as="sourcePoint" />
+            <mxPoint x="410" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend3-text" value="Calls" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="420" y="850" width="40" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="waferalign-comparison" name="WaferAlign vs VisionAlignChamber">
+    <mxGraphModel dx="1224" dy="1192" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title2" value="WaferAlign vs VisionAlignChamber Comparison" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="284" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1976d2;opacity=60;" parent="1" vertex="1">
+          <mxGeometry x="80" y="80" width="480" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-title" value="WaferAlign (기존)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="200" y="90" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-ui" value="FormMain.cs&#xa;(Windows Forms)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;fontColor=#ffffff;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="220" y="130" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-vision" value="ClassAlign.cs&#xa;(Vision Processing)&#xa;&#xa;- OpenCV 직접 사용&#xa;- 내부 알고리즘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="100" y="200" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-camera" value="MulticamEx.cs&#xa;(Camera)&#xa;&#xa;- Euresys MultiCam&#xa;- GigE Vision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="280" y="200" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-motor" value="TurnTable.cs&#xa;(Motor Control)&#xa;&#xa;- Serial Port RS-232&#xa;- COM7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="100" y="320" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-light" value="LfineLight.cs&#xa;(Light Control)&#xa;&#xa;- Serial Port RS-232&#xa;- COM1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#42a5f5;strokeColor=#1976d2;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="280" y="320" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-dll1" value="MultiCam.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90caf9;strokeColor=#42a5f5;fontColor=#0d47a1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="100" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-dll2" value="OpenCvSharp.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90caf9;strokeColor=#42a5f5;fontColor=#0d47a1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="240" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-hw1" value="Euresys&#xa;Camera" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#64b5f6;strokeColor=#1976d2;fontColor=#0d47a1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="100" y="500" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-hw2" value="Serial&#xa;Motor" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#64b5f6;strokeColor=#1976d2;fontColor=#0d47a1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="200" y="500" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-hw3" value="Serial&#xa;Light" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#64b5f6;strokeColor=#1976d2;fontColor=#0d47a1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="300" y="500" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wa-char" value="특징:&#xa;• 단일 클래스 구조&#xa;• Serial 통신 기반&#xa;• 비전 알고리즘 내장&#xa;• 상태 머신 패턴" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#64b5f6;fontColor=#0d47a1;fontSize=11;align=left;spacingLeft=10;" parent="1" vertex="1">
+          <mxGeometry x="100" y="580" width="340" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#388e3c;opacity=60;" parent="1" vertex="1">
+          <mxGeometry x="600" y="80" width="500" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-title" value="VisionAlignChamber (신규)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#2e7d32;" parent="1" vertex="1">
+          <mxGeometry x="720" y="90" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-ui" value="Form1.cs&#xa;(Windows Forms)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#388e3c;strokeColor=#1b5e20;fontColor=#ffffff;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="130" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-interfaces" value="Interfaces&#xa;&#xa;IMotionController&#xa;IDigitalIO&#xa;IVisionProcessor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#388e3c;fontColor=#ffffff;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="720" y="200" width="260" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-motion" value="AjinMotionController&#xa;&#xa;- AJIN EtherCAT&#xa;- 다축 제어" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#66bb6a;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="620" y="300" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-dio" value="AjinDigitalIO&#xa;&#xa;- AJIN EtherCAT&#xa;- Bit/Word I/O" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#66bb6a;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="780" y="300" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-vision" value="VisionAlignWrapper&#xa;&#xa;- eMotionAlign.dll&#xa;- 노치/플랫 검출" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#66bb6a;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="940" y="300" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-wrapper" value="P/Invoke Wrapper&#xa;CAXM, CAXL, CAXD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a5d6a7;strokeColor=#81c784;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="620" y="400" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-dll1" value="AXL.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#a5d6a7;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="620" y="460" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-dll2" value="EzBasicAxl.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#a5d6a7;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="725" y="460" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-dll3" value="eMotionAlign.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#a5d6a7;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="830" y="460" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-dll4" value="OpenCvSharp.dll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#a5d6a7;fontColor=#1b5e20;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="945" y="460" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-hw1" value="AJIN&#xa;EtherCAT" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#81c784;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="650" y="520" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-hw2" value="DIO&#xa;Module" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#81c784;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="750" y="520" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-hw3" value="Camera" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#81c784;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="950" y="520" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vac-char" value="특징:&#xa;• 인터페이스 기반 계층화&#xa;• AJIN EtherCAT 사용&#xa;• 비전 엔진 DLL 분리&#xa;• 의존성 역전 원칙 (DIP)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#81c784;fontColor=#1b5e20;fontSize=11;align=left;spacingLeft=10;" parent="1" vertex="1">
+          <mxGeometry x="620" y="600" width="340" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="migration-arrow" value="" style="shape=flexArrow;endArrow=classic;html=1;fillColor=#ff9800;strokeColor=#e65100;width=20;endSize=8;startSize=8;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="470" y="700" as="sourcePoint" />
+            <mxPoint x="610" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="migration-label" value="eMotionAlign.dll&#xa;Migration" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#e65100;" parent="1" vertex="1">
+          <mxGeometry x="530" y="780" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="table-bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;" parent="1" vertex="1">
+          <mxGeometry x="80" y="680" width="480" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="table-header" value="비교 항목" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#cccccc;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="80" y="680" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="table-wa-header" value="WaferAlign" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#cccccc;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="180" y="680" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="table-vac-header" value="VisionAlignChamber" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#cccccc;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="370" y="680" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="row1-label" value="모션 제어" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="80" y="710" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="row1-wa" value="Serial RS-232" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="180" y="710" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="row1-vac" value="AJIN EtherCAT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="370" y="710" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="row2-label" value="비전 엔진" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="80" y="740" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="row2-wa" value="ClassAlign (내장)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="180" y="740" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="row2-vac" value="eMotionAlign.dll (외부)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="370" y="740" width="190" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="vision-workflow" name="Vision Inspection Workflow">
+    <mxGraphModel dx="1434" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title3" value="Vision Inspection Workflow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="384" y="20" width="400" height="40" as="geometry" />
+        </mxCell>
+        <!-- Start -->
+        <mxCell id="start" value="Start" style="ellipse;whiteSpace=wrap;html=1;fillColor=#4caf50;strokeColor=#2e7d32;fontColor=#ffffff;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="534" y="80" width="100" height="50" as="geometry" />
+        </mxCell>
+        <!-- Step 1: Initialize -->
+        <mxCell id="step1" value="1. 초기화&#xa;&#xa;• AjinMotionController.Initialize()&#xa;• AjinDigitalIO.Initialize()&#xa;• VisionAlignWrapper.Initialize()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196f3;strokeColor=#1565c0;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="160" width="240" height="100" as="geometry" />
+        </mxCell>
+        <!-- Step 2: Home -->
+        <mxCell id="step2" value="2. 원점 복귀&#xa;&#xa;• MotionController.HomeMove()&#xa;• Wait for IsHomeDone()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196f3;strokeColor=#1565c0;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="290" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- Step 3: Move to Position -->
+        <mxCell id="step3" value="3. 촬영 위치 이동&#xa;&#xa;• MotionController.MoveAbs(angle)&#xa;• Wait for IsMotionDone()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196f3;strokeColor=#1565c0;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="400" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- Step 4: Capture Image -->
+        <mxCell id="step4" value="4. 이미지 획득&#xa;&#xa;• Camera.Trigger()&#xa;• VisionProcessor.AddImage(buffer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ff9800;strokeColor=#e65100;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="510" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- Decision: More angles? -->
+        <mxCell id="decision1" value="24개 이미지&#xa;완료?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffeb3b;strokeColor=#f9a825;fontColor=#333333;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="514" y="620" width="140" height="80" as="geometry" />
+        </mxCell>
+        <!-- Loop back arrow -->
+        <mxCell id="loop1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#f9a825;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="decision1" target="step3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="660" />
+              <mxPoint x="760" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loop1-label" value="No&#xa;(다음 각도)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#f9a825;" vertex="1" parent="1">
+          <mxGeometry x="670" y="640" width="60" height="30" as="geometry" />
+        </mxCell>
+        <!-- Step 5: Vision Processing -->
+        <mxCell id="step5" value="5. 비전 검사 실행&#xa;&#xa;• VisionProcessor.ExecuteInspection(isFlat)&#xa;• eMotionAlign.dll 내부 처리:&#xa;  - 노치/플랫 검출&#xa;  - 웨이퍼 중심 계산&#xa;  - 각도 측정" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9c27b0;strokeColor=#6a1b9a;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="730" width="240" height="120" as="geometry" />
+        </mxCell>
+        <!-- Step 6: Get Results -->
+        <mxCell id="step6" value="6. 결과 추출&#xa;&#xa;• WaferAlignResult result = GetResult()&#xa;  - Index1st, Index2nd&#xa;  - OffAngle, AbsAngle&#xa;  - Wafer (CenterX, CenterY, Radius)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e91e63;strokeColor=#ad1457;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="880" width="240" height="110" as="geometry" />
+        </mxCell>
+        <!-- Step 7: Correction Move -->
+        <mxCell id="step7" value="7. 보정 이동&#xa;&#xa;• 각도 보정: MoveRel(OffAngle)&#xa;• 위치 보정: MoveAbsMulti(CenterX, CenterY)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00bcd4;strokeColor=#00838f;fontColor=#ffffff;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="464" y="1020" width="240" height="80" as="geometry" />
+        </mxCell>
+        <!-- End -->
+        <mxCell id="end" value="End" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f44336;strokeColor=#c62828;fontColor=#ffffff;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="534" y="1130" width="100" height="50" as="geometry" />
+        </mxCell>
+        <!-- Arrows -->
+        <mxCell id="arr1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="start" target="step1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step2" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step4" target="decision1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="decision1" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr6-label" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1;fontColor=#4caf50;" vertex="1" parent="1">
+          <mxGeometry x="590" y="700" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="arr7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step5" target="step6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step6" target="step7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="step7" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Side annotations -->
+        <mxCell id="note1" value="AJIN EtherCAT&#xa;모션 컨트롤러" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff9c4;strokeColor=#fbc02d;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="200" y="330" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note1-conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#fbc02d;strokeWidth=1;dashed=1;endArrow=none;endFill=0;" edge="1" parent="1" source="note1" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" value="카메라&#xa;(추가 구현 필요)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffccbc;strokeColor=#e64a19;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="200" y="520" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note2-conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e64a19;strokeWidth=1;dashed=1;endArrow=none;endFill=0;" edge="1" parent="1" source="note2" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note3" value="eMotionAlign.dll&#xa;비전 엔진" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#e1bee7;strokeColor=#8e24aa;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="800" y="760" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note3-conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8e24aa;strokeWidth=1;dashed=1;endArrow=none;endFill=0;" edge="1" parent="1" source="note3" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

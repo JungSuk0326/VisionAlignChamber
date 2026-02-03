@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using VisionAlignChamber.Interfaces;
 
-namespace VisionAlignChamber.Hardware.IO
+namespace VisionAlignChamber.Hardware.Facade
 {
     /// <summary>
     /// Vision Aligner 전용 I/O Facade
@@ -13,13 +13,13 @@ namespace VisionAlignChamber.Hardware.IO
         #region Fields
 
         private readonly IDigitalIO _dio;
-        private readonly IOMapping _mapping;
+        private readonly HardwareMapping _mapping;
 
         #endregion
 
         #region Constructor
 
-        public VisionAlignerIO(IDigitalIO digitalIO, IOMapping mapping)
+        public VisionAlignerIO(IDigitalIO digitalIO, HardwareMapping mapping)
         {
             _dio = digitalIO ?? throw new ArgumentNullException(nameof(digitalIO));
             _mapping = mapping ?? throw new ArgumentNullException(nameof(mapping));

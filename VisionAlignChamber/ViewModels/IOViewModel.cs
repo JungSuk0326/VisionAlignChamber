@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
-using VisionAlignChamber.Hardware.IO;
+using VisionAlignChamber.Hardware.Facade;
 
 namespace VisionAlignChamber.ViewModels
 {

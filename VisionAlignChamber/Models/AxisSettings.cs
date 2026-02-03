@@ -1,5 +1,5 @@
 using System;
-using VisionAlignChamber.Hardware.IO;
+using VisionAlignChamber.Hardware.Facade;
 
 namespace VisionAlignChamber.Models
 {

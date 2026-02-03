@@ -69,6 +69,18 @@ namespace VisionAlignChamber.Views.Controls
             // 홈 상태 표시
             chkHomed.Checked = _viewModel.IsHomed;
 
+            // 알람 상태 표시 (CLR 버튼)
+            if (_viewModel.IsAlarm)
+            {
+                btnAlarmClear.Enabled = true;
+                btnAlarmClear.BackColor = Color.Red;
+            }
+            else
+            {
+                btnAlarmClear.Enabled = false;
+                btnAlarmClear.BackColor = Color.DarkGray;
+            }
+
             // 서보 상태 표시
             if (_viewModel.IsServoOn)
             {
@@ -81,8 +93,8 @@ namespace VisionAlignChamber.Views.Controls
                 btnServo.BackColor = Color.Gray;
             }
 
-            // 버튼 활성화 상태
-            bool canMove = _viewModel.IsEnabled && !_viewModel.IsMoving && _viewModel.IsServoOn;
+            // 버튼 활성화 상태 (알람 시 비활성화)
+            bool canMove = _viewModel.IsEnabled && !_viewModel.IsMoving && _viewModel.IsServoOn && !_viewModel.IsAlarm;
             btnHome.Enabled = canMove;
             btnMove.Enabled = canMove;
             btnJogPlus.Enabled = canMove;
@@ -142,6 +154,11 @@ namespace VisionAlignChamber.Views.Controls
         private void btnServo_Click(object sender, EventArgs e)
         {
             _viewModel?.ServoToggleCommand?.Execute(null);
+        }
+
+        private void btnAlarmClear_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ClearAlarmCommand?.Execute(null);
         }
 
         #endregion

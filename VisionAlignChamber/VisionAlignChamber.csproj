@@ -111,11 +111,11 @@
     <!-- 아진 컨트롤러 -->
     <Compile Include="Hardware\Ajin\AjinMotionController.cs" />
     <Compile Include="Hardware\Ajin\AjinDigitalIO.cs" />
-    <!-- I/O 추상화 -->
-    <Compile Include="Hardware\IO\IODefinition.cs" />
-    <Compile Include="Hardware\IO\IOMapping.cs" />
-    <Compile Include="Hardware\IO\VisionAlignerIO.cs" />
-    <Compile Include="Hardware\IO\VisionAlignerMotion.cs" />
+    <!-- Hardware Facade (I/O 및 Motion 추상화) -->
+    <Compile Include="Hardware\Facade\HardwareDefinition.cs" />
+    <Compile Include="Hardware\Facade\HardwareMapping.cs" />
+    <Compile Include="Hardware\Facade\VisionAlignerIO.cs" />
+    <Compile Include="Hardware\Facade\VisionAlignerMotion.cs" />
     <!-- Core (비즈니스 로직) -->
     <Compile Include="Core\VisionAlignerSystem.cs" />
     <!-- 비전 -->
@@ -226,6 +226,9 @@
     <Content Include="Vision\eMotion\DLLs\opencv_videoio_ffmpeg4110_64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hardware\Eddy\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

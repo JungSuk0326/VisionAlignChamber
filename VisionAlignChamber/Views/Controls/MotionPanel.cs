@@ -49,13 +49,26 @@ namespace VisionAlignChamber.Views.Controls
 
             if (_viewModel == null) return;
 
-            // 개별 축 바인딩
-            axisWedge.BindViewModel(_viewModel.WedgeAxis);
-            axisChuck.BindViewModel(_viewModel.ChuckAxis);
-            axisCentering1.BindViewModel(_viewModel.CenteringStage1Axis);
-            axisCentering2.BindViewModel(_viewModel.CenteringStage2Axis);
+            // 개별 축 바인딩 (활성화된 축만 표시)
+            BindAxisPanel(axisWedge, _viewModel.WedgeAxis);
+            BindAxisPanel(axisChuck, _viewModel.ChuckAxis);
+            BindAxisPanel(axisCentering1, _viewModel.CenteringStage1Axis);
+            BindAxisPanel(axisCentering2, _viewModel.CenteringStage2Axis);
 
             _updateTimer.Start();
+        }
+
+        private void BindAxisPanel(AxisControlPanel panel, AxisViewModel axis)
+        {
+            if (axis.IsEnabled)
+            {
+                panel.BindViewModel(axis);
+                panel.Visible = true;
+            }
+            else
+            {
+                panel.Visible = false;
+            }
         }
 
         #endregion
@@ -66,11 +79,11 @@ namespace VisionAlignChamber.Views.Controls
         {
             if (_viewModel == null) return;
 
-            // 각 축 UI 업데이트
-            axisWedge.UpdateDisplay();
-            axisChuck.UpdateDisplay();
-            axisCentering1.UpdateDisplay();
-            axisCentering2.UpdateDisplay();
+            // 활성화된 축만 UI 업데이트
+            if (axisWedge.Visible) axisWedge.UpdateDisplay();
+            if (axisChuck.Visible) axisChuck.UpdateDisplay();
+            if (axisCentering1.Visible) axisCentering1.UpdateDisplay();
+            if (axisCentering2.Visible) axisCentering2.UpdateDisplay();
 
             // 전체 상태 업데이트
             UpdateGlobalStatus();

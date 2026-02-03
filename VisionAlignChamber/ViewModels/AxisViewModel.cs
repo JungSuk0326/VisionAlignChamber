@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
-using VisionAlignChamber.Hardware.IO;
+using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Models;
 
 namespace VisionAlignChamber.ViewModels
@@ -137,6 +137,16 @@ namespace VisionAlignChamber.ViewModels
             set => SetProperty(ref _isServoOn, value);
         }
 
+        private bool _isAlarm;
+        /// <summary>
+        /// 알람 발생 여부
+        /// </summary>
+        public bool IsAlarm
+        {
+            get => _isAlarm;
+            set => SetProperty(ref _isAlarm, value);
+        }
+
         private string _statusMessage;
         /// <summary>
         /// 상태 메시지
@@ -201,6 +211,11 @@ namespace VisionAlignChamber.ViewModels
         /// </summary>
         public ICommand ServoToggleCommand { get; private set; }
 
+        /// <summary>
+        /// 알람 클리어 명령
+        /// </summary>
+        public ICommand ClearAlarmCommand { get; private set; }
+
         private void InitializeCommands()
         {
             HomeCommand = new RelayCommand(ExecuteHome, CanExecuteMotion);
@@ -213,6 +228,7 @@ namespace VisionAlignChamber.ViewModels
             ServoOnCommand = new RelayCommand(ExecuteServoOn, () => !IsServoOn);
             ServoOffCommand = new RelayCommand(ExecuteServoOff, () => IsServoOn);
             ServoToggleCommand = new RelayCommand(ExecuteServoToggle);
+            ClearAlarmCommand = new RelayCommand(ExecuteClearAlarm, () => IsAlarm);
         }
 
         #endregion
@@ -352,6 +368,27 @@ namespace VisionAlignChamber.ViewModels
                 ExecuteServoOn();
         }
 
+        private void ExecuteClearAlarm()
+        {
+            try
+            {
+                if (_motion.ClearAlarm(_axis))
+                {
+                    IsAlarm = false;
+                    HasError = false;
+                    StatusMessage = "Alarm Cleared";
+                }
+                else
+                {
+                    StatusMessage = "Alarm Clear 실패";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Alarm Clear 오류: {ex.Message}";
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -364,6 +401,13 @@ namespace VisionAlignChamber.ViewModels
             Position = _motion.GetPosition(_axis);
             IsMoving = _motion.IsMoving(_axis);
             IsServoOn = _motion.IsServoOn(_axis);
+            IsAlarm = _motion.IsAlarm(_axis);
+
+            // 알람 발생 시 HasError 설정
+            if (IsAlarm)
+            {
+                HasError = true;
+            }
 
             // Command 실행 가능 상태 갱신
             RaiseCanExecuteChanged();
@@ -404,6 +448,7 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)StopCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ServoOnCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ServoOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ClearAlarmCommand).RaiseCanExecuteChanged();
         }
 
         #endregion

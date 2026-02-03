@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using VisionAlignChamber.ViewModels;
-using VisionAlignChamber.Hardware.IO;
+using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Hardware.Ajin;
 using VisionAlignChamber.Vision;
 using VisionAlignChamber.Core;
@@ -24,7 +24,7 @@ namespace VisionAlignChamber.Views
         // 하드웨어 (실제 연결 시 사용)
         private AjinMotionController _motionController;
         private AjinDigitalIO _digitalIO;
-        private IOMapping _ioMapping;
+        private HardwareMapping _hardwareMapping;
         private VisionAlignerMotion _vaMotion;
         private VisionAlignerIO _vaIO;
         private VisionAlignWrapper _vision;
@@ -59,11 +59,11 @@ namespace VisionAlignChamber.Views
                 // 하드웨어 초기화 (시뮬레이션 모드로 시작 가능)
                 _motionController = new AjinMotionController();
                 _digitalIO = new AjinDigitalIO();
-                _ioMapping = new IOMapping(configPath);
+                _hardwareMapping = new HardwareMapping(configPath);
 
                 // Facade 생성
-                _vaMotion = new VisionAlignerMotion(_motionController, _ioMapping);
-                _vaIO = new VisionAlignerIO(_digitalIO, _ioMapping);
+                _vaMotion = new VisionAlignerMotion(_motionController, _hardwareMapping);
+                _vaIO = new VisionAlignerIO(_digitalIO, _hardwareMapping);
                 _vision = new VisionAlignWrapper();
 
                 // VisionAlignerSystem 생성 (비즈니스 로직 레이어)

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
-using VisionAlignChamber.Hardware.IO;
+using VisionAlignChamber.Hardware.Facade;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -30,6 +30,12 @@ namespace VisionAlignChamber.ViewModels
             ChuckAxis = new AxisViewModel(motion, VAMotionAxis.ChuckRotation, "Chuck Rotation", "degree");
             CenteringStage1Axis = new AxisViewModel(motion, VAMotionAxis.CenteringStage_1, "Centering Stage 1", "pulse");
             CenteringStage2Axis = new AxisViewModel(motion, VAMotionAxis.CenteringStage_2, "Centering Stage 2", "pulse");
+
+            // INI 설정에서 축 활성화 상태 반영
+            WedgeAxis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.WedgeUpDown);
+            ChuckAxis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.ChuckRotation);
+            CenteringStage1Axis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.CenteringStage_1);
+            CenteringStage2Axis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.CenteringStage_2);
 
             // 전체 축 리스트 (반복 처리용)
             _allAxes = new List<AxisViewModel>
@@ -135,12 +141,18 @@ namespace VisionAlignChamber.ViewModels
         /// </summary>
         public ICommand EmergencyStopAllCommand { get; private set; }
 
+        /// <summary>
+        /// 전체 축 알람 클리어 명령
+        /// </summary>
+        public ICommand ClearAllAlarmsCommand { get; private set; }
+
         private void InitializeCommands()
         {
             InitializeCommand = new RelayCommand(ExecuteInitialize, () => !IsInitialized);
             HomeAllCommand = new RelayCommand(ExecuteHomeAll, () => IsInitialized && !IsAnyAxisMoving);
             StopAllCommand = new RelayCommand(ExecuteStopAll);
             EmergencyStopAllCommand = new RelayCommand(ExecuteEmergencyStopAll);
+            ClearAllAlarmsCommand = new RelayCommand(ExecuteClearAllAlarms, () => IsInitialized);
         }
 
         #endregion
@@ -179,6 +191,19 @@ namespace VisionAlignChamber.ViewModels
         {
             _motion.EmergencyStopAll();
             StatusMessage = "비상 정지!";
+        }
+
+        private void ExecuteClearAllAlarms()
+        {
+            StatusMessage = "전체 축 알람 클리어 중...";
+            if (_motion.ClearAlarmAll())
+            {
+                StatusMessage = "전체 축 알람 클리어 완료";
+            }
+            else
+            {
+                StatusMessage = "알람 클리어 실패";
+            }
         }
 
         #endregion

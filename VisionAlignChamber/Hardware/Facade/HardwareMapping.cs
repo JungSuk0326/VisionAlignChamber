@@ -4,13 +4,13 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace VisionAlignChamber.Hardware.IO
+namespace VisionAlignChamber.Hardware.Facade
 {
     /// <summary>
     /// I/O 및 Motion 채널 매핑 관리
     /// Settings.ini 파일에서 매핑 정보를 로드
     /// </summary>
-    public class IOMapping
+    public class HardwareMapping
     {
         #region Win32 API
 
@@ -51,7 +51,7 @@ namespace VisionAlignChamber.Hardware.IO
 
         #region Constructor
 
-        public IOMapping(string configFilePath)
+        public HardwareMapping(string configFilePath)
         {
             _configFilePath = configFilePath;
             _diMapping = new Dictionary<VADigitalInput, IOChannelInfo>();
@@ -186,12 +186,14 @@ namespace VisionAlignChamber.Hardware.IO
                 double velocity = ReadDouble("Motion_Axis", $"{key}_Velocity", 10000);
                 double accel = ReadDouble("Motion_Axis", $"{key}_Accel", 50000);
                 double decel = ReadDouble("Motion_Axis", $"{key}_Decel", 50000);
+                bool enabled = ReadBool("Motion_Axis", $"{key}_Enabled", true);
 
                 _axisMapping[axis] = new AxisInfo(axisNo, key)
                 {
                     DefaultVelocity = velocity,
                     DefaultAccel = accel,
-                    DefaultDecel = decel
+                    DefaultDecel = decel,
+                    Enabled = enabled
                 };
             }
         }
@@ -237,6 +239,12 @@ namespace VisionAlignChamber.Hardware.IO
         {
             string value = ReadValue(section, key, defaultValue.ToString());
             return double.TryParse(value, out double result) ? result : defaultValue;
+        }
+
+        private bool ReadBool(string section, string key, bool defaultValue)
+        {
+            string value = ReadValue(section, key, defaultValue ? "true" : "false").ToLower();
+            return value == "true" || value == "1" || value == "yes";
         }
 
         #endregion

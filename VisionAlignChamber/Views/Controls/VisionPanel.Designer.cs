@@ -23,6 +23,23 @@ namespace VisionAlignChamber.Views.Controls
             this.grpMode = new System.Windows.Forms.GroupBox();
             this.rdoFlat = new System.Windows.Forms.RadioButton();
             this.rdoNotch = new System.Windows.Forms.RadioButton();
+            this.grpRunning = new System.Windows.Forms.GroupBox();
+            this.lblRunStep = new System.Windows.Forms.Label();
+            this.txtRunStep = new System.Windows.Forms.TextBox();
+            this.lblRunCnt = new System.Windows.Forms.Label();
+            this.txtRunCnt = new System.Windows.Forms.TextBox();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnRun = new System.Windows.Forms.Button();
+            this.lblDeg = new System.Windows.Forms.Label();
+            this.txtDeg = new System.Windows.Forms.TextBox();
+            this.lblCount = new System.Windows.Forms.Label();
+            this.numCount = new System.Windows.Forms.NumericUpDown();
+            this.grpSetting = new System.Windows.Forms.GroupBox();
+            this.btnFileSave = new System.Windows.Forms.Button();
+            this.btnTrigger = new System.Windows.Forms.Button();
+            this.btnGrabberActive = new System.Windows.Forms.Button();
+            this.btnCamOpen = new System.Windows.Forms.Button();
+            this.lblCamFile = new System.Windows.Forms.Label();
             this.grpControl = new System.Windows.Forms.GroupBox();
             this.btnExecute = new System.Windows.Forms.Button();
             this.btnClearImages = new System.Windows.Forms.Button();
@@ -44,6 +61,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.grpStatus.SuspendLayout();
             this.grpMode.SuspendLayout();
+            this.grpRunning.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numCount)).BeginInit();
+            this.grpSetting.SuspendLayout();
             this.grpControl.SuspendLayout();
             this.grpResult.SuspendLayout();
             this.pnlStatusBar.SuspendLayout();
@@ -138,6 +158,202 @@ namespace VisionAlignChamber.Views.Controls
             this.rdoFlat.UseVisualStyleBackColor = true;
             this.rdoFlat.CheckedChanged += new System.EventHandler(this.rdoFlat_CheckedChanged);
             //
+            // grpRunning
+            //
+            this.grpRunning.Controls.Add(this.lblRunStep);
+            this.grpRunning.Controls.Add(this.txtRunStep);
+            this.grpRunning.Controls.Add(this.lblRunCnt);
+            this.grpRunning.Controls.Add(this.txtRunCnt);
+            this.grpRunning.Controls.Add(this.btnStop);
+            this.grpRunning.Controls.Add(this.btnRun);
+            this.grpRunning.Controls.Add(this.lblDeg);
+            this.grpRunning.Controls.Add(this.txtDeg);
+            this.grpRunning.Controls.Add(this.lblCount);
+            this.grpRunning.Controls.Add(this.numCount);
+            this.grpRunning.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpRunning.Location = new System.Drawing.Point(0, 125);
+            this.grpRunning.Name = "grpRunning";
+            this.grpRunning.Size = new System.Drawing.Size(350, 120);
+            this.grpRunning.TabIndex = 2;
+            this.grpRunning.TabStop = false;
+            this.grpRunning.Text = "Running";
+            //
+            // lblCount
+            //
+            this.lblCount.AutoSize = true;
+            this.lblCount.Location = new System.Drawing.Point(15, 28);
+            this.lblCount.Name = "lblCount";
+            this.lblCount.Size = new System.Drawing.Size(45, 15);
+            this.lblCount.TabIndex = 0;
+            this.lblCount.Text = "Count:";
+            //
+            // numCount
+            //
+            this.numCount.Font = new System.Drawing.Font("맑은 고딕", 11F, System.Drawing.FontStyle.Bold);
+            this.numCount.Location = new System.Drawing.Point(70, 22);
+            this.numCount.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            this.numCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.numCount.Name = "numCount";
+            this.numCount.Size = new System.Drawing.Size(70, 27);
+            this.numCount.TabIndex = 1;
+            this.numCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numCount.Value = new decimal(new int[] { 24, 0, 0, 0 });
+            this.numCount.ValueChanged += new System.EventHandler(this.numCount_ValueChanged);
+            //
+            // lblDeg
+            //
+            this.lblDeg.AutoSize = true;
+            this.lblDeg.Location = new System.Drawing.Point(160, 28);
+            this.lblDeg.Name = "lblDeg";
+            this.lblDeg.Size = new System.Drawing.Size(33, 15);
+            this.lblDeg.TabIndex = 2;
+            this.lblDeg.Text = "Deg:";
+            //
+            // txtDeg
+            //
+            this.txtDeg.BackColor = System.Drawing.Color.Khaki;
+            this.txtDeg.Font = new System.Drawing.Font("맑은 고딕", 11F, System.Drawing.FontStyle.Bold);
+            this.txtDeg.Location = new System.Drawing.Point(200, 22);
+            this.txtDeg.Name = "txtDeg";
+            this.txtDeg.ReadOnly = true;
+            this.txtDeg.Size = new System.Drawing.Size(70, 27);
+            this.txtDeg.TabIndex = 3;
+            this.txtDeg.Text = "15.00";
+            this.txtDeg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            //
+            // lblRunCnt
+            //
+            this.lblRunCnt.AutoSize = true;
+            this.lblRunCnt.Location = new System.Drawing.Point(280, 28);
+            this.lblRunCnt.Name = "lblRunCnt";
+            this.lblRunCnt.Size = new System.Drawing.Size(30, 15);
+            this.lblRunCnt.TabIndex = 4;
+            this.lblRunCnt.Text = "Cnt:";
+            //
+            // txtRunCnt
+            //
+            this.txtRunCnt.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.txtRunCnt.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.txtRunCnt.Location = new System.Drawing.Point(310, 25);
+            this.txtRunCnt.Name = "txtRunCnt";
+            this.txtRunCnt.ReadOnly = true;
+            this.txtRunCnt.Size = new System.Drawing.Size(30, 23);
+            this.txtRunCnt.TabIndex = 5;
+            this.txtRunCnt.Text = "0";
+            this.txtRunCnt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            //
+            // lblRunStep
+            //
+            this.lblRunStep.AutoSize = true;
+            this.lblRunStep.Location = new System.Drawing.Point(280, 58);
+            this.lblRunStep.Name = "lblRunStep";
+            this.lblRunStep.Size = new System.Drawing.Size(34, 15);
+            this.lblRunStep.TabIndex = 6;
+            this.lblRunStep.Text = "Step:";
+            //
+            // txtRunStep
+            //
+            this.txtRunStep.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.txtRunStep.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.txtRunStep.Location = new System.Drawing.Point(310, 55);
+            this.txtRunStep.Name = "txtRunStep";
+            this.txtRunStep.ReadOnly = true;
+            this.txtRunStep.Size = new System.Drawing.Size(30, 23);
+            this.txtRunStep.TabIndex = 7;
+            this.txtRunStep.Text = "0";
+            this.txtRunStep.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            //
+            // btnRun
+            //
+            this.btnRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnRun.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.btnRun.ForeColor = System.Drawing.Color.White;
+            this.btnRun.Location = new System.Drawing.Point(15, 60);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(120, 40);
+            this.btnRun.TabIndex = 8;
+            this.btnRun.Text = "Run";
+            this.btnRun.UseVisualStyleBackColor = false;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            //
+            // btnStop
+            //
+            this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnStop.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.btnStop.ForeColor = System.Drawing.Color.White;
+            this.btnStop.Location = new System.Drawing.Point(145, 60);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(120, 40);
+            this.btnStop.TabIndex = 9;
+            this.btnStop.Text = "Stop";
+            this.btnStop.UseVisualStyleBackColor = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            //
+            // grpSetting
+            //
+            this.grpSetting.Controls.Add(this.lblCamFile);
+            this.grpSetting.Controls.Add(this.btnFileSave);
+            this.grpSetting.Controls.Add(this.btnTrigger);
+            this.grpSetting.Controls.Add(this.btnGrabberActive);
+            this.grpSetting.Controls.Add(this.btnCamOpen);
+            this.grpSetting.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpSetting.Location = new System.Drawing.Point(0, 245);
+            this.grpSetting.Name = "grpSetting";
+            this.grpSetting.Size = new System.Drawing.Size(350, 110);
+            this.grpSetting.TabIndex = 3;
+            this.grpSetting.TabStop = false;
+            this.grpSetting.Text = "Setting";
+            //
+            // btnCamOpen
+            //
+            this.btnCamOpen.Location = new System.Drawing.Point(15, 25);
+            this.btnCamOpen.Name = "btnCamOpen";
+            this.btnCamOpen.Size = new System.Drawing.Size(100, 35);
+            this.btnCamOpen.TabIndex = 0;
+            this.btnCamOpen.Text = "Open";
+            this.btnCamOpen.UseVisualStyleBackColor = true;
+            this.btnCamOpen.Click += new System.EventHandler(this.btnCamOpen_Click);
+            //
+            // btnGrabberActive
+            //
+            this.btnGrabberActive.Location = new System.Drawing.Point(125, 25);
+            this.btnGrabberActive.Name = "btnGrabberActive";
+            this.btnGrabberActive.Size = new System.Drawing.Size(100, 35);
+            this.btnGrabberActive.TabIndex = 1;
+            this.btnGrabberActive.Text = "Active";
+            this.btnGrabberActive.UseVisualStyleBackColor = true;
+            this.btnGrabberActive.Click += new System.EventHandler(this.btnGrabberActive_Click);
+            //
+            // btnTrigger
+            //
+            this.btnTrigger.Location = new System.Drawing.Point(235, 25);
+            this.btnTrigger.Name = "btnTrigger";
+            this.btnTrigger.Size = new System.Drawing.Size(100, 35);
+            this.btnTrigger.TabIndex = 2;
+            this.btnTrigger.Text = "Trigger";
+            this.btnTrigger.UseVisualStyleBackColor = true;
+            this.btnTrigger.Click += new System.EventHandler(this.btnTrigger_Click);
+            //
+            // btnFileSave
+            //
+            this.btnFileSave.Location = new System.Drawing.Point(15, 68);
+            this.btnFileSave.Name = "btnFileSave";
+            this.btnFileSave.Size = new System.Drawing.Size(100, 35);
+            this.btnFileSave.TabIndex = 3;
+            this.btnFileSave.Text = "File Save";
+            this.btnFileSave.UseVisualStyleBackColor = true;
+            this.btnFileSave.Click += new System.EventHandler(this.btnFileSave_Click);
+            //
+            // lblCamFile
+            //
+            this.lblCamFile.AutoSize = true;
+            this.lblCamFile.ForeColor = System.Drawing.Color.Gray;
+            this.lblCamFile.Location = new System.Drawing.Point(125, 78);
+            this.lblCamFile.Name = "lblCamFile";
+            this.lblCamFile.Size = new System.Drawing.Size(80, 15);
+            this.lblCamFile.TabIndex = 4;
+            this.lblCamFile.Text = "No cam file";
+            //
             // grpControl
             //
             this.grpControl.Controls.Add(this.btnExecute);
@@ -145,12 +361,12 @@ namespace VisionAlignChamber.Views.Controls
             this.grpControl.Controls.Add(this.btnLoadImages);
             this.grpControl.Controls.Add(this.btnInitialize);
             this.grpControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpControl.Location = new System.Drawing.Point(0, 125);
+            this.grpControl.Location = new System.Drawing.Point(0, 355);
             this.grpControl.Name = "grpControl";
             this.grpControl.Size = new System.Drawing.Size(350, 110);
-            this.grpControl.TabIndex = 2;
+            this.grpControl.TabIndex = 4;
             this.grpControl.TabStop = false;
-            this.grpControl.Text = "제어";
+            this.grpControl.Text = "Control";
             //
             // btnInitialize
             //
@@ -198,10 +414,10 @@ namespace VisionAlignChamber.Views.Controls
             //
             this.grpResult.Controls.Add(this.listResult);
             this.grpResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpResult.Location = new System.Drawing.Point(0, 235);
+            this.grpResult.Location = new System.Drawing.Point(0, 465);
             this.grpResult.Name = "grpResult";
-            this.grpResult.Size = new System.Drawing.Size(350, 225);
-            this.grpResult.TabIndex = 3;
+            this.grpResult.Size = new System.Drawing.Size(350, 135);
+            this.grpResult.TabIndex = 5;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "검사 결과";
             //
@@ -295,10 +511,10 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlStatusBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.pnlStatusBar.Controls.Add(this.lblStatusMessage);
             this.pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlStatusBar.Location = new System.Drawing.Point(0, 460);
+            this.pnlStatusBar.Location = new System.Drawing.Point(0, 600);
             this.pnlStatusBar.Name = "pnlStatusBar";
             this.pnlStatusBar.Size = new System.Drawing.Size(350, 30);
-            this.pnlStatusBar.TabIndex = 4;
+            this.pnlStatusBar.TabIndex = 6;
             //
             // lblStatusMessage
             //
@@ -317,15 +533,22 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpResult);
             this.Controls.Add(this.pnlStatusBar);
             this.Controls.Add(this.grpControl);
+            this.Controls.Add(this.grpSetting);
+            this.Controls.Add(this.grpRunning);
             this.Controls.Add(this.grpMode);
             this.Controls.Add(this.grpStatus);
             this.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.Name = "VisionPanel";
-            this.Size = new System.Drawing.Size(350, 490);
+            this.Size = new System.Drawing.Size(350, 630);
             this.grpStatus.ResumeLayout(false);
             this.grpStatus.PerformLayout();
             this.grpMode.ResumeLayout(false);
             this.grpMode.PerformLayout();
+            this.grpRunning.ResumeLayout(false);
+            this.grpRunning.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numCount)).EndInit();
+            this.grpSetting.ResumeLayout(false);
+            this.grpSetting.PerformLayout();
             this.grpControl.ResumeLayout(false);
             this.grpResult.ResumeLayout(false);
             this.pnlStatusBar.ResumeLayout(false);
@@ -344,6 +567,23 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.GroupBox grpMode;
         private System.Windows.Forms.RadioButton rdoFlat;
         private System.Windows.Forms.RadioButton rdoNotch;
+        private System.Windows.Forms.GroupBox grpRunning;
+        private System.Windows.Forms.Label lblCount;
+        private System.Windows.Forms.NumericUpDown numCount;
+        private System.Windows.Forms.Label lblDeg;
+        private System.Windows.Forms.TextBox txtDeg;
+        private System.Windows.Forms.Label lblRunCnt;
+        private System.Windows.Forms.TextBox txtRunCnt;
+        private System.Windows.Forms.Label lblRunStep;
+        private System.Windows.Forms.TextBox txtRunStep;
+        private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.GroupBox grpSetting;
+        private System.Windows.Forms.Button btnCamOpen;
+        private System.Windows.Forms.Button btnGrabberActive;
+        private System.Windows.Forms.Button btnTrigger;
+        private System.Windows.Forms.Button btnFileSave;
+        private System.Windows.Forms.Label lblCamFile;
         private System.Windows.Forms.GroupBox grpControl;
         private System.Windows.Forms.Button btnExecute;
         private System.Windows.Forms.Button btnClearImages;

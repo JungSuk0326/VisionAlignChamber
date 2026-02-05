@@ -67,6 +67,71 @@ namespace VisionAlignChamber.ViewModels
 
         #endregion
 
+        #region Running Properties
+
+        private bool _isRunning;
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
+        }
+
+        private int _runCount;
+        public int RunCount
+        {
+            get => _runCount;
+            set => SetProperty(ref _runCount, value);
+        }
+
+        private int _runStep;
+        public int RunStep
+        {
+            get => _runStep;
+            set => SetProperty(ref _runStep, value);
+        }
+
+        private int _setCount = 24;
+        public int SetCount
+        {
+            get => _setCount;
+            set
+            {
+                if (SetProperty(ref _setCount, value))
+                {
+                    OnPropertyChanged(nameof(DegPerStep));
+                }
+            }
+        }
+
+        public double DegPerStep => _setCount > 0 ? 360.0 / _setCount : 0;
+
+        #endregion
+
+        #region Camera/Grabber Properties
+
+        private bool _isCameraOpened;
+        public bool IsCameraOpened
+        {
+            get => _isCameraOpened;
+            set => SetProperty(ref _isCameraOpened, value);
+        }
+
+        private bool _isGrabberActive;
+        public bool IsGrabberActive
+        {
+            get => _isGrabberActive;
+            set => SetProperty(ref _isGrabberActive, value);
+        }
+
+        private string _camFilePath;
+        public string CamFilePath
+        {
+            get => _camFilePath;
+            set => SetProperty(ref _camFilePath, value);
+        }
+
+        #endregion
+
         #region Inspection Mode Properties
 
         private bool _isNotchMode = true;
@@ -163,6 +228,16 @@ namespace VisionAlignChamber.ViewModels
         public ICommand ExecuteInspectionCommand { get; private set; }
         public ICommand PreviousImageCommand { get; private set; }
         public ICommand NextImageCommand { get; private set; }
+        public ICommand StartRunCommand { get; private set; }
+        public ICommand StopRunCommand { get; private set; }
+
+        // Camera/Grabber Commands
+        public ICommand OpenCameraCommand { get; private set; }
+        public ICommand CloseCameraCommand { get; private set; }
+        public ICommand ActivateGrabberCommand { get; private set; }
+        public ICommand DeactivateGrabberCommand { get; private set; }
+        public ICommand TriggerCommand { get; private set; }
+        public ICommand SaveImageCommand { get; private set; }
 
         private void InitializeCommands()
         {
@@ -172,6 +247,16 @@ namespace VisionAlignChamber.ViewModels
             ExecuteInspectionCommand = new RelayCommand(ExecuteInspection, CanExecuteInspection);
             PreviousImageCommand = new RelayCommand(ExecutePreviousImage, () => CurrentImageIndex > 0);
             NextImageCommand = new RelayCommand(ExecuteNextImage, () => CurrentImageIndex < ImageCount - 1);
+            StartRunCommand = new RelayCommand(ExecuteStartRun, () => IsInitialized && !IsRunning);
+            StopRunCommand = new RelayCommand(ExecuteStopRun, () => IsRunning);
+
+            // Camera/Grabber Commands
+            OpenCameraCommand = new RelayCommand<string>(ExecuteOpenCamera, _ => !IsCameraOpened);
+            CloseCameraCommand = new RelayCommand(ExecuteCloseCamera, () => IsCameraOpened);
+            ActivateGrabberCommand = new RelayCommand(ExecuteActivateGrabber, () => IsCameraOpened && !IsGrabberActive);
+            DeactivateGrabberCommand = new RelayCommand(ExecuteDeactivateGrabber, () => IsGrabberActive);
+            TriggerCommand = new RelayCommand(ExecuteTrigger, () => IsCameraOpened && IsGrabberActive);
+            SaveImageCommand = new RelayCommand<string>(ExecuteSaveImage, _ => IsCameraOpened);
         }
 
         #endregion
@@ -297,6 +382,152 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
+        private void ExecuteStartRun()
+        {
+            try
+            {
+                IsRunning = true;
+                RunCount = 0;
+                RunStep = 1;
+                StatusMessage = $"Running 시작 (Count: {SetCount}, Deg: {DegPerStep:F2})";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Running 시작 오류: {ex.Message}";
+                IsRunning = false;
+            }
+        }
+
+        private void ExecuteStopRun()
+        {
+            IsRunning = false;
+            RunStep = 0;
+            StatusMessage = "Running 정지";
+            RaiseCanExecuteChanged();
+        }
+
+        private void ExecuteOpenCamera(string camFilePath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(camFilePath))
+                {
+                    StatusMessage = "Cam 파일이 선택되지 않았습니다.";
+                    return;
+                }
+
+                // TODO: 실제 Grabber 연동 시 여기에 OpenBoard 호출
+                // _grabber.OpenBoard(0, "M", "MONO_DECA", camFilePath);
+                CamFilePath = camFilePath;
+                IsCameraOpened = true;
+                StatusMessage = $"카메라 오픈: {System.IO.Path.GetFileName(camFilePath)}";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"카메라 오픈 오류: {ex.Message}";
+                IsCameraOpened = false;
+            }
+        }
+
+        private void ExecuteCloseCamera()
+        {
+            try
+            {
+                // TODO: 실제 Grabber 연동 시 여기에 CloseBoard 호출
+                // _grabber.CloseBoard();
+                if (IsGrabberActive)
+                {
+                    ExecuteDeactivateGrabber();
+                }
+                IsCameraOpened = false;
+                CamFilePath = null;
+                StatusMessage = "카메라 닫힘";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"카메라 닫기 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteActivateGrabber()
+        {
+            try
+            {
+                // TODO: 실제 Grabber 연동 시 여기에 SetAcquisition(ACTIVE) 호출
+                // _grabber.SetAcquisition(eState.ACTIVE);
+                IsGrabberActive = true;
+                StatusMessage = "Grabber 활성화";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Grabber 활성화 오류: {ex.Message}";
+                IsGrabberActive = false;
+            }
+        }
+
+        private void ExecuteDeactivateGrabber()
+        {
+            try
+            {
+                // TODO: 실제 Grabber 연동 시 여기에 SetAcquisition(IDLE) 호출
+                // _grabber.SetAcquisition(eState.IDLE);
+                IsGrabberActive = false;
+                StatusMessage = "Grabber 비활성화";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Grabber 비활성화 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteTrigger()
+        {
+            try
+            {
+                // TODO: 실제 Grabber 연동 시 여기에 OnTrigger 호출
+                // _grabber.OnTrigger();
+                StatusMessage = "Trigger 실행";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Trigger 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteSaveImage(string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    StatusMessage = "파일 경로가 지정되지 않았습니다.";
+                    return;
+                }
+
+                // TODO: 실제 Grabber 연동 시 여기에 SaveImage 호출
+                // _grabber.SaveImage(filePath);
+                // 현재는 CurrentImage가 있으면 저장
+                if (CurrentImage != null)
+                {
+                    CurrentImage.Save(filePath);
+                    StatusMessage = $"이미지 저장: {System.IO.Path.GetFileName(filePath)}";
+                }
+                else
+                {
+                    StatusMessage = "저장할 이미지가 없습니다.";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"이미지 저장 오류: {ex.Message}";
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -332,6 +563,17 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
+        /// <summary>
+        /// Running Count 설정
+        /// </summary>
+        public void SetRunningCount(int count)
+        {
+            if (count > 0 && count <= 360)
+            {
+                SetCount = count;
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -351,6 +593,14 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)ExecuteInspectionCommand).RaiseCanExecuteChanged();
             ((RelayCommand)PreviousImageCommand).RaiseCanExecuteChanged();
             ((RelayCommand)NextImageCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)StartRunCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)StopRunCommand).RaiseCanExecuteChanged();
+
+            // Camera/Grabber Commands
+            ((RelayCommand)CloseCameraCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ActivateGrabberCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)DeactivateGrabberCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)TriggerCommand).RaiseCanExecuteChanged();
         }
 
         #endregion

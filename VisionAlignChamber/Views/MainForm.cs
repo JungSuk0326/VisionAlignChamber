@@ -256,8 +256,8 @@ namespace VisionAlignChamber.Views
             // 제어권 상태
             UpdateControlAuthorityDisplay();
 
-            // 모드 라디오 버튼 상태
-            UpdateModeRadioButtons();
+            // 제어권 라디오 버튼 상태
+            UpdateControlAuthorityRadioButtons();
 
             // UI 활성화/비활성화
             UpdateUIEnabledState();
@@ -283,27 +283,27 @@ namespace VisionAlignChamber.Views
 
         private bool _isUpdatingRadioButtons = false;
 
-        private void UpdateModeRadioButtons()
+        private void UpdateControlAuthorityRadioButtons()
         {
             // 라디오 버튼 상태 동기화 (플래그로 이벤트 처리 방지)
             _isUpdatingRadioButtons = true;
             try
             {
-                bool shouldBeManual = _viewModel.IsManualMode || _viewModel.IsSetupMode;
-                bool shouldBeAuto = _viewModel.IsAutoMode;
+                bool shouldBeLocal = _viewModel.IsLocalControl;
+                bool shouldBeRemote = _viewModel.IsRemoteControl;
 
-                if (rbManual.Checked != shouldBeManual)
+                if (rbLocal.Checked != shouldBeLocal)
                 {
-                    rbManual.Checked = shouldBeManual;
+                    rbLocal.Checked = shouldBeLocal;
                 }
-                if (rbAuto.Checked != shouldBeAuto)
+                if (rbRemote.Checked != shouldBeRemote)
                 {
-                    rbAuto.Checked = shouldBeAuto;
+                    rbRemote.Checked = shouldBeRemote;
                 }
 
                 // 색상 업데이트
-                rbManual.ForeColor = rbManual.Checked ? Color.LimeGreen : Color.White;
-                rbAuto.ForeColor = rbAuto.Checked ? Color.LimeGreen : Color.White;
+                rbLocal.ForeColor = rbLocal.Checked ? Color.LimeGreen : Color.White;
+                rbRemote.ForeColor = rbRemote.Checked ? Color.Yellow : Color.White;
             }
             finally
             {
@@ -314,28 +314,29 @@ namespace VisionAlignChamber.Views
         private void UpdateUIEnabledState()
         {
             bool canOperate = _viewModel.CanOperateUI;
+            bool isLocal = _viewModel.IsLocalControl;
 
-            // 시스템 버튼
-            btnInitialize.Enabled = canOperate && !_viewModel.IsInitialized;
-            btnHomeAll.Enabled = canOperate && _viewModel.IsInitialized && !_viewModel.IsHomed;
-            btnResetAlarm.Enabled = _viewModel.IsLocalControl && _viewModel.HasActiveAlarm;
+            // 시스템 버튼 (Local 모드에서만 활성화)
+            btnInitialize.Enabled = isLocal && !_viewModel.IsInitialized;
+            btnHomeAll.Enabled = isLocal && _viewModel.IsInitialized && !_viewModel.IsHomed;
+            btnResetAlarm.Enabled = isLocal && _viewModel.HasActiveAlarm;
 
-            // 모드 전환 (개별 컨트롤 제어)
-            // Manual은 Local 상태에서 항상 가능
-            rbManual.Enabled = _viewModel.IsLocalControl;
+            // 제어권 전환 (Local/Remote)
+            // Local 버튼: Locked 상태가 아니면 항상 활성화
+            rbLocal.Enabled = !_viewModel.IsLocked;
 
-            // Auto는 Initialize + Home 완료 후에만 가능 (프로덕션)
-            // Simulation 모드: Local이면 Auto 활성화 (Initialize/Home 불필요)
-            bool autoEnabled = AppSettings.SimulationMode
-                ? _viewModel.IsLocalControl
-                : _viewModel.IsLocalControl && _viewModel.IsInitialized && _viewModel.IsHomed;
-            rbAuto.Enabled = autoEnabled;
+            // Remote 버튼: Local 상태 + Initialize + Home 완료 후에만 활성화
+            // Simulation 모드: Local이면 Remote 활성화 가능
+            bool remoteEnabled = AppSettings.SimulationMode
+                ? isLocal
+                : isLocal && _viewModel.IsInitialized && _viewModel.IsHomed && !_viewModel.HasActiveAlarm;
+            rbRemote.Enabled = remoteEnabled;
 
-            // 탭 패널 활성화
-            motionPanel.Enabled = canOperate;
-            ioPanel.Enabled = canOperate;
-            visionPanel.Enabled = canOperate;
-            eddyPanel.Enabled = canOperate;
+            // 탭 패널 활성화 (Local 모드에서만)
+            motionPanel.Enabled = isLocal;
+            ioPanel.Enabled = isLocal;
+            visionPanel.Enabled = isLocal;
+            eddyPanel.Enabled = isLocal;
         }
 
         private void UpdateVisionImage()
@@ -386,25 +387,25 @@ namespace VisionAlignChamber.Views
             _viewModel?.ResetAlarmCommand?.Execute(null);
         }
 
-        private void rbManual_CheckedChanged(object sender, EventArgs e)
+        private void rbLocal_CheckedChanged(object sender, EventArgs e)
         {
             // 프로그래밍적 업데이트 중에는 무시
             if (_isUpdatingRadioButtons) return;
 
-            if (rbManual.Checked && _viewModel != null)
+            if (rbLocal.Checked && _viewModel != null)
             {
-                _viewModel.SetManualModeCommand?.Execute(null);
+                _viewModel.SetLocalControlCommand?.Execute(null);
             }
         }
 
-        private void rbAuto_CheckedChanged(object sender, EventArgs e)
+        private void rbRemote_CheckedChanged(object sender, EventArgs e)
         {
             // 프로그래밍적 업데이트 중에는 무시
             if (_isUpdatingRadioButtons) return;
 
-            if (rbAuto.Checked && _viewModel != null)
+            if (rbRemote.Checked && _viewModel != null)
             {
-                _viewModel.SetAutoModeCommand?.Execute(null);
+                _viewModel.SetRemoteControlCommand?.Execute(null);
             }
         }
 
@@ -420,5 +421,6 @@ namespace VisionAlignChamber.Views
         }
 
         #endregion
+
     }
 }

@@ -52,6 +52,9 @@ namespace VisionAlignChamber.Views.Controls
 
             if (_viewModel == null) return;
 
+            // Initialize Deg value
+            UpdateDegValue();
+
             _updateTimer.Start();
         }
 
@@ -80,11 +83,30 @@ namespace VisionAlignChamber.Views.Controls
             rdoNotch.Checked = _viewModel.IsNotchMode;
             rdoFlat.Checked = _viewModel.IsFlatMode;
 
+            // Running 섹션 업데이트
+            txtRunCnt.Text = _viewModel.RunCount.ToString();
+            txtRunStep.Text = _viewModel.RunStep.ToString();
+
+            // Running 버튼 상태
+            bool isRunning = _viewModel.IsRunning;
+            btnRun.Enabled = _viewModel.IsInitialized && !isRunning;
+            btnStop.Enabled = isRunning;
+            numCount.Enabled = !isRunning;
+
+            // Setting 버튼 상태
+            btnGrabberActive.Enabled = _viewModel.IsCameraOpened;
+            btnTrigger.Enabled = _viewModel.IsCameraOpened && _viewModel.IsGrabberActive;
+            btnFileSave.Enabled = _viewModel.IsCameraOpened;
+
+            // Setting 버튼 텍스트 동기화
+            btnCamOpen.Text = _viewModel.IsCameraOpened ? "Close" : "Open";
+            btnGrabberActive.Text = _viewModel.IsGrabberActive ? "Idle" : "Active";
+
             // 버튼 상태
             btnInitialize.Enabled = !_viewModel.IsInitialized;
-            btnLoadImages.Enabled = _viewModel.IsInitialized && !_viewModel.IsInspecting;
-            btnClearImages.Enabled = _viewModel.IsInitialized && _viewModel.ImageCount > 0;
-            btnExecute.Enabled = _viewModel.IsInitialized && !_viewModel.IsInspecting && _viewModel.ImageCount > 0;
+            btnLoadImages.Enabled = _viewModel.IsInitialized && !_viewModel.IsInspecting && !isRunning;
+            btnClearImages.Enabled = _viewModel.IsInitialized && _viewModel.ImageCount > 0 && !isRunning;
+            btnExecute.Enabled = _viewModel.IsInitialized && !_viewModel.IsInspecting && _viewModel.ImageCount > 0 && !isRunning;
 
             // 상태 메시지
             lblStatusMessage.Text = _viewModel.StatusMessage ?? "";
@@ -135,6 +157,100 @@ namespace VisionAlignChamber.Views.Controls
         #endregion
 
         #region Event Handlers
+
+        private void numCount_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateDegValue();
+            _viewModel?.SetRunningCount((int)numCount.Value);
+        }
+
+        private void UpdateDegValue()
+        {
+            int count = (int)numCount.Value;
+            if (count > 0)
+            {
+                double deg = 360.0 / count;
+                txtDeg.Text = deg.ToString("F2");
+            }
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            _viewModel?.StartRunCommand?.Execute(null);
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            _viewModel?.StopRunCommand?.Execute(null);
+        }
+
+        private void btnCamOpen_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null) return;
+
+            if (_viewModel.IsCameraOpened)
+            {
+                // Close camera
+                _viewModel.CloseCameraCommand?.Execute(null);
+                btnCamOpen.Text = "Open";
+            }
+            else
+            {
+                // Open camera with file dialog
+                using (var dialog = new OpenFileDialog())
+                {
+                    dialog.Title = "Cam 파일 선택";
+                    dialog.Filter = "CAM Files (*.cam)|*.cam|All Files (*.*)|*.*";
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        _viewModel.OpenCameraCommand?.Execute(dialog.FileName);
+                        if (_viewModel.IsCameraOpened)
+                        {
+                            btnCamOpen.Text = "Close";
+                            lblCamFile.Text = System.IO.Path.GetFileName(dialog.FileName);
+                            lblCamFile.ForeColor = Color.LimeGreen;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnGrabberActive_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null) return;
+
+            if (_viewModel.IsGrabberActive)
+            {
+                _viewModel.DeactivateGrabberCommand?.Execute(null);
+                btnGrabberActive.Text = "Active";
+            }
+            else
+            {
+                _viewModel.ActivateGrabberCommand?.Execute(null);
+                btnGrabberActive.Text = "Idle";
+            }
+        }
+
+        private void btnTrigger_Click(object sender, EventArgs e)
+        {
+            _viewModel?.TriggerCommand?.Execute(null);
+        }
+
+        private void btnFileSave_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null) return;
+
+            using (var dialog = new SaveFileDialog())
+            {
+                dialog.Title = "이미지 저장";
+                dialog.Filter = "JPEG Image (*.jpg)|*.jpg|PNG Image (*.png)|*.png|Bitmap Image (*.bmp)|*.bmp";
+                dialog.DefaultExt = "jpg";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    _viewModel.SaveImageCommand?.Execute(dialog.FileName);
+                }
+            }
+        }
 
         private void btnInitialize_Click(object sender, EventArgs e)
         {

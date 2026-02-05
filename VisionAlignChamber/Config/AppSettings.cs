@@ -177,6 +177,21 @@ namespace VisionAlignChamber.Config
 
         #endregion
 
+        #region System Properties
+
+        /// <summary>
+        /// 시뮬레이션 모드 여부
+        /// true: 하드웨어 없이 UI 테스트 가능 (Initialize/Home 없이 Auto 모드 전환 가능)
+        /// false: 실제 하드웨어 운영 모드 (Initialize → Home → Auto 순서 필요)
+        /// </summary>
+        public static bool SimulationMode
+        {
+            get => GetBool("System", "Simulation", false);
+            set => WriteValue("System", "Simulation", value ? "true" : "false");
+        }
+
+        #endregion
+
         #region Initialization
 
         /// <summary>

@@ -92,8 +92,8 @@ namespace VisionAlignChamber.ViewModels
 
         #region Result Properties
 
-        private WaferAlignResult _alignResult;
-        public WaferAlignResult AlignResult
+        private WaferVisionResult _alignResult;
+        public WaferVisionResult AlignResult
         {
             get => _alignResult;
             set
@@ -229,7 +229,7 @@ namespace VisionAlignChamber.ViewModels
             CurrentImage = null;
             ResultImage = null;
             WaferImage = null;
-            AlignResult = WaferAlignResult.Empty;
+            AlignResult = WaferVisionResult.Empty;
             StatusMessage = "이미지 클리어 완료";
             RaiseCanExecuteChanged();
         }
@@ -312,7 +312,7 @@ namespace VisionAlignChamber.ViewModels
         /// <summary>
         /// 검사 실행 (외부에서 호출)
         /// </summary>
-        public WaferAlignResult RunInspection(bool isFlat)
+        public WaferVisionResult RunInspection(bool isFlat)
         {
             IsFlatMode = isFlat;
             ExecuteInspection();

@@ -282,16 +282,16 @@ namespace VisionAlignChamber.Vision
         /// <summary>
         /// 검사 결과 조회 (GetResult 사용)
         /// </summary>
-        public WaferAlignResult GetResult(bool isFlat)
+        public WaferVisionResult GetResult(bool isFlat)
         {
-            if (!CheckInitialized()) return WaferAlignResult.Empty;
+            if (!CheckInitialized()) return WaferVisionResult.Empty;
 
             try
             {
                 // DLL의 GetResult(bool flat) 호출 - ClassWafer.ResultInfo 반환
                 var result = _aligner.GetResult(isFlat);
 
-                return new WaferAlignResult
+                return new WaferVisionResult
                 {
                     IsValid = _inspectionComplete,
                     Found = result.TestEnd,
@@ -312,7 +312,7 @@ namespace VisionAlignChamber.Vision
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"GetResult Error: {ex.Message}");
-                return WaferAlignResult.Empty;
+                return WaferVisionResult.Empty;
             }
         }
 

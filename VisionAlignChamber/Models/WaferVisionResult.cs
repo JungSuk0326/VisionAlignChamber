@@ -5,7 +5,7 @@ namespace VisionAlignChamber.Models
     /// <summary>
     /// 웨이퍼 정렬 검사 결과
     /// </summary>
-    public struct WaferAlignResult
+    public struct WaferVisionResult
     {
         /// <summary>
         /// 결과 유효성
@@ -55,7 +55,7 @@ namespace VisionAlignChamber.Models
         /// <summary>
         /// 기본값 생성
         /// </summary>
-        public static WaferAlignResult Empty => new WaferAlignResult
+        public static WaferVisionResult Empty => new WaferVisionResult
         {
             IsValid = false,
             Found = false,

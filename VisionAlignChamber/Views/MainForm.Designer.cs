@@ -30,6 +30,7 @@ namespace VisionAlignChamber.Views
             this.tabVision = new System.Windows.Forms.TabPage();
             this.visionPanel = new VisionAlignChamber.Views.Controls.VisionPanel();
             this.tabEddy = new System.Windows.Forms.TabPage();
+            this.eddyPanel = new VisionAlignChamber.Views.Controls.EddyPanel();
             this.tabPN = new System.Windows.Forms.TabPage();
             this.panelTop = new System.Windows.Forms.Panel();
             this.btnResetAlarm = new System.Windows.Forms.Button();
@@ -42,6 +43,11 @@ namespace VisionAlignChamber.Views
             this.label1 = new System.Windows.Forms.Label();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.grpControlMode = new System.Windows.Forms.GroupBox();
+            this.rbManual = new System.Windows.Forms.RadioButton();
+            this.rbAuto = new System.Windows.Forms.RadioButton();
+            this.lblControlAuthority = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
 
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -54,8 +60,10 @@ namespace VisionAlignChamber.Views
             this.tabMotion.SuspendLayout();
             this.tabIO.SuspendLayout();
             this.tabVision.SuspendLayout();
+            this.tabEddy.SuspendLayout();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
+            this.grpControlMode.SuspendLayout();
             this.SuspendLayout();
 
             //
@@ -209,6 +217,7 @@ namespace VisionAlignChamber.Views
             //
             // tabEddy
             //
+            this.tabEddy.Controls.Add(this.eddyPanel);
             this.tabEddy.Location = new System.Drawing.Point(4, 28);
             this.tabEddy.Name = "tabEddy";
             this.tabEddy.Padding = new System.Windows.Forms.Padding(3);
@@ -216,6 +225,15 @@ namespace VisionAlignChamber.Views
             this.tabEddy.TabIndex = 3;
             this.tabEddy.Text = "Eddy";
             this.tabEddy.UseVisualStyleBackColor = true;
+
+            //
+            // eddyPanel
+            //
+            this.eddyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eddyPanel.Location = new System.Drawing.Point(3, 3);
+            this.eddyPanel.Name = "eddyPanel";
+            this.eddyPanel.Size = new System.Drawing.Size(782, 662);
+            this.eddyPanel.TabIndex = 0;
 
             //
             // tabPN
@@ -236,6 +254,9 @@ namespace VisionAlignChamber.Views
             this.panelTop.Controls.Add(this.btnHomeAll);
             this.panelTop.Controls.Add(this.btnInitialize);
             this.panelTop.Controls.Add(this.btnEmergencyStop);
+            this.panelTop.Controls.Add(this.grpControlMode);
+            this.panelTop.Controls.Add(this.label3);
+            this.panelTop.Controls.Add(this.lblControlAuthority);
             this.panelTop.Controls.Add(this.lblSystemMode);
             this.panelTop.Controls.Add(this.lblSystemStatus);
             this.panelTop.Controls.Add(this.label2);
@@ -307,12 +328,79 @@ namespace VisionAlignChamber.Views
             this.btnResetAlarm.Click += new System.EventHandler(this.btnResetAlarm_Click);
 
             //
+            // grpControlMode
+            //
+            this.grpControlMode.Controls.Add(this.rbManual);
+            this.grpControlMode.Controls.Add(this.rbAuto);
+            this.grpControlMode.ForeColor = System.Drawing.Color.White;
+            this.grpControlMode.Location = new System.Drawing.Point(490, 5);
+            this.grpControlMode.Name = "grpControlMode";
+            this.grpControlMode.Size = new System.Drawing.Size(180, 50);
+            this.grpControlMode.TabIndex = 8;
+            this.grpControlMode.TabStop = false;
+            this.grpControlMode.Text = "Control Mode";
+
+            //
+            // rbManual
+            //
+            this.rbManual.AutoSize = true;
+            this.rbManual.Checked = true;
+            this.rbManual.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.rbManual.ForeColor = System.Drawing.Color.LimeGreen;
+            this.rbManual.Location = new System.Drawing.Point(10, 20);
+            this.rbManual.Name = "rbManual";
+            this.rbManual.Size = new System.Drawing.Size(77, 23);
+            this.rbManual.TabIndex = 0;
+            this.rbManual.TabStop = true;
+            this.rbManual.Text = "Manual";
+            this.rbManual.UseVisualStyleBackColor = true;
+            this.rbManual.CheckedChanged += new System.EventHandler(this.rbManual_CheckedChanged);
+
+            //
+            // rbAuto
+            //
+            this.rbAuto.AutoSize = true;
+            this.rbAuto.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.rbAuto.ForeColor = System.Drawing.Color.White;
+            this.rbAuto.Location = new System.Drawing.Point(95, 20);
+            this.rbAuto.Name = "rbAuto";
+            this.rbAuto.Size = new System.Drawing.Size(58, 23);
+            this.rbAuto.TabIndex = 1;
+            this.rbAuto.Text = "Auto";
+            this.rbAuto.UseVisualStyleBackColor = true;
+            this.rbAuto.CheckedChanged += new System.EventHandler(this.rbAuto_CheckedChanged);
+
+            //
+            // label3
+            //
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(690, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 19);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Control:";
+
+            //
+            // lblControlAuthority
+            //
+            this.lblControlAuthority.AutoSize = true;
+            this.lblControlAuthority.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblControlAuthority.ForeColor = System.Drawing.Color.Cyan;
+            this.lblControlAuthority.Location = new System.Drawing.Point(750, 12);
+            this.lblControlAuthority.Name = "lblControlAuthority";
+            this.lblControlAuthority.Size = new System.Drawing.Size(44, 19);
+            this.lblControlAuthority.TabIndex = 10;
+            this.lblControlAuthority.Text = "Local";
+
+            //
             // label1
             //
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(550, 12);
+            this.label1.Location = new System.Drawing.Point(690, 34);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 19);
             this.label1.TabIndex = 4;
@@ -324,35 +412,37 @@ namespace VisionAlignChamber.Views
             this.lblSystemStatus.AutoSize = true;
             this.lblSystemStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblSystemStatus.ForeColor = System.Drawing.Color.LimeGreen;
-            this.lblSystemStatus.Location = new System.Drawing.Point(610, 12);
+            this.lblSystemStatus.Location = new System.Drawing.Point(750, 34);
             this.lblSystemStatus.Name = "lblSystemStatus";
             this.lblSystemStatus.Size = new System.Drawing.Size(36, 19);
             this.lblSystemStatus.TabIndex = 5;
             this.lblSystemStatus.Text = "Idle";
 
             //
-            // label2
+            // label2 (removed - replaced by grpControlMode)
             //
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(550, 34);
+            this.label2.Location = new System.Drawing.Point(850, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 19);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Mode:";
+            this.label2.Text = "";
+            this.label2.Visible = false;
 
             //
-            // lblSystemMode
+            // lblSystemMode (hidden - mode shown in grpControlMode)
             //
             this.lblSystemMode.AutoSize = true;
             this.lblSystemMode.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblSystemMode.ForeColor = System.Drawing.Color.White;
-            this.lblSystemMode.Location = new System.Drawing.Point(610, 34);
+            this.lblSystemMode.Location = new System.Drawing.Point(850, 34);
             this.lblSystemMode.Name = "lblSystemMode";
             this.lblSystemMode.Size = new System.Drawing.Size(58, 19);
             this.lblSystemMode.TabIndex = 7;
             this.lblSystemMode.Text = "Manual";
+            this.lblSystemMode.Visible = false;
 
             //
             // panelBottom
@@ -404,8 +494,11 @@ namespace VisionAlignChamber.Views
             this.tabMotion.ResumeLayout(false);
             this.tabIO.ResumeLayout(false);
             this.tabVision.ResumeLayout(false);
+            this.tabEddy.ResumeLayout(false);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
+            this.grpControlMode.ResumeLayout(false);
+            this.grpControlMode.PerformLayout();
             this.panelBottom.ResumeLayout(false);
             this.panelBottom.PerformLayout();
             this.ResumeLayout(false);
@@ -438,5 +531,11 @@ namespace VisionAlignChamber.Views
         private Controls.MotionPanel motionPanel;
         private Controls.IOPanel ioPanel;
         private Controls.VisionPanel visionPanel;
+        private Controls.EddyPanel eddyPanel;
+        private System.Windows.Forms.GroupBox grpControlMode;
+        private System.Windows.Forms.RadioButton rbManual;
+        private System.Windows.Forms.RadioButton rbAuto;
+        private System.Windows.Forms.Label lblControlAuthority;
+        private System.Windows.Forms.Label label3;
     }
 }

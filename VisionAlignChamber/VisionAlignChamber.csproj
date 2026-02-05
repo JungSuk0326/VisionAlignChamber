@@ -81,12 +81,14 @@
   </ItemGroup>
   <ItemGroup>
     <!-- 기존 파일 -->
+    <Compile Include="Eddy\EddyCurrentSensor.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IEddyCurrentSensor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <!-- 인터페이스 -->
@@ -111,6 +113,9 @@
     <!-- 아진 컨트롤러 -->
     <Compile Include="Hardware\Ajin\AjinMotionController.cs" />
     <Compile Include="Hardware\Ajin\AjinDigitalIO.cs" />
+    <!-- 시뮬레이션 컨트롤러 -->
+    <Compile Include="Hardware\Simulation\SimulationMotionController.cs" />
+    <Compile Include="Hardware\Simulation\SimulationDigitalIO.cs" />
     <!-- Hardware Facade (I/O 및 Motion 추상화) -->
     <Compile Include="Hardware\Facade\HardwareDefinition.cs" />
     <Compile Include="Hardware\Facade\HardwareMapping.cs" />
@@ -121,11 +126,12 @@
     <!-- 비전 -->
     <Compile Include="Vision\VisionAlignWrapper.cs" />
     <!-- 모델 -->
-    <Compile Include="Models\WaferAlignResult.cs" />
+    <Compile Include="Models\WaferVisionResult.cs" />
     <Compile Include="Models\SystemState.cs" />
     <Compile Include="Models\AxisSettings.cs" />
     <Compile Include="Models\AlignParameters.cs" />
     <Compile Include="Models\AlarmInfo.cs" />
+    <Compile Include="Models\ControlAuthority.cs" />
     <!-- 설정 -->
     <Compile Include="Config\AppSettings.cs" />
     <!-- MVVM 인프라 -->
@@ -137,6 +143,7 @@
     <Compile Include="ViewModels\MotionViewModel.cs" />
     <Compile Include="ViewModels\IOViewModel.cs" />
     <Compile Include="ViewModels\VisionViewModel.cs" />
+    <Compile Include="ViewModels\EddyViewModel.cs" />
     <!-- Views -->
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
@@ -168,6 +175,12 @@
     </Compile>
     <Compile Include="Views\Controls\VisionPanel.Designer.cs">
       <DependentUpon>VisionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\EddyPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\EddyPanel.Designer.cs">
+      <DependentUpon>EddyPanel.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -227,8 +240,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hardware\Eddy\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

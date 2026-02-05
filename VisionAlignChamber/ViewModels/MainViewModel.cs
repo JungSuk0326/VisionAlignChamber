@@ -4,6 +4,7 @@ using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Models;
 using VisionAlignChamber.Core;
+using VisionAlignChamber.Config;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -23,6 +24,55 @@ namespace VisionAlignChamber.ViewModels
         public MotionViewModel Motion { get; private set; }
         public IOViewModel IO { get; private set; }
         public VisionViewModel Vision { get; private set; }
+        public EddyViewModel Eddy { get; private set; }
+
+        #endregion
+
+        #region Control Authority
+
+        private ControlAuthority _controlAuthority = ControlAuthority.Local;
+        public ControlAuthority ControlAuthority
+        {
+            get => _controlAuthority;
+            set
+            {
+                if (SetProperty(ref _controlAuthority, value))
+                {
+                    OnPropertyChanged(nameof(IsLocalControl));
+                    OnPropertyChanged(nameof(IsRemoteControl));
+                    OnPropertyChanged(nameof(IsLocked));
+                    OnPropertyChanged(nameof(CanOperateUI));
+
+                    // Remote로 전환 시 Auto 모드 강제
+                    if (value == ControlAuthority.Remote)
+                    {
+                        CurrentMode = SystemMode.Auto;
+                    }
+
+                    RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 로컬(UI) 제어 상태
+        /// </summary>
+        public bool IsLocalControl => ControlAuthority == ControlAuthority.Local;
+
+        /// <summary>
+        /// 원격(CTC) 제어 상태
+        /// </summary>
+        public bool IsRemoteControl => ControlAuthority == ControlAuthority.Remote;
+
+        /// <summary>
+        /// 잠금 상태 (EMO/Interlock)
+        /// </summary>
+        public bool IsLocked => ControlAuthority == ControlAuthority.Locked;
+
+        /// <summary>
+        /// UI 조작 가능 여부 (Local 상태에서만)
+        /// </summary>
+        public bool CanOperateUI => IsLocalControl && !IsError;
 
         #endregion
 
@@ -161,16 +211,53 @@ namespace VisionAlignChamber.ViewModels
             // 이벤트 구독
             _system.InitializationProgress += OnInitializationProgress;
 
-            // Child ViewModel 생성
-            Motion = new MotionViewModel(_system.Motion);
-            IO = new IOViewModel(_system.IO);
-            Vision = new VisionViewModel(_system.Vision);
+            // Child ViewModel 생성 (사용 가능한 모듈만)
+            if (_system.HasMotion)
+            {
+                Motion = new MotionViewModel(_system.Motion);
+            }
+
+            if (_system.HasIO)
+            {
+                IO = new IOViewModel(_system.IO);
+            }
+
+            if (_system.HasVision)
+            {
+                Vision = new VisionViewModel(_system.Vision);
+            }
+
+            if (_system.HasEddy)
+            {
+                Eddy = new EddyViewModel(_system.Eddy);
+            }
 
             OnPropertyChanged(nameof(Motion));
             OnPropertyChanged(nameof(IO));
             OnPropertyChanged(nameof(Vision));
+            OnPropertyChanged(nameof(Eddy));
 
-            StatusMessage = "시스템 준비 완료";
+            StatusMessage = GetInitStatusMessage();
+        }
+
+        private string GetInitStatusMessage()
+        {
+            var available = new System.Collections.Generic.List<string>();
+            var unavailable = new System.Collections.Generic.List<string>();
+
+            if (_system.HasMotion) available.Add("Motion"); else unavailable.Add("Motion");
+            if (_system.HasIO) available.Add("IO"); else unavailable.Add("IO");
+            if (_system.HasVision) available.Add("Vision"); else unavailable.Add("Vision");
+            if (_system.HasEddy) available.Add("Eddy"); else unavailable.Add("Eddy");
+
+            if (unavailable.Count == 0)
+            {
+                return "시스템 준비 완료";
+            }
+            else
+            {
+                return $"사용 가능: {string.Join(", ", available)} | 사용 불가: {string.Join(", ", unavailable)}";
+            }
         }
 
         private void OnInitializationProgress(object sender, InitializationProgressEventArgs e)
@@ -182,10 +269,16 @@ namespace VisionAlignChamber.ViewModels
 
         #region Commands
 
+        // 제어권 전환 명령
+        public ICommand SetLocalControlCommand { get; private set; }
+        public ICommand SetRemoteControlCommand { get; private set; }
+
+        // 모드 전환 명령
         public ICommand SetManualModeCommand { get; private set; }
         public ICommand SetAutoModeCommand { get; private set; }
         public ICommand SetSetupModeCommand { get; private set; }
 
+        // 시스템 명령
         public ICommand InitializeSystemCommand { get; private set; }
         public ICommand HomeAllCommand { get; private set; }
         public ICommand EmergencyStopCommand { get; private set; }
@@ -193,14 +286,40 @@ namespace VisionAlignChamber.ViewModels
 
         private void InitializeCommands()
         {
-            SetManualModeCommand = new RelayCommand(() => CurrentMode = SystemMode.Manual);
-            SetAutoModeCommand = new RelayCommand(() => CurrentMode = SystemMode.Auto, () => IsInitialized && IsHomed);
-            SetSetupModeCommand = new RelayCommand(() => CurrentMode = SystemMode.Setup);
+            // 제어권 전환 (Local 상태에서만 Remote로 전환 가능)
+            SetLocalControlCommand = new RelayCommand(
+                () => ControlAuthority = ControlAuthority.Local,
+                () => !IsLocked);
+            SetRemoteControlCommand = new RelayCommand(
+                () => ControlAuthority = ControlAuthority.Remote,
+                () => IsLocalControl && IsInitialized && IsHomed && !HasActiveAlarm);
 
-            InitializeSystemCommand = new RelayCommand(ExecuteInitializeSystem, () => !IsInitialized);
-            HomeAllCommand = new RelayCommand(ExecuteHomeAll, () => IsInitialized && !IsHomed);
-            EmergencyStopCommand = new RelayCommand(ExecuteEmergencyStop);
-            ResetAlarmCommand = new RelayCommand(ExecuteResetAlarm, () => HasActiveAlarm);
+            // 모드 전환 (Local 상태에서만)
+            SetManualModeCommand = new RelayCommand(
+                () => CurrentMode = SystemMode.Manual,
+                () => IsLocalControl);
+            // Auto는 Initialize + Home 완료 후에만 가능 (프로덕션)
+            // Simulation 모드: Local이면 Auto 가능 (Initialize/Home 불필요)
+            SetAutoModeCommand = new RelayCommand(
+                () => CurrentMode = SystemMode.Auto,
+                () => AppSettings.SimulationMode
+                    ? IsLocalControl
+                    : IsLocalControl && IsInitialized && IsHomed);
+            SetSetupModeCommand = new RelayCommand(
+                () => CurrentMode = SystemMode.Setup,
+                () => IsLocalControl);
+
+            // 시스템 명령 (Local 상태에서만)
+            InitializeSystemCommand = new RelayCommand(
+                ExecuteInitializeSystem,
+                () => IsLocalControl && !IsInitialized);
+            HomeAllCommand = new RelayCommand(
+                ExecuteHomeAll,
+                () => IsLocalControl && IsInitialized && !IsHomed);
+            EmergencyStopCommand = new RelayCommand(ExecuteEmergencyStop); // EMO는 항상 가능
+            ResetAlarmCommand = new RelayCommand(
+                ExecuteResetAlarm,
+                () => IsLocalControl && HasActiveAlarm);
         }
 
         #endregion
@@ -276,6 +395,9 @@ namespace VisionAlignChamber.ViewModels
             // VisionAlignerSystem을 통해 비상 정지 (비즈니스 로직)
             _system?.EmergencyStop();
 
+            // 제어권 잠금
+            ControlAuthority = ControlAuthority.Locked;
+
             CurrentStatus = SystemStatus.EMO;
             StatusMessage = "비상 정지!";
 
@@ -295,6 +417,12 @@ namespace VisionAlignChamber.ViewModels
             {
                 CurrentStatus = SystemStatus.Idle;
                 IsHomed = false; // 홈 상태 리셋
+
+                // Locked 상태였다면 Local로 복구
+                if (IsLocked)
+                {
+                    ControlAuthority = ControlAuthority.Local;
+                }
             }
 
             StatusMessage = "알람 리셋 완료";
@@ -313,6 +441,7 @@ namespace VisionAlignChamber.ViewModels
             Motion?.UpdateStatus();
             IO?.UpdateStatus();
             Vision?.UpdateStatus();
+            Eddy?.UpdateStatus();
 
             SystemState.LastUpdated = DateTime.Now;
         }
@@ -338,7 +467,16 @@ namespace VisionAlignChamber.ViewModels
 
         private void RaiseCanExecuteChanged()
         {
+            // 제어권 전환 명령
+            ((RelayCommand)SetLocalControlCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)SetRemoteControlCommand).RaiseCanExecuteChanged();
+
+            // 모드 전환 명령
+            ((RelayCommand)SetManualModeCommand).RaiseCanExecuteChanged();
             ((RelayCommand)SetAutoModeCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)SetSetupModeCommand).RaiseCanExecuteChanged();
+
+            // 시스템 명령
             ((RelayCommand)InitializeSystemCommand).RaiseCanExecuteChanged();
             ((RelayCommand)HomeAllCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ResetAlarmCommand).RaiseCanExecuteChanged();
@@ -360,6 +498,7 @@ namespace VisionAlignChamber.ViewModels
             Motion?.Dispose();
             IO?.Dispose();
             Vision?.Dispose();
+            Eddy?.Dispose();
 
             // VisionAlignerSystem은 MainForm에서 관리 (여기서 Dispose하지 않음)
             base.OnDisposing();

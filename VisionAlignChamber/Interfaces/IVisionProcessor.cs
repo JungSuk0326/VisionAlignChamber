@@ -100,7 +100,7 @@ namespace VisionAlignChamber.Interfaces
         /// </summary>
         /// <param name="isFlat">플랫 모드 여부</param>
         /// <returns>웨이퍼 정렬 결과</returns>
-        WaferAlignResult GetResult(bool isFlat);
+        WaferVisionResult GetResult(bool isFlat);
 
         /// <summary>
         /// 결과 이미지 조회 (노치/플랫 표시)

@@ -1,6 +1,7 @@
 using System;
 using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Vision;
+using VisionAlignChamber.Interfaces;
 
 namespace VisionAlignChamber.Core
 {
@@ -15,6 +16,7 @@ namespace VisionAlignChamber.Core
         private readonly VisionAlignerMotion _motion;
         private readonly VisionAlignerIO _io;
         private readonly VisionAlignWrapper _vision;
+        private readonly IEddyCurrentSensor _eddy;
 
         private bool _isInitialized;
         private bool _disposed;
@@ -23,11 +25,19 @@ namespace VisionAlignChamber.Core
 
         #region Constructor
 
-        public VisionAlignerSystem(VisionAlignerMotion motion, VisionAlignerIO io, VisionAlignWrapper vision)
+        /// <summary>
+        /// 생성자 - 각 모듈은 null 허용 (개별 테스트 가능)
+        /// </summary>
+        public VisionAlignerSystem(
+            VisionAlignerMotion motion = null,
+            VisionAlignerIO io = null,
+            VisionAlignWrapper vision = null,
+            IEddyCurrentSensor eddy = null)
         {
-            _motion = motion ?? throw new ArgumentNullException(nameof(motion));
-            _io = io ?? throw new ArgumentNullException(nameof(io));
-            _vision = vision ?? throw new ArgumentNullException(nameof(vision));
+            _motion = motion;
+            _io = io;
+            _vision = vision;
+            _eddy = eddy;
         }
 
         #endregion
@@ -39,20 +49,55 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool IsInitialized => _isInitialized;
 
+        #region 모듈 가용성
+
+        /// <summary>
+        /// Motion 모듈 사용 가능 여부
+        /// </summary>
+        public bool HasMotion => _motion != null;
+
+        /// <summary>
+        /// IO 모듈 사용 가능 여부
+        /// </summary>
+        public bool HasIO => _io != null;
+
+        /// <summary>
+        /// Vision 모듈 사용 가능 여부
+        /// </summary>
+        public bool HasVision => _vision != null;
+
+        /// <summary>
+        /// Eddy 모듈 사용 가능 여부
+        /// </summary>
+        public bool HasEddy => _eddy != null;
+
+        #endregion
+
+        #region 모듈 초기화 상태
+
         /// <summary>
         /// 모션 컨트롤러 초기화 상태
         /// </summary>
-        public bool IsMotionInitialized => _motion.IsInitialized;
+        public bool IsMotionInitialized => _motion?.IsInitialized ?? false;
 
         /// <summary>
         /// 디지털 IO 초기화 상태
         /// </summary>
-        public bool IsIOInitialized => _io.IsInitialized;
+        public bool IsIOInitialized => _io?.IsInitialized ?? false;
 
         /// <summary>
         /// 비전 초기화 상태
         /// </summary>
-        public bool IsVisionInitialized => _vision.IsInitialized;
+        public bool IsVisionInitialized => _vision?.IsInitialized ?? false;
+
+        /// <summary>
+        /// Eddy 센서 연결 상태
+        /// </summary>
+        public bool IsEddyConnected => _eddy?.IsConnected ?? false;
+
+        #endregion
+
+        #region 모듈 접근자
 
         /// <summary>
         /// Motion Facade (ViewModel에서 직접 접근용)
@@ -68,6 +113,13 @@ namespace VisionAlignChamber.Core
         /// Vision Wrapper (ViewModel에서 직접 접근용)
         /// </summary>
         public VisionAlignWrapper Vision => _vision;
+
+        /// <summary>
+        /// Eddy Current 센서 (ViewModel에서 직접 접근용)
+        /// </summary>
+        public IEddyCurrentSensor Eddy => _eddy;
+
+        #endregion
 
         /// <summary>
         /// 마지막 에러 메시지
@@ -88,10 +140,10 @@ namespace VisionAlignChamber.Core
         #region Initialization
 
         /// <summary>
-        /// 전체 시스템 초기화
+        /// 전체 시스템 초기화 (사용 가능한 모듈만)
         /// 순서: Motion → IO → Vision
         /// </summary>
-        /// <returns>성공 여부</returns>
+        /// <returns>하나 이상의 모듈이 초기화되면 true</returns>
         public bool InitializeAll()
         {
             if (_isInitialized)
@@ -100,37 +152,53 @@ namespace VisionAlignChamber.Core
                 return true;
             }
 
+            bool anySuccess = false;
+            int step = 0;
+            int totalSteps = (HasMotion ? 1 : 0) + (HasIO ? 1 : 0) + (HasVision ? 1 : 0);
+
             try
             {
                 // Step 1: Motion 초기화
-                RaiseInitializationProgress("모션 컨트롤러 초기화 중...", 0, 3);
-                if (!InitializeMotion())
+                if (HasMotion)
                 {
-                    return false;
+                    RaiseInitializationProgress("모션 컨트롤러 초기화 중...", step, totalSteps);
+                    if (InitializeMotion())
+                    {
+                        anySuccess = true;
+                    }
+                    step++;
                 }
 
                 // Step 2: IO 초기화
-                RaiseInitializationProgress("디지털 IO 초기화 중...", 1, 3);
-                if (!InitializeIO())
+                if (HasIO)
                 {
-                    return false;
+                    RaiseInitializationProgress("디지털 IO 초기화 중...", step, totalSteps);
+                    if (InitializeIO())
+                    {
+                        anySuccess = true;
+                    }
+                    step++;
                 }
 
                 // Step 3: Vision 초기화
-                RaiseInitializationProgress("비전 시스템 초기화 중...", 2, 3);
-                if (!InitializeVision())
+                if (HasVision)
                 {
-                    return false;
+                    RaiseInitializationProgress("비전 시스템 초기화 중...", step, totalSteps);
+                    if (InitializeVision())
+                    {
+                        anySuccess = true;
+                    }
+                    step++;
                 }
 
-                _isInitialized = true;
-                RaiseInitializationProgress("시스템 초기화 완료", 3, 3);
-                return true;
+                _isInitialized = anySuccess;
+                RaiseInitializationProgress("시스템 초기화 완료", totalSteps, totalSteps);
+                return anySuccess;
             }
             catch (Exception ex)
             {
                 LastError = $"초기화 중 예외 발생: {ex.Message}";
-                return false;
+                return anySuccess;
             }
         }
 
@@ -140,6 +208,12 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool InitializeMotion()
         {
+            if (_motion == null)
+            {
+                LastError = "Motion 모듈을 사용할 수 없습니다.";
+                return false;
+            }
+
             if (_motion.IsInitialized)
             {
                 return true;
@@ -166,6 +240,12 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool InitializeIO()
         {
+            if (_io == null)
+            {
+                LastError = "IO 모듈을 사용할 수 없습니다.";
+                return false;
+            }
+
             if (_io.IsInitialized)
             {
                 return true;
@@ -185,6 +265,12 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool InitializeVision()
         {
+            if (_vision == null)
+            {
+                LastError = "Vision 모듈을 사용할 수 없습니다.";
+                return false;
+            }
+
             if (_vision.IsInitialized)
             {
                 return true;
@@ -205,17 +291,24 @@ namespace VisionAlignChamber.Core
 
         /// <summary>
         /// 전체 시스템 종료
-        /// 순서: Vision → IO → Motion (초기화 역순)
+        /// 순서: Eddy → Vision → IO → Motion (초기화 역순)
         /// </summary>
         public void ShutdownAll()
         {
             try
             {
+                // Eddy 센서 종료
+                if (_eddy?.IsConnected == true)
+                {
+                    _eddy.Disconnect();
+                }
+                _eddy?.Dispose();
+
                 // Vision 종료
                 _vision?.Dispose();
 
                 // IO 종료 (모든 출력 OFF 후 종료)
-                if (_io.IsInitialized)
+                if (_io?.IsInitialized == true)
                 {
                     _io.SetLiftPinVacuum(false);
                     _io.SetLiftPinBlow(false);
@@ -226,7 +319,7 @@ namespace VisionAlignChamber.Core
                 }
 
                 // Motion 종료 (모든 축 정지 후 종료)
-                if (_motion.IsInitialized)
+                if (_motion?.IsInitialized == true)
                 {
                     _motion.EmergencyStopAll();
                     _motion.Close();
@@ -250,10 +343,10 @@ namespace VisionAlignChamber.Core
         public void EmergencyStop()
         {
             // 모션 비상 정지
-            _motion.EmergencyStopAll();
+            _motion?.EmergencyStopAll();
 
             // 모든 출력 OFF
-            if (_io.IsInitialized)
+            if (_io?.IsInitialized == true)
             {
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(false);
@@ -272,6 +365,12 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool HomeAll()
         {
+            if (_motion == null)
+            {
+                LastError = "Motion 모듈을 사용할 수 없습니다.";
+                return false;
+            }
+
             if (!_motion.IsInitialized)
             {
                 LastError = "모션 컨트롤러가 초기화되지 않았습니다.";

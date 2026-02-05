@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- 기존 파일 -->
+    <Compile Include="Core\AppContext.cs" />
     <Compile Include="Core\EventManager.cs" />
     <Compile Include="Eddy\EddyCurrentSensor.cs" />
     <Compile Include="Form1.cs">
@@ -202,6 +203,7 @@
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Log\DLLs\NLog.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -225,6 +227,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Hardware\Ajin\DLLs\EzBasicAxl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Log\DLLs\NLog.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Vision\eMotion\DLLs\eMotionAlign.dll">

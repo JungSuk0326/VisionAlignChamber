@@ -45,6 +45,8 @@ namespace VisionAlignChamber.Views
         public MainForm()
         {
             InitializeComponent();
+            InitializeAppContext();
+            SubscribeEvents();
             InitializeViewModel();
             InitializeTimer();
             BindViewModel();
@@ -53,6 +55,23 @@ namespace VisionAlignChamber.Views
         #endregion
 
         #region Initialization
+
+        private void InitializeAppContext()
+        {
+            // AppContext 초기화
+            Core.AppContext.Current.Initialize();
+            // Note: AppSettings는 static 클래스이므로 직접 접근
+        }
+
+        private void SubscribeEvents()
+        {
+            // EventManager 구독
+            EventManager.Subscribe(EventManager.StatusMessage, OnStatusMessageReceived);
+            EventManager.Subscribe(EventManager.AlarmOccurred, OnAlarmOccurred);
+            EventManager.Subscribe(EventManager.AlarmCleared, OnAlarmCleared);
+            EventManager.Subscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
+            EventManager.Subscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+        }
 
         private void InitializeViewModel()
         {
@@ -146,6 +165,10 @@ namespace VisionAlignChamber.Views
 
             // VisionAlignerSystem 생성 (사용 가능한 모듈만 전달)
             _system = new VisionAlignerSystem(_vaMotion, _vaIO, _vision, _eddySensor);
+
+            // AppContext에 서비스 등록
+            Core.AppContext.Current.Motion = _motionController;
+            Core.AppContext.Current.DigitalIO = _digitalIO;
 
             // ViewModel 생성 및 초기화
             _viewModel = new MainViewModel();
@@ -364,6 +387,90 @@ namespace VisionAlignChamber.Views
 
         #endregion
 
+        #region EventManager Handlers
+
+        private void OnStatusMessageReceived(object data)
+        {
+            var message = data as string;
+            if (!string.IsNullOrEmpty(message))
+            {
+                UpdateStatusMessage(message);
+            }
+        }
+
+        private void OnAlarmOccurred(object data)
+        {
+            var alarm = data as AlarmInfo;
+            if (alarm != null)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action<object>(OnAlarmOccurred), data);
+                    return;
+                }
+
+                // 알람 발생 시 UI 업데이트
+                lblSystemStatus.Text = "Alarm";
+                lblSystemStatus.ForeColor = Color.Red;
+                UpdateStatusMessage($"알람 발생: [{alarm.Code}] {alarm.Message}");
+            }
+        }
+
+        private void OnAlarmCleared(object data)
+        {
+            var alarm = data as AlarmInfo;
+            if (alarm != null)
+            {
+                UpdateStatusMessage($"알람 해제: [{alarm.Code}]");
+            }
+        }
+
+        private void OnControlAuthorityChanged(object data)
+        {
+            if (data is ControlAuthority authority)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action<object>(OnControlAuthorityChanged), data);
+                    return;
+                }
+
+                // AppContext의 제어권 상태와 UI 동기화
+                UpdateControlAuthorityDisplay();
+                UpdateControlAuthorityRadioButtons();
+            }
+        }
+
+        private void OnSystemStateChanged(object data)
+        {
+            var propertyName = data as string;
+            if (!string.IsNullOrEmpty(propertyName))
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action<object>(OnSystemStateChanged), data);
+                    return;
+                }
+
+                // 시스템 상태 변경에 따른 UI 업데이트
+                switch (propertyName)
+                {
+                    case nameof(Core.AppContext.SystemStatus):
+                        lblSystemStatus.Text = Core.AppContext.Current.SystemStatus.ToString();
+                        break;
+                    case nameof(Core.AppContext.IsEmergencyStop):
+                        if (Core.AppContext.Current.IsEmergencyStop)
+                        {
+                            lblSystemStatus.Text = "EMO";
+                            lblSystemStatus.ForeColor = Color.Red;
+                        }
+                        break;
+                }
+            }
+        }
+
+        #endregion
+
         #region Event Handlers
 
         private void btnEmergencyStop_Click(object sender, EventArgs e)
@@ -414,10 +521,20 @@ namespace VisionAlignChamber.Views
             _updateTimer?.Stop();
             _updateTimer?.Dispose();
 
+            // EventManager 구독 해제
+            EventManager.Unsubscribe(EventManager.StatusMessage, OnStatusMessageReceived);
+            EventManager.Unsubscribe(EventManager.AlarmOccurred, OnAlarmOccurred);
+            EventManager.Unsubscribe(EventManager.AlarmCleared, OnAlarmCleared);
+            EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
+            EventManager.Unsubscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+
             _viewModel?.Dispose();
 
             // VisionAlignerSystem이 내부적으로 모든 하드웨어 종료 처리
             _system?.Dispose();
+
+            // AppContext 종료
+            Core.AppContext.Current.Shutdown();
         }
 
         #endregion

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Vision;
 using VisionAlignChamber.Models;
+using VisionAlignChamber.Core;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -24,6 +25,39 @@ namespace VisionAlignChamber.ViewModels
         {
             _vision = vision ?? throw new ArgumentNullException(nameof(vision));
             InitializeCommands();
+            SubscribeEvents();
+        }
+
+        private void SubscribeEvents()
+        {
+            // EventManager 구독
+            EventManager.Subscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
+            EventManager.Subscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+        }
+
+        private void OnControlAuthorityChanged(object data)
+        {
+            if (data is ControlAuthority authority)
+            {
+                // Remote 모드에서는 UI 조작 비활성화
+                bool isLocal = (authority == ControlAuthority.Local);
+                // CanExecute 재평가
+                RaiseCanExecuteChanged();
+            }
+        }
+
+        private void OnSystemStateChanged(object data)
+        {
+            var propertyName = data as string;
+            if (propertyName == nameof(Core.AppContext.IsEmergencyStop) &&
+                Core.AppContext.Current.IsEmergencyStop)
+            {
+                // 비상정지 시 Running 중지
+                if (IsRunning)
+                {
+                    ExecuteStopRun();
+                }
+            }
         }
 
         #endregion
@@ -62,7 +96,14 @@ namespace VisionAlignChamber.ViewModels
         public string StatusMessage
         {
             get => _statusMessage;
-            set => SetProperty(ref _statusMessage, value);
+            set
+            {
+                if (SetProperty(ref _statusMessage, value))
+                {
+                    // EventManager를 통해 전역 상태 메시지 발행
+                    EventManager.Publish(EventManager.StatusMessage, value);
+                }
+            }
         }
 
         #endregion
@@ -341,6 +382,9 @@ namespace VisionAlignChamber.ViewModels
                     ResultImage = _vision.GetResultImage(isFlat);
                     WaferImage = _vision.GetWaferImage(isFlat);
 
+                    // AppContext에 검사 결과 저장 (자동으로 InspectionComplete 이벤트 발행)
+                    Core.AppContext.Current.LastVisionResult = AlignResult;
+
                     if (AlignResult.IsValid)
                     {
                         StatusMessage = $"검사 완료 - 각도: {OffsetAngle:F3}°";
@@ -609,6 +653,10 @@ namespace VisionAlignChamber.ViewModels
 
         protected override void OnDisposing()
         {
+            // EventManager 구독 해제
+            EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
+            EventManager.Unsubscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+
             ResultImage?.Dispose();
             WaferImage?.Dispose();
             CurrentImage?.Dispose();

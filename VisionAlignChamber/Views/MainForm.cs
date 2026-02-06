@@ -11,6 +11,8 @@ using VisionAlignChamber.Eddy;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
 using VisionAlignChamber.Config;
+using VisionAlignChamber.Interlock;
+using VisionAlignChamber.Log;
 
 namespace VisionAlignChamber.Views
 {
@@ -24,7 +26,9 @@ namespace VisionAlignChamber.Views
         #region Fields
 
         private MainViewModel _viewModel;
+        private LogViewModel _logViewModel;
         private Timer _updateTimer;
+        private bool _alarmBlinkState; // 알람 깜빡임 상태
 
         // 하드웨어 (인터페이스 타입으로 선언 - 실제/시뮬레이션 모두 지원)
         private IMotionController _motionController;
@@ -50,6 +54,7 @@ namespace VisionAlignChamber.Views
             InitializeViewModel();
             InitializeTimer();
             BindViewModel();
+            InitializeAlarmIndicator();
         }
 
         #endregion
@@ -58,6 +63,9 @@ namespace VisionAlignChamber.Views
 
         private void InitializeAppContext()
         {
+            // LogManager 초기화
+            LogManager.Initialize();
+
             // AppContext 초기화
             Core.AppContext.Current.Initialize();
             // Note: AppSettings는 static 클래스이므로 직접 접근
@@ -233,6 +241,20 @@ namespace VisionAlignChamber.Views
             {
                 eddyPanel.BindViewModel(_viewModel.Eddy);
             }
+
+            // Log 탭 바인딩
+            _logViewModel = new LogViewModel();
+            logPanel.BindViewModel(_logViewModel);
+            LogManager.RegisterLogViewModel(_logViewModel);
+
+            // 초기 로그 메시지
+            LogManager.System.Info("VisionAlignChamber 시작");
+        }
+
+        private void InitializeAlarmIndicator()
+        {
+            // 시작 시 활성 알람 확인하여 표시등 상태 초기화
+            UpdateAlarmIndicator();
         }
 
         #endregion
@@ -400,28 +422,84 @@ namespace VisionAlignChamber.Views
 
         private void OnAlarmOccurred(object data)
         {
-            var alarm = data as AlarmInfo;
-            if (alarm != null)
+            if (InvokeRequired)
             {
-                if (InvokeRequired)
-                {
-                    Invoke(new Action<object>(OnAlarmOccurred), data);
-                    return;
-                }
+                Invoke(new Action<object>(OnAlarmOccurred), data);
+                return;
+            }
 
+            // InterlockManager의 AlarmInfo 처리
+            var interlockAlarm = data as Interlock.AlarmInfo;
+            if (interlockAlarm != null)
+            {
                 // 알람 발생 시 UI 업데이트
                 lblSystemStatus.Text = "Alarm";
                 lblSystemStatus.ForeColor = Color.Red;
+                UpdateStatusMessage($"알람 발생: [{interlockAlarm.Definition?.Code}] {interlockAlarm.Definition?.Name}");
+
+                // 알람 표시등 활성화 및 깜빡임 시작
+                UpdateAlarmIndicator();
+                return;
+            }
+
+            // 기존 Models.AlarmInfo 처리 (하위 호환성)
+            var alarm = data as Models.AlarmInfo;
+            if (alarm != null)
+            {
+                lblSystemStatus.Text = "Alarm";
+                lblSystemStatus.ForeColor = Color.Red;
                 UpdateStatusMessage($"알람 발생: [{alarm.Code}] {alarm.Message}");
+
+                // 알람 표시등 활성화 및 깜빡임 시작
+                UpdateAlarmIndicator();
             }
         }
 
         private void OnAlarmCleared(object data)
         {
-            var alarm = data as AlarmInfo;
+            if (InvokeRequired)
+            {
+                Invoke(new Action<object>(OnAlarmCleared), data);
+                return;
+            }
+
+            // InterlockManager의 AlarmInfo 처리
+            var interlockAlarm = data as Interlock.AlarmInfo;
+            if (interlockAlarm != null)
+            {
+                UpdateStatusMessage($"알람 해제: [{interlockAlarm.Definition?.Code}]");
+                UpdateAlarmIndicator();
+                return;
+            }
+
+            // 기존 Models.AlarmInfo 처리 (하위 호환성)
+            var alarm = data as Models.AlarmInfo;
             if (alarm != null)
             {
                 UpdateStatusMessage($"알람 해제: [{alarm.Code}]");
+                UpdateAlarmIndicator();
+            }
+        }
+
+        private void UpdateAlarmIndicator()
+        {
+            bool hasAlarm = InterlockManager.Instance.HasActiveAlarm;
+
+            if (hasAlarm)
+            {
+                // 알람 있으면 표시등 보이기 및 깜빡임 시작
+                lblAlarmIndicator.Visible = true;
+                if (!timerAlarmBlink.Enabled)
+                {
+                    timerAlarmBlink.Start();
+                }
+            }
+            else
+            {
+                // 알람 없으면 표시등 숨기기 및 깜빡임 정지
+                lblAlarmIndicator.Visible = false;
+                timerAlarmBlink.Stop();
+                _alarmBlinkState = false;
             }
         }
 
@@ -516,8 +594,35 @@ namespace VisionAlignChamber.Views
             }
         }
 
+        private void timerAlarmBlink_Tick(object sender, EventArgs e)
+        {
+            // 알람 표시등 깜빡임
+            _alarmBlinkState = !_alarmBlinkState;
+
+            if (_alarmBlinkState)
+            {
+                lblAlarmIndicator.BackColor = Color.Red;
+                lblAlarmIndicator.ForeColor = Color.White;
+            }
+            else
+            {
+                lblAlarmIndicator.BackColor = Color.DarkRed;
+                lblAlarmIndicator.ForeColor = Color.Yellow;
+            }
+        }
+
+        private void lblAlarmIndicator_Click(object sender, EventArgs e)
+        {
+            // 알람 클릭 시 History > Alarm 탭으로 이동
+            tabMain.SelectedTab = tabHistory;
+            tabControlHistory.SelectedTab = tabAlarm;
+        }
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // 알람 깜빡임 타이머 정지
+            timerAlarmBlink?.Stop();
+
             _updateTimer?.Stop();
             _updateTimer?.Dispose();
 
@@ -532,6 +637,9 @@ namespace VisionAlignChamber.Views
 
             // VisionAlignerSystem이 내부적으로 모든 하드웨어 종료 처리
             _system?.Dispose();
+
+            // LogManager 종료
+            LogManager.Shutdown();
 
             // AppContext 종료
             Core.AppContext.Current.Shutdown();

@@ -1,0 +1,105 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.0/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.0": {},
+    ".NETStandard,Version=v2.0/": {
+      "CommObject/1.0.0": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.3",
+          "ObjectCommunication": "1.0.0",
+          "ObjectDumper.NET": "4.3.2"
+        },
+        "runtime": {
+          "CommObject.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.0": {},
+      "NETStandard.Library/2.0.3": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "ObjectDumper.NET/4.3.2": {
+        "runtime": {
+          "lib/netstandard2.0/ObjectDumping.dll": {
+            "assemblyVersion": "4.3.2.0",
+            "fileVersion": "4.3.2.0"
+          }
+        }
+      },
+      "System.Threading.Tasks.Dataflow/9.0.7": {
+        "runtime": {
+          "lib/netstandard2.0/System.Threading.Tasks.Dataflow.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.725.31616"
+          }
+        }
+      },
+      "System.ValueTuple/4.6.1": {},
+      "ObjectCommunication/1.0.0": {
+        "dependencies": {
+          "ObjectDumper.NET": "4.3.2",
+          "System.Threading.Tasks.Dataflow": "9.0.7",
+          "System.ValueTuple": "4.6.1"
+        },
+        "runtime": {
+          "ObjectCommunication.dll": {
+            "assemblyVersion": "1.0.0.1",
+            "fileVersion": "1.0.0.1"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CommObject/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "path": "microsoft.netcore.platforms/1.1.0",
+      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "NETStandard.Library/2.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "path": "netstandard.library/2.0.3",
+      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "ObjectDumper.NET/4.3.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-K7gpO3o6m+Z90jsFyeYCrQgtzdnMYv4lRomm67WrgoLiaicRxkf0X4AAPuZcIqJ3fgdN27IBI7ydnXwBal/Dmw==",
+      "path": "objectdumper.net/4.3.2",
+      "hashPath": "objectdumper.net.4.3.2.nupkg.sha512"
+    },
+    "System.Threading.Tasks.Dataflow/9.0.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MDKosIO40uXc6x6MaJJZFDAQG3gOGcnpFuVs6cy9ivW+00m9SokeBmPCjVcstT9/HuDF9CV3Jxs7RpgEW2czGA==",
+      "path": "system.threading.tasks.dataflow/9.0.7",
+      "hashPath": "system.threading.tasks.dataflow.9.0.7.nupkg.sha512"
+    },
+    "System.ValueTuple/4.6.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+RJT4qaekpZ7DDLhf+LTjq+E48jieKiY9ulJ+BoxKmZblIJfIJT8Ufcaa/clQqnYvWs8jugfGSMu8ylS0caG0w==",
+      "path": "system.valuetuple/4.6.1",
+      "hashPath": "system.valuetuple.4.6.1.nupkg.sha512"
+    },
+    "ObjectCommunication/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -30,6 +30,13 @@ x86/
 *.pdb
 *.cache
 
+# 예외: 프로젝트에 포함된 DLL들
+!**/Hardware/Ajin/DLLs/*.dll
+!**/Vision/eMotion/DLLs/*.dll
+!**/Database/DLLs/*.dll
+!**/Communication/DLLs/*.dll
+!**/Log/DLLs/*.dll
+
 # User-specific files
 *.rsuser
 *.suo

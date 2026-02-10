@@ -37,6 +37,10 @@ x86/
 !**/Communication/DLLs/*.dll
 !**/Log/DLLs/*.dll
 
+# 예외: Log 폴더의 소스 코드 파일
+!**/Log/*.cs
+!**/Log/DLLs/
+
 # User-specific files
 *.rsuser
 *.suo

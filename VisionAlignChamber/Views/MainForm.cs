@@ -13,6 +13,8 @@ using VisionAlignChamber.Models;
 using VisionAlignChamber.Config;
 using VisionAlignChamber.Interlock;
 using VisionAlignChamber.Log;
+using VisionAlignChamber.Communication;
+using VisionAlignChamber.Communication.Interfaces;
 
 namespace VisionAlignChamber.Views
 {
@@ -41,6 +43,9 @@ namespace VisionAlignChamber.Views
 
         // 비즈니스 로직 (Core)
         private VisionAlignerSystem _system;
+
+        // CTC 통신
+        private CTCCommController _ctcController;
 
         #endregion
 
@@ -171,8 +176,23 @@ namespace VisionAlignChamber.Views
                 _eddySensor = null;
             }
 
+            // 6. CTC 통신 초기화 (UI 스레드에서 생성)
+            try
+            {
+                _ctcController = new CTCCommController(AppSettings.CTCPort);
+                SubscribeCTCEvents();
+                _ctcController.Start(); // 서버 리스닝 시작
+                UpdateCTCStatusDisplay(); // 초기 상태 표시
+            }
+            catch (Exception ex)
+            {
+                initErrors.Add($"CTC Communication: {ex.Message}");
+                _ctcController = null;
+                UpdateCTCStatusDisplay(); // N/A 표시
+            }
+
             // VisionAlignerSystem 생성 (사용 가능한 모듈만 전달)
-            _system = new VisionAlignerSystem(_vaMotion, _vaIO, _vision, _eddySensor);
+            _system = new VisionAlignerSystem(_vaMotion, _vaIO, _vision, _eddySensor, _ctcController);
 
             // AppContext에 서비스 등록
             Core.AppContext.Current.Motion = _motionController;
@@ -203,7 +223,91 @@ namespace VisionAlignChamber.Views
             if (_vaIO != null) modules.Add("IO");
             if (_vision != null) modules.Add("Vision");
             if (_eddySensor != null) modules.Add("Eddy");
+            if (_ctcController != null) modules.Add("CTC");
             return modules.Count > 0 ? string.Join(", ", modules) : "없음";
+        }
+
+        /// <summary>
+        /// CTC 통신 이벤트 구독 (UI 스레드 안전 처리)
+        /// </summary>
+        private void SubscribeCTCEvents()
+        {
+            if (_ctcController == null) return;
+
+            // 연결 상태 변경 이벤트
+            _ctcController.OnConnectionChanged += (endPoint, connected) =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    string status = connected ? "연결됨" : "연결 해제됨";
+                    UpdateStatusMessage($"[CTC] {endPoint} {status}");
+                    LogManager.System.Info($"[CTC] {endPoint} {status}");
+
+                    // CTC 상태 표시 업데이트
+                    UpdateCTCStatusDisplay();
+                }));
+            };
+
+            // 명령 수신 이벤트 (UI 표시용)
+            _ctcController.OnCommandReceived += cmd =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    UpdateStatusMessage($"[CTC] 명령 수신: {cmd.Command}");
+                }));
+            };
+
+            // 객체 수신 이벤트 (로그용)
+            _ctcController.OnObjectReceived += obj =>
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    LogManager.System.Debug($"[CTC] 객체 수신: {obj.GetType().Name}");
+                }));
+            };
+        }
+
+        /// <summary>
+        /// CTC 연결 상태 표시 업데이트
+        /// </summary>
+        private void UpdateCTCStatusDisplay()
+        {
+            if (_ctcController == null)
+            {
+                lblCTCStatus.Text = "N/A";
+                lblCTCStatus.ForeColor = Color.Gray;
+                return;
+            }
+
+            int clientCount = _ctcController.ClientCount;
+            bool isListening = _ctcController.IsListening;
+
+            if (clientCount > 0)
+            {
+                // 클라이언트 연결됨
+                lblCTCStatus.Text = $"Connected ({clientCount})";
+                lblCTCStatus.ForeColor = Color.LimeGreen;
+            }
+            else if (isListening)
+            {
+                // 서버 리스닝 중 (연결 대기)
+                lblCTCStatus.Text = "Listening...";
+                lblCTCStatus.ForeColor = Color.Yellow;
+            }
+            else
+            {
+                // 서버 미시작
+                lblCTCStatus.Text = "Stopped";
+                lblCTCStatus.ForeColor = Color.Gray;
+            }
+        }
+
+        /// <summary>
+        /// CTC 통신 이벤트 구독 해제
+        /// </summary>
+        private void UnsubscribeCTCEvents()
+        {
+            // CTCCommController.Dispose()에서 자동으로 이벤트 언링크됨
         }
 
         private void InitializeTimer()
@@ -635,8 +739,11 @@ namespace VisionAlignChamber.Views
 
             _viewModel?.Dispose();
 
-            // VisionAlignerSystem이 내부적으로 모든 하드웨어 종료 처리
+            // VisionAlignerSystem이 내부적으로 모든 하드웨어 종료 처리 (CTC 포함)
             _system?.Dispose();
+
+            // CTC 통신 종료 (System에서 처리되지 않은 경우 대비)
+            _ctcController?.Dispose();
 
             // LogManager 종료
             LogManager.Shutdown();

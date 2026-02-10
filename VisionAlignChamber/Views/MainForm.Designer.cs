@@ -60,6 +60,8 @@ namespace VisionAlignChamber.Views
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.lblAlarmIndicator = new System.Windows.Forms.Label();
             this.timerAlarmBlink = new System.Windows.Forms.Timer();
+            this.lblCTCLabel = new System.Windows.Forms.Label();
+            this.lblCTCStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -363,6 +365,8 @@ namespace VisionAlignChamber.Views
             // 
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.panelTop.Controls.Add(this.lblAlarmIndicator);
+            this.panelTop.Controls.Add(this.lblCTCLabel);
+            this.panelTop.Controls.Add(this.lblCTCStatus);
             this.panelTop.Controls.Add(this.btnResetAlarm);
             this.panelTop.Controls.Add(this.btnHomeAll);
             this.panelTop.Controls.Add(this.btnInitialize);
@@ -558,6 +562,28 @@ namespace VisionAlignChamber.Views
             this.lblAlarmIndicator.Visible = false;
             this.lblAlarmIndicator.Click += new System.EventHandler(this.lblAlarmIndicator_Click);
             //
+            // lblCTCLabel
+            //
+            this.lblCTCLabel.AutoSize = true;
+            this.lblCTCLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblCTCLabel.ForeColor = System.Drawing.Color.White;
+            this.lblCTCLabel.Location = new System.Drawing.Point(920, 12);
+            this.lblCTCLabel.Name = "lblCTCLabel";
+            this.lblCTCLabel.Size = new System.Drawing.Size(35, 19);
+            this.lblCTCLabel.TabIndex = 12;
+            this.lblCTCLabel.Text = "CTC:";
+            //
+            // lblCTCStatus
+            //
+            this.lblCTCStatus.AutoSize = true;
+            this.lblCTCStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblCTCStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblCTCStatus.Location = new System.Drawing.Point(960, 12);
+            this.lblCTCStatus.Name = "lblCTCStatus";
+            this.lblCTCStatus.Size = new System.Drawing.Size(95, 19);
+            this.lblCTCStatus.TabIndex = 13;
+            this.lblCTCStatus.Text = "Disconnected";
+            //
             // timerAlarmBlink
             //
             this.timerAlarmBlink.Interval = 500;
@@ -674,5 +700,7 @@ namespace VisionAlignChamber.Views
         private System.Windows.Forms.Label lblAlarmIndicator;
         private System.Windows.Forms.Timer timerAlarmBlink;
         private Controls.LogPanel logPanel;
+        private System.Windows.Forms.Label lblCTCLabel;
+        private System.Windows.Forms.Label lblCTCStatus;
     }
 }

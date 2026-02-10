@@ -1,7 +1,9 @@
 using System;
+using CommObject;
 using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Vision;
 using VisionAlignChamber.Interfaces;
+using VisionAlignChamber.Communication.Interfaces;
 
 namespace VisionAlignChamber.Core
 {
@@ -17,6 +19,7 @@ namespace VisionAlignChamber.Core
         private readonly VisionAlignerIO _io;
         private readonly VisionAlignWrapper _vision;
         private readonly IEddyCurrentSensor _eddy;
+        private readonly ICTCCommunication _ctcComm;
 
         private bool _isInitialized;
         private bool _disposed;
@@ -32,12 +35,17 @@ namespace VisionAlignChamber.Core
             VisionAlignerMotion motion = null,
             VisionAlignerIO io = null,
             VisionAlignWrapper vision = null,
-            IEddyCurrentSensor eddy = null)
+            IEddyCurrentSensor eddy = null,
+            ICTCCommunication ctcComm = null)
         {
             _motion = motion;
             _io = io;
             _vision = vision;
             _eddy = eddy;
+            _ctcComm = ctcComm;
+
+            // CTC 통신 이벤트 구독 (비즈니스 로직용)
+            SubscribeCTCEvents();
         }
 
         #endregion
@@ -71,6 +79,11 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool HasEddy => _eddy != null;
 
+        /// <summary>
+        /// CTC 통신 모듈 사용 가능 여부
+        /// </summary>
+        public bool HasCTC => _ctcComm != null;
+
         #endregion
 
         #region 모듈 초기화 상태
@@ -95,6 +108,11 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public bool IsEddyConnected => _eddy?.IsConnected ?? false;
 
+        /// <summary>
+        /// CTC 통신 리스닝 상태
+        /// </summary>
+        public bool IsCTCListening => _ctcComm?.IsListening ?? false;
+
         #endregion
 
         #region 모듈 접근자
@@ -118,6 +136,11 @@ namespace VisionAlignChamber.Core
         /// Eddy Current 센서 (ViewModel에서 직접 접근용)
         /// </summary>
         public IEddyCurrentSensor Eddy => _eddy;
+
+        /// <summary>
+        /// CTC 통신 컨트롤러 (ViewModel에서 직접 접근용)
+        /// </summary>
+        public ICTCCommunication CTCComm => _ctcComm;
 
         #endregion
 
@@ -154,7 +177,7 @@ namespace VisionAlignChamber.Core
 
             bool anySuccess = false;
             int step = 0;
-            int totalSteps = (HasMotion ? 1 : 0) + (HasIO ? 1 : 0) + (HasVision ? 1 : 0);
+            int totalSteps = (HasMotion ? 1 : 0) + (HasIO ? 1 : 0) + (HasVision ? 1 : 0) + (HasCTC ? 1 : 0);
 
             try
             {
@@ -188,6 +211,14 @@ namespace VisionAlignChamber.Core
                     {
                         anySuccess = true;
                     }
+                    step++;
+                }
+
+                // Step 4: CTC 통신 시작
+                if (HasCTC)
+                {
+                    RaiseInitializationProgress("CTC 통신 시작 중...", step, totalSteps);
+                    StartCTCCommunication();
                     step++;
                 }
 
@@ -291,12 +322,15 @@ namespace VisionAlignChamber.Core
 
         /// <summary>
         /// 전체 시스템 종료
-        /// 순서: Eddy → Vision → IO → Motion (초기화 역순)
+        /// 순서: CTC → Eddy → Vision → IO → Motion (초기화 역순)
         /// </summary>
         public void ShutdownAll()
         {
             try
             {
+                // CTC 통신 종료
+                StopCTCCommunication();
+
                 // Eddy 센서 종료
                 if (_eddy?.IsConnected == true)
                 {
@@ -387,6 +421,64 @@ namespace VisionAlignChamber.Core
         private void RaiseInitializationProgress(string message, int currentStep, int totalSteps)
         {
             InitializationProgress?.Invoke(this, new InitializationProgressEventArgs(message, currentStep, totalSteps));
+        }
+
+        #endregion
+
+        #region CTC Communication
+
+        /// <summary>
+        /// CTC 통신 이벤트 구독 (비즈니스 로직용)
+        /// </summary>
+        private void SubscribeCTCEvents()
+        {
+            if (_ctcComm == null) return;
+
+            // 명령 수신 이벤트 - 비즈니스 로직 처리
+            _ctcComm.OnCommandReceived += HandleCTCCommand;
+        }
+
+        /// <summary>
+        /// CTC 통신 시작
+        /// </summary>
+        private void StartCTCCommunication()
+        {
+            _ctcComm?.Start();
+        }
+
+        /// <summary>
+        /// CTC 통신 종료
+        /// </summary>
+        private void StopCTCCommunication()
+        {
+            _ctcComm?.Stop();
+        }
+
+        /// <summary>
+        /// CTC 명령 처리 (비즈니스 로직)
+        /// </summary>
+        private void HandleCTCCommand(CommObject.CommandObject cmd)
+        {
+            // 비즈니스 로직에 따른 명령 처리
+            // UI와 무관한 로직만 여기서 처리
+            // 예: Initialize, MeasurementStart, TransferReady 등
+
+            switch (cmd.Command)
+            {
+                case CommObject.CommandObject.eCMD.Initialize:
+                    // 초기화 명령 처리
+                    break;
+
+                case CommObject.CommandObject.eCMD.MeasurementStart:
+                    // 측정 시작 명령 처리
+                    break;
+
+                case CommObject.CommandObject.eCMD.TransferReady:
+                    // 전송 준비 명령 처리
+                    break;
+
+                // 다른 명령들은 필요에 따라 추가
+            }
         }
 
         #endregion

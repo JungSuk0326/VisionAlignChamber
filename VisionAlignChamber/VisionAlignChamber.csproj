@@ -163,6 +163,10 @@
     <Compile Include="Database\Entities.cs" />
     <!-- Log (로그) -->
     <Compile Include="Log\LogManager.cs" />
+    <!-- Communication (CTC 통신) -->
+    <Compile Include="Communication\Interfaces\ICTCCommunication.cs" />
+    <Compile Include="Communication\CTCCommServer.cs" />
+    <Compile Include="Communication\CTCCommController.cs" />
     <!-- 비전 -->
     <Compile Include="Vision\VisionAlignWrapper.cs" />
     <!-- 모델 -->

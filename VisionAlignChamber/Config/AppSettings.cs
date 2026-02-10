@@ -192,6 +192,19 @@ namespace VisionAlignChamber.Config
 
         #endregion
 
+        #region Communication Properties
+
+        /// <summary>
+        /// CTC 통신 포트 (VisionAlignChamber가 서버)
+        /// </summary>
+        public static int CTCPort
+        {
+            get => GetInt("Communication", "CTCPort", 9998);
+            set => WriteValue("Communication", "CTCPort", value.ToString());
+        }
+
+        #endregion
+
         #region Initialization
 
         /// <summary>

@@ -351,6 +351,12 @@ namespace VisionAlignChamber.Views
             logPanel.BindViewModel(_logViewModel);
             LogManager.RegisterLogViewModel(_logViewModel);
 
+            // Comm 탭 바인딩 (CTC 컨트롤러)
+            if (_ctcController != null)
+            {
+                commPanel.BindController(_ctcController);
+            }
+
             // 초기 로그 메시지
             LogManager.System.Info("VisionAlignChamber 시작");
         }

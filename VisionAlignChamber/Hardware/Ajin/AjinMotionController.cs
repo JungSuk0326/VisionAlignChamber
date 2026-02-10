@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Hardware.Common;
+using VisionAlignChamber.Config;
 
 namespace VisionAlignChamber.Hardware.Ajin
 {
@@ -44,6 +46,9 @@ namespace VisionAlignChamber.Hardware.Ajin
                 {
                     throw new MotionException(result, $"AxlOpen failed: {AjinErrorCode.GetErrorMessage(result)}");
                 }
+
+                // 모션 파라미터 파일 로드 (.mot)
+                LoadMotionParameterFile();
 
                 // 모션 모듈 존재 확인
                 uint isMotion = 0;
@@ -434,6 +439,30 @@ namespace VisionAlignChamber.Hardware.Ajin
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// 모션 파라미터 파일(.mot) 로드
+        /// </summary>
+        private void LoadMotionParameterFile()
+        {
+            string motFilePath = AppSettings.MotParamFilePath;
+
+            if (!File.Exists(motFilePath))
+            {
+                System.Diagnostics.Debug.WriteLine($"Motion parameter file not found: {motFilePath} (using default parameters)");
+                return;
+            }
+
+            uint result = CAXM.AxmMotLoadParaAll(motFilePath);
+            if (result == AjinErrorCode.AXT_RT_SUCCESS)
+            {
+                System.Diagnostics.Debug.WriteLine($"Motion parameter file loaded: {motFilePath}");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"AxmMotLoadParaAll failed: {AjinErrorCode.GetErrorMessage(result)} (File: {motFilePath})");
+            }
         }
 
         #endregion

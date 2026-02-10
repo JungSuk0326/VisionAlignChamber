@@ -109,6 +109,29 @@ namespace VisionAlignChamber.Config
         #region Motion Properties
 
         /// <summary>
+        /// 모션 파라미터 파일 경로 (.mot 파일)
+        /// 비어있으면 기본 경로(Config/AlignChamber.mot) 사용
+        /// </summary>
+        public static string MotParamFilePath
+        {
+            get
+            {
+                string path = ReadValue("Motion", "MotParamFile", "");
+                if (string.IsNullOrEmpty(path))
+                {
+                    // 기본 경로: 실행파일/Config/MotionPara.mot
+                    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "MotionPara.mot");
+                }
+                if (!Path.IsPathRooted(path))
+                {
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
+                }
+                return path;
+            }
+            set => WriteValue("Motion", "MotParamFile", value);
+        }
+
+        /// <summary>
         /// 기본 속도
         /// </summary>
         public static double DefaultVelocity
@@ -199,7 +222,7 @@ namespace VisionAlignChamber.Config
         /// </summary>
         public static int CTCPort
         {
-            get => GetInt("Communication", "CTCPort", 9998);
+            get => GetInt("Communication", "CTCPort", 9999);
             set => WriteValue("Communication", "CTCPort", value.ToString());
         }
 

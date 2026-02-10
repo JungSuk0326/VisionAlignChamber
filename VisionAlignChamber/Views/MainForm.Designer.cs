@@ -41,6 +41,8 @@ namespace VisionAlignChamber.Views
             this.ioPanel = new VisionAlignChamber.Views.Controls.IOPanel();
             this.tabMotion = new System.Windows.Forms.TabPage();
             this.motionPanel = new VisionAlignChamber.Views.Controls.MotionPanel();
+            this.tabComm = new System.Windows.Forms.TabPage();
+            this.commPanel = new VisionAlignChamber.Views.Controls.CommPanel();
             this.tabParameter = new System.Windows.Forms.TabPage();
             this.panelTop = new System.Windows.Forms.Panel();
             this.btnResetAlarm = new System.Windows.Forms.Button();
@@ -79,6 +81,7 @@ namespace VisionAlignChamber.Views
             this.tabEddy.SuspendLayout();
             this.tabIO.SuspendLayout();
             this.tabMotion.SuspendLayout();
+            this.tabComm.SuspendLayout();
             this.panelTop.SuspendLayout();
             this.grpControlMode.SuspendLayout();
             this.panelBottom.SuspendLayout();
@@ -252,6 +255,7 @@ namespace VisionAlignChamber.Views
             this.tabControlMaint.Controls.Add(this.tabPN);
             this.tabControlMaint.Controls.Add(this.tabIO);
             this.tabControlMaint.Controls.Add(this.tabMotion);
+            this.tabControlMaint.Controls.Add(this.tabComm);
             this.tabControlMaint.Controls.Add(this.tabParameter);
             this.tabControlMaint.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMaint.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -350,6 +354,26 @@ namespace VisionAlignChamber.Views
             this.motionPanel.Name = "motionPanel";
             this.motionPanel.Size = new System.Drawing.Size(774, 631);
             this.motionPanel.TabIndex = 0;
+            //
+            // tabComm
+            //
+            this.tabComm.Controls.Add(this.commPanel);
+            this.tabComm.Location = new System.Drawing.Point(4, 26);
+            this.tabComm.Name = "tabComm";
+            this.tabComm.Padding = new System.Windows.Forms.Padding(3);
+            this.tabComm.Size = new System.Drawing.Size(780, 637);
+            this.tabComm.TabIndex = 6;
+            this.tabComm.Text = "Comm";
+            this.tabComm.UseVisualStyleBackColor = true;
+            //
+            // commPanel
+            //
+            this.commPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commPanel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.commPanel.Location = new System.Drawing.Point(3, 3);
+            this.commPanel.Name = "commPanel";
+            this.commPanel.Size = new System.Drawing.Size(774, 631);
+            this.commPanel.TabIndex = 0;
             //
             // tabParameter
             //
@@ -641,6 +665,7 @@ namespace VisionAlignChamber.Views
             this.tabEddy.ResumeLayout(false);
             this.tabIO.ResumeLayout(false);
             this.tabMotion.ResumeLayout(false);
+            this.tabComm.ResumeLayout(false);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.grpControlMode.ResumeLayout(false);
@@ -676,6 +701,7 @@ namespace VisionAlignChamber.Views
         private System.Windows.Forms.TabPage tabEddy;
         private System.Windows.Forms.TabPage tabPN;
         private System.Windows.Forms.TabPage tabParameter;
+        private System.Windows.Forms.TabPage tabComm;
         // 패널
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Button btnEmergencyStop;
@@ -692,6 +718,7 @@ namespace VisionAlignChamber.Views
         private Controls.IOPanel ioPanel;
         private Controls.VisionPanel visionPanel;
         private Controls.EddyPanel eddyPanel;
+        private Controls.CommPanel commPanel;
         private System.Windows.Forms.GroupBox grpControlMode;
         private System.Windows.Forms.RadioButton rbLocal;
         private System.Windows.Forms.RadioButton rbRemote;

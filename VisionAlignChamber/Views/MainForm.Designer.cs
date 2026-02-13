@@ -44,6 +44,7 @@ namespace VisionAlignChamber.Views
             this.tabComm = new System.Windows.Forms.TabPage();
             this.commPanel = new VisionAlignChamber.Views.Controls.CommPanel();
             this.tabParameter = new System.Windows.Forms.TabPage();
+            this.parameterPanel = new VisionAlignChamber.Views.Controls.ParameterPanel();
             this.panelTop = new System.Windows.Forms.Panel();
             this.btnResetAlarm = new System.Windows.Forms.Button();
             this.btnHomeAll = new System.Windows.Forms.Button();
@@ -82,6 +83,7 @@ namespace VisionAlignChamber.Views
             this.tabIO.SuspendLayout();
             this.tabMotion.SuspendLayout();
             this.tabComm.SuspendLayout();
+            this.tabParameter.SuspendLayout();
             this.panelTop.SuspendLayout();
             this.grpControlMode.SuspendLayout();
             this.panelBottom.SuspendLayout();
@@ -377,6 +379,7 @@ namespace VisionAlignChamber.Views
             //
             // tabParameter
             //
+            this.tabParameter.Controls.Add(this.parameterPanel);
             this.tabParameter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabParameter.Location = new System.Drawing.Point(4, 26);
             this.tabParameter.Name = "tabParameter";
@@ -384,6 +387,15 @@ namespace VisionAlignChamber.Views
             this.tabParameter.Size = new System.Drawing.Size(780, 637);
             this.tabParameter.TabIndex = 5;
             this.tabParameter.Text = "Parameter";
+            //
+            // parameterPanel
+            //
+            this.parameterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.parameterPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.parameterPanel.Location = new System.Drawing.Point(3, 3);
+            this.parameterPanel.Name = "parameterPanel";
+            this.parameterPanel.Size = new System.Drawing.Size(774, 631);
+            this.parameterPanel.TabIndex = 0;
             //
             // panelTop
             // 
@@ -666,6 +678,7 @@ namespace VisionAlignChamber.Views
             this.tabIO.ResumeLayout(false);
             this.tabMotion.ResumeLayout(false);
             this.tabComm.ResumeLayout(false);
+            this.tabParameter.ResumeLayout(false);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.grpControlMode.ResumeLayout(false);
@@ -719,6 +732,7 @@ namespace VisionAlignChamber.Views
         private Controls.VisionPanel visionPanel;
         private Controls.EddyPanel eddyPanel;
         private Controls.CommPanel commPanel;
+        private Controls.ParameterPanel parameterPanel;
         private System.Windows.Forms.GroupBox grpControlMode;
         private System.Windows.Forms.RadioButton rbLocal;
         private System.Windows.Forms.RadioButton rbRemote;

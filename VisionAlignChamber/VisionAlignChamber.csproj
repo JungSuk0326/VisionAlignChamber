@@ -178,6 +178,7 @@
     <Compile Include="Models\ControlAuthority.cs" />
     <!-- 설정 -->
     <Compile Include="Config\AppSettings.cs" />
+    <Compile Include="Config\TeachingParameter.cs" />
     <!-- MVVM 인프라 -->
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
@@ -239,6 +240,12 @@
     <Compile Include="Views\Controls\CommPanel.Designer.cs">
       <DependentUpon>CommPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\ParameterPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\ParameterPanel.Designer.cs">
+      <DependentUpon>ParameterPanel.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -289,6 +296,9 @@
     <None Include="App.config" />
     <!-- 설정 파일 -->
     <Content Include="Config\Settings.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\Parameter.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

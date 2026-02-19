@@ -53,6 +53,16 @@ namespace VisionAlignChamber.Models
         public WaferInfo Wafer;
 
         /// <summary>
+        /// Centering용 Radius (= Wafer.TotalOffset)
+        /// </summary>
+        public double Radius => Wafer.TotalOffset;
+
+        /// <summary>
+        /// Eddy Current 측정값
+        /// </summary>
+        public double EddyValue;
+
+        /// <summary>
         /// 기본값 생성
         /// </summary>
         public static WaferVisionResult Empty => new WaferVisionResult
@@ -65,7 +75,8 @@ namespace VisionAlignChamber.Models
             AbsAngle = 0,
             Width = 0,
             Height = 0,
-            Wafer = WaferInfo.Empty
+            Wafer = WaferInfo.Empty,
+            EddyValue = 0
         };
 
         public override string ToString()

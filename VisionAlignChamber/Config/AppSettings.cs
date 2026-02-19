@@ -131,32 +131,7 @@ namespace VisionAlignChamber.Config
             set => WriteValue("Motion", "MotParamFile", value);
         }
 
-        /// <summary>
-        /// 기본 속도
-        /// </summary>
-        public static double DefaultVelocity
-        {
-            get => GetDouble("Motion", "DefaultVelocity", 10000);
-            set => WriteValue("Motion", "DefaultVelocity", value.ToString());
-        }
-
-        /// <summary>
-        /// 기본 가속도
-        /// </summary>
-        public static double DefaultAccel
-        {
-            get => GetDouble("Motion", "DefaultAccel", 50000);
-            set => WriteValue("Motion", "DefaultAccel", value.ToString());
-        }
-
-        /// <summary>
-        /// 기본 감속도
-        /// </summary>
-        public static double DefaultDecel
-        {
-            get => GetDouble("Motion", "DefaultDecel", 50000);
-            set => WriteValue("Motion", "DefaultDecel", value.ToString());
-        }
+        // NOTE: DefaultVelocity, DefaultAccel, DefaultDecel은 Parameter.ini (TeachingParameter)로 이동됨
 
         #endregion
 
@@ -413,10 +388,17 @@ namespace VisionAlignChamber.Config
         {
             try
             {
-                string defaultContent = @"[DLL]
+                string defaultContent = @";=============================================================================
+; System 설정
+;=============================================================================
+
+[System]
+; 시뮬레이션 모드 (true/false)
+Simulation=true
+
+[DLL]
 ; AJIN EtherCAT DLL 경로 설정
 ; 빈 값이면 기본 경로(실행 파일 폴더)에서 로드
-; 절대 경로 또는 상대 경로 사용 가능
 
 ; AXL.dll 경로 (예: C:\AJINEXTEK\AXL\AXL.dll)
 AXL_Path=
@@ -432,14 +414,7 @@ eMotionAlign_Path=
 OpenCvSharp_Path=
 
 ; OpenCvSharpExtern.dll 네이티브 DLL 폴더 경로
-; 비어있으면 실행파일 폴더 또는 x64 하위 폴더 사용
 OpenCvNative_Path=
-
-[Motion]
-; 기본 모션 파라미터
-DefaultVelocity=10000
-DefaultAccel=50000
-DefaultDecel=50000
 
 [Camera]
 ; 카메라 설정
@@ -447,6 +422,10 @@ ImageWidth=5120
 ImageHeight=5120
 ImageCount=24
 AngleStep=15.0
+
+[Communication]
+; CTC 통신 포트 (VisionAlignChamber가 서버)
+CTCPort=9999
 ";
                 File.WriteAllText(SettingsFilePath, defaultContent, Encoding.UTF8);
             }

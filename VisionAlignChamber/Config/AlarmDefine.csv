@@ -1,0 +1,45 @@
+Code,Name,Description,Level,Category,Source
+# System Alarms (1xxx)
+1001,EMO_ACTIVATED,비상정지 버튼 작동,Critical,System,System
+1002,INITIALIZATION_FAILED,시스템 초기화 실패,Error,System,System
+1003,COMMUNICATION_ERROR,통신 에러,Error,System,System
+1004,CONFIG_LOAD_FAILED,설정 파일 로드 실패,Warning,System,System
+# Motion Hardware Alarms (20xx) - AJIN Driver Level
+2001,MOTION_SERVO_ALARM,서보 드라이버 알람,Critical,Motion,Hardware
+2002,MOTION_POSITION_ERROR,위치 편차 과대,Error,Motion,Hardware
+2003,MOTION_OVERLOAD,과부하 발생,Critical,Motion,Hardware
+2004,MOTION_ENCODER_ERROR,엔코더 에러,Error,Motion,Hardware
+2005,MOTION_LIMIT_POS,정방향 리밋 감지,Warning,Motion,Hardware
+2006,MOTION_LIMIT_NEG,역방향 리밋 감지,Warning,Motion,Hardware
+2007,MOTION_HOME_SENSOR_ERROR,홈 센서 에러,Error,Motion,Hardware
+2008,MOTION_COMMUNICATION_ERROR,모션 통신 에러,Critical,Motion,Hardware
+# Motion Facade Alarms (21xx) - Application Level
+2101,MOTION_TIMEOUT,모션 타임아웃,Error,Motion,Facade
+2102,MOTION_START_FAILED,모션 시작 실패,Error,Motion,Facade
+2103,MOTION_SERVO_OFF,서보 OFF 상태,Warning,Motion,Facade
+2104,MOTION_AXIS_DISABLED,축 비활성화 상태,Warning,Motion,Facade
+2105,MOTION_HOME_FAILED,원점 복귀 실패,Error,Motion,Facade
+2106,MOTION_ALARM_ACTIVE,모션 알람 활성 상태,Error,Motion,Facade
+# IO Alarms (3xxx)
+3001,IO_VACUUM_ERROR,진공 에러,Error,IO,Hardware
+3002,IO_SENSOR_ERROR,센서 에러,Error,IO,Hardware
+3003,IO_INTERLOCK_ERROR,인터락 에러,Critical,IO,Hardware
+3004,IO_WAFER_DETECT_ERROR,웨이퍼 감지 에러,Warning,IO,Hardware
+3005,IO_DOOR_OPEN,도어 열림,Warning,IO,Hardware
+# Vision Alarms (4xxx)
+4001,VISION_INIT_FAILED,비전 초기화 실패,Error,Vision,Hardware
+4002,VISION_CAMERA_ERROR,카메라 에러,Error,Vision,Hardware
+4003,VISION_WAFER_NOT_FOUND,웨이퍼 미감지,Warning,Vision,Facade
+4004,VISION_NOTCH_NOT_FOUND,노치/플랫 미감지,Warning,Vision,Facade
+4005,VISION_ALIGNMENT_FAILED,정렬 실패,Error,Vision,Facade
+4006,VISION_ANALYSIS_TIMEOUT,분석 타임아웃,Error,Vision,Facade
+# Sequence Alarms (5xxx)
+5001,SEQUENCE_ERROR,시퀀스 에러,Error,Sequence,Facade
+5002,SEQUENCE_STEP_TIMEOUT,스텝 타임아웃,Error,Sequence,Facade
+5003,SEQUENCE_ABORT_REQUESTED,시퀀스 중단 요청,Info,Sequence,Facade
+5004,SEQUENCE_IO_CONDITION_ERROR,IO 조건 불일치,Error,Sequence,Facade
+5005,SEQUENCE_PRECONDITION_FAILED,선행 조건 실패,Error,Sequence,Facade
+# Eddy Current Alarms (6xxx)
+6001,EDDY_CONNECTION_ERROR,Eddy 센서 연결 실패,Error,Sensor,Hardware
+6002,EDDY_MEASUREMENT_ERROR,Eddy 측정 에러,Warning,Sensor,Hardware
+6003,EDDY_TIMEOUT,Eddy 측정 타임아웃,Warning,Sensor,Facade

@@ -153,6 +153,8 @@
     <Compile Include="Hardware\Facade\VisionAlignerMotion.cs" />
     <!-- Core (비즈니스 로직) -->
     <Compile Include="Core\VisionAlignerSystem.cs" />
+    <Compile Include="Core\VisionAlignerSequence.cs" />
+    <Compile Include="Core\AlarmManager.cs" />
     <!-- Interlock (알람/인터락 관리) -->
     <Compile Include="Interlock\InterlockDefinition.cs" />
     <Compile Include="Interlock\InterlockManager.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Models\AxisSettings.cs" />
     <Compile Include="Models\AlignParameters.cs" />
     <Compile Include="Models\AlarmInfo.cs" />
+    <Compile Include="Models\AlarmDefinition.cs" />
     <Compile Include="Models\ControlAuthority.cs" />
     <!-- 설정 -->
     <Compile Include="Config\AppSettings.cs" />
@@ -299,6 +302,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Parameter.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\AlarmDefine.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

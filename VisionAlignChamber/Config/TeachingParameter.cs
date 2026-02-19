@@ -74,6 +74,12 @@ namespace VisionAlignChamber.Config
 
         private TeachingParameter()
         {
+            // 축 설정 초기화
+            WedgeUpDown = new AxisConfig();
+            ChuckRotation = new AxisConfig();
+            CenteringStage1 = new AxisConfig();
+            CenteringStage2 = new AxisConfig();
+
             // 설정 파일이 없으면 기본값으로 생성
             if (!File.Exists(ParameterFilePath))
             {
@@ -84,7 +90,37 @@ namespace VisionAlignChamber.Config
 
         #endregion
 
-        #region Axis Position Classes
+        #region Axis Configuration Classes
+
+        /// <summary>
+        /// 축 설정 정보 (번호, 활성화, 속도/가속도/감속도)
+        /// </summary>
+        public class AxisConfig
+        {
+            public int AxisNo { get; set; }
+            public bool Enabled { get; set; }
+            public double Velocity { get; set; }
+            public double Accel { get; set; }
+            public double Decel { get; set; }
+
+            public AxisConfig()
+            {
+                AxisNo = 0;
+                Enabled = true;
+                Velocity = 10000;
+                Accel = 50000;
+                Decel = 50000;
+            }
+
+            public AxisConfig(int axisNo, bool enabled, double velocity, double accel, double decel)
+            {
+                AxisNo = axisNo;
+                Enabled = enabled;
+                Velocity = velocity;
+                Accel = accel;
+                Decel = decel;
+            }
+        }
 
         /// <summary>
         /// 단일 축 위치 정보
@@ -142,6 +178,46 @@ namespace VisionAlignChamber.Config
                 Theta = new AxisPosition();
             }
         }
+
+        #endregion
+
+        #region Axis Configurations
+
+        /// <summary>
+        /// Wedge Up/Down (Chuck Z) 축 설정
+        /// </summary>
+        public AxisConfig WedgeUpDown { get; set; }
+
+        /// <summary>
+        /// Chuck Rotation (Theta) 축 설정
+        /// </summary>
+        public AxisConfig ChuckRotation { get; set; }
+
+        /// <summary>
+        /// Centering Stage 1 (Centering L) 축 설정
+        /// </summary>
+        public AxisConfig CenteringStage1 { get; set; }
+
+        /// <summary>
+        /// Centering Stage 2 (Centering R) 축 설정
+        /// </summary>
+        public AxisConfig CenteringStage2 { get; set; }
+
+        #endregion
+
+        #region Motion Position Settings
+
+        // Wedge Stage 위치
+        public double WedgeStage_UpPos { get; set; }
+        public double WedgeStage_DownPos { get; set; }
+
+        // Chuck 각도 변환
+        public double Chuck_PulsePerDegree { get; set; }
+
+        // Centering Stage 위치
+        public double CenteringStage_OpenPos { get; set; }
+        public double CenteringStage_ClosePos { get; set; }
+        public double CenteringStage_MarginUm { get; set; }
 
         #endregion
 
@@ -315,18 +391,51 @@ namespace VisionAlignChamber.Config
         /// </summary>
         public void Load()
         {
+            // Axis Configurations
+            WedgeUpDown.AxisNo = GetInt("Motion_Axis", "WedgeUpDown", 0);
+            WedgeUpDown.Enabled = GetBool("Motion_Axis", "WedgeUpDown_Enabled", true);
+            WedgeUpDown.Velocity = GetDouble("Motion_Axis", "WedgeUpDown_Velocity", 10000);
+            WedgeUpDown.Accel = GetDouble("Motion_Axis", "WedgeUpDown_Accel", 50000);
+            WedgeUpDown.Decel = GetDouble("Motion_Axis", "WedgeUpDown_Decel", 50000);
+
+            ChuckRotation.AxisNo = GetInt("Motion_Axis", "ChuckRotation", 1);
+            ChuckRotation.Enabled = GetBool("Motion_Axis", "ChuckRotation_Enabled", true);
+            ChuckRotation.Velocity = GetDouble("Motion_Axis", "ChuckRotation_Velocity", 5000);
+            ChuckRotation.Accel = GetDouble("Motion_Axis", "ChuckRotation_Accel", 30000);
+            ChuckRotation.Decel = GetDouble("Motion_Axis", "ChuckRotation_Decel", 30000);
+
+            CenteringStage1.AxisNo = GetInt("Motion_Axis", "CenteringStage_1", 2);
+            CenteringStage1.Enabled = GetBool("Motion_Axis", "CenteringStage_1_Enabled", true);
+            CenteringStage1.Velocity = GetDouble("Motion_Axis", "CenteringStage_1_Velocity", 8000);
+            CenteringStage1.Accel = GetDouble("Motion_Axis", "CenteringStage_1_Accel", 40000);
+            CenteringStage1.Decel = GetDouble("Motion_Axis", "CenteringStage_1_Decel", 40000);
+
+            CenteringStage2.AxisNo = GetInt("Motion_Axis", "CenteringStage_2", 3);
+            CenteringStage2.Enabled = GetBool("Motion_Axis", "CenteringStage_2_Enabled", true);
+            CenteringStage2.Velocity = GetDouble("Motion_Axis", "CenteringStage_2_Velocity", 8000);
+            CenteringStage2.Accel = GetDouble("Motion_Axis", "CenteringStage_2_Accel", 40000);
+            CenteringStage2.Decel = GetDouble("Motion_Axis", "CenteringStage_2_Decel", 40000);
+
+            // Motion Position Settings
+            WedgeStage_UpPos = GetDouble("Motion_Position", "WedgeStage_UpPos", 100000);
+            WedgeStage_DownPos = GetDouble("Motion_Position", "WedgeStage_DownPos", 0);
+            Chuck_PulsePerDegree = GetDouble("Motion_Position", "Chuck_PulsePerDegree", 10000);
+            CenteringStage_OpenPos = GetDouble("Motion_Position", "CenteringStage_OpenPos", 50000);
+            CenteringStage_ClosePos = GetDouble("Motion_Position", "CenteringStage_ClosePos", 0);
+            CenteringStage_MarginUm = GetDouble("Motion_Position", "CenteringStage_MarginUm", 20);
+
             // Chuck Z
             ChuckZ_Down = GetDouble("ChuckZ", "Down", 0);
-            ChuckZ_Vision = GetDouble("ChuckZ", "Vision", 100);
-            ChuckZ_Eddy = GetDouble("ChuckZ", "Eddy", 50);
+            ChuckZ_Vision = GetDouble("ChuckZ", "Vision", 100000);
+            ChuckZ_Eddy = GetDouble("ChuckZ", "Eddy", 50000);
 
             // Centering L
             CenterL_Open = GetDouble("CenteringL", "Open", 0);
-            CenterL_MinCtr = GetDouble("CenteringL", "MinCtr", 50);
+            CenterL_MinCtr = GetDouble("CenteringL", "MinCtr", 50000);
 
             // Centering R
             CenterR_Open = GetDouble("CenteringR", "Open", 0);
-            CenterR_MinCtr = GetDouble("CenteringR", "MinCtr", 50);
+            CenterR_MinCtr = GetDouble("CenteringR", "MinCtr", 50000);
 
             // Theta
             Theta_Home = GetDouble("Theta", "Home", 0);
@@ -356,6 +465,39 @@ namespace VisionAlignChamber.Config
             {
                 Directory.CreateDirectory(configDir);
             }
+
+            // Axis Configurations
+            WriteValue("Motion_Axis", "WedgeUpDown", WedgeUpDown.AxisNo.ToString());
+            WriteValue("Motion_Axis", "WedgeUpDown_Enabled", WedgeUpDown.Enabled.ToString().ToLower());
+            WriteValue("Motion_Axis", "WedgeUpDown_Velocity", WedgeUpDown.Velocity.ToString());
+            WriteValue("Motion_Axis", "WedgeUpDown_Accel", WedgeUpDown.Accel.ToString());
+            WriteValue("Motion_Axis", "WedgeUpDown_Decel", WedgeUpDown.Decel.ToString());
+
+            WriteValue("Motion_Axis", "ChuckRotation", ChuckRotation.AxisNo.ToString());
+            WriteValue("Motion_Axis", "ChuckRotation_Enabled", ChuckRotation.Enabled.ToString().ToLower());
+            WriteValue("Motion_Axis", "ChuckRotation_Velocity", ChuckRotation.Velocity.ToString());
+            WriteValue("Motion_Axis", "ChuckRotation_Accel", ChuckRotation.Accel.ToString());
+            WriteValue("Motion_Axis", "ChuckRotation_Decel", ChuckRotation.Decel.ToString());
+
+            WriteValue("Motion_Axis", "CenteringStage_1", CenteringStage1.AxisNo.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_1_Enabled", CenteringStage1.Enabled.ToString().ToLower());
+            WriteValue("Motion_Axis", "CenteringStage_1_Velocity", CenteringStage1.Velocity.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_1_Accel", CenteringStage1.Accel.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_1_Decel", CenteringStage1.Decel.ToString());
+
+            WriteValue("Motion_Axis", "CenteringStage_2", CenteringStage2.AxisNo.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_2_Enabled", CenteringStage2.Enabled.ToString().ToLower());
+            WriteValue("Motion_Axis", "CenteringStage_2_Velocity", CenteringStage2.Velocity.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_2_Accel", CenteringStage2.Accel.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_2_Decel", CenteringStage2.Decel.ToString());
+
+            // Motion Position Settings
+            WriteValue("Motion_Position", "WedgeStage_UpPos", WedgeStage_UpPos.ToString());
+            WriteValue("Motion_Position", "WedgeStage_DownPos", WedgeStage_DownPos.ToString());
+            WriteValue("Motion_Position", "Chuck_PulsePerDegree", Chuck_PulsePerDegree.ToString());
+            WriteValue("Motion_Position", "CenteringStage_OpenPos", CenteringStage_OpenPos.ToString());
+            WriteValue("Motion_Position", "CenteringStage_ClosePos", CenteringStage_ClosePos.ToString());
+            WriteValue("Motion_Position", "CenteringStage_MarginUm", CenteringStage_MarginUm.ToString());
 
             // Chuck Z
             WriteValue("ChuckZ", "Down", ChuckZ_Down.ToString());
@@ -400,6 +542,44 @@ namespace VisionAlignChamber.Config
 
             string defaultContent = @"; Vision Align Chamber Teaching Parameters
 ; 4-Axis Teaching Position Configuration
+; 9-Step Sequence: Receive -> PreCtr(FOV) -> Ready -> ScanStart -> Scan(xN) -> Rewind -> Align(Center+Theta) -> Eddy -> Release
+
+;=============================================================================
+; Motion Axis Configuration
+;=============================================================================
+
+[Motion_Axis]
+; Wedge Up/Down Stage (Servo) - Chuck Z
+WedgeUpDown=0
+WedgeUpDown_Enabled=true
+WedgeUpDown_Velocity=10000
+WedgeUpDown_Accel=50000
+WedgeUpDown_Decel=50000
+
+; Chuck Rotation (DD Motor) - Theta
+ChuckRotation=1
+ChuckRotation_Enabled=true
+ChuckRotation_Velocity=5000
+ChuckRotation_Accel=30000
+ChuckRotation_Decel=30000
+
+; Centering Stage 1 (Stepping) - Centering L
+CenteringStage_1=2
+CenteringStage_1_Enabled=true
+CenteringStage_1_Velocity=8000
+CenteringStage_1_Accel=40000
+CenteringStage_1_Decel=40000
+
+; Centering Stage 2 (Stepping) - Centering R
+CenteringStage_2=3
+CenteringStage_2_Enabled=true
+CenteringStage_2_Velocity=8000
+CenteringStage_2_Accel=40000
+CenteringStage_2_Decel=40000
+
+;=============================================================================
+; Teaching Positions
+;=============================================================================
 
 [ChuckZ]
 ; Chuck Z Axis (Axis 0) Positions [pulse]
@@ -423,14 +603,37 @@ Home=0
 ScanStart=-180
 ScanEnd=180
 
-[Motion]
+;=============================================================================
+; Motion Position Settings
+;=============================================================================
+
+[Motion_Position]
+; Wedge Stage 위치 (pulse)
+WedgeStage_UpPos=100000
+WedgeStage_DownPos=0
+
+; Chuck 각도 변환 (pulse per degree)
+Chuck_PulsePerDegree=10000
+
+; Centering Stage 위치 (pulse)
+CenteringStage_OpenPos=50000
+CenteringStage_ClosePos=0
+CenteringStage_MarginUm=20
+
+;=============================================================================
 ; Default Motion Parameters
+;=============================================================================
+
+[Motion]
 DefaultVelocity=10000
 DefaultAccel=50000
 DefaultDecel=50000
 
-[VisionScan]
+;=============================================================================
 ; Vision Scan Parameters
+;=============================================================================
+
+[VisionScan]
 StepAngle=15
 ImageCount=24
 ";
@@ -467,6 +670,12 @@ ImageCount=24
         {
             string value = ReadValue(section, key, defaultValue.ToString());
             return int.TryParse(value, out int result) ? result : defaultValue;
+        }
+
+        private bool GetBool(string section, string key, bool defaultValue = false)
+        {
+            string value = ReadValue(section, key, defaultValue ? "true" : "false");
+            return value.ToLower() == "true" || value == "1";
         }
 
         #endregion

@@ -25,6 +25,8 @@ namespace VisionAlignChamber.Database
 
         private DatabaseManager()
         {
+            // 인스턴스 생성 시 자동으로 초기화 (테이블 생성)
+            Initialize();
         }
 
         #endregion
@@ -80,7 +82,7 @@ namespace VisionAlignChamber.Database
                     if (string.IsNullOrEmpty(databaseFolder))
                     {
                         databaseFolder = Path.Combine(
-                            AppDomain.CurrentDomain.BaseDirectory, "Data");
+                            AppDomain.CurrentDomain.BaseDirectory, "Database");
                     }
 
                     // 폴더 생성
@@ -115,7 +117,8 @@ namespace VisionAlignChamber.Database
         /// </summary>
         private void CreateTables()
         {
-            using (var connection = CreateConnection())
+            // 순환 호출 방지: CreateConnection() 대신 직접 연결 생성
+            using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
 
@@ -177,11 +180,6 @@ namespace VisionAlignChamber.Database
         /// <returns>SQLite 연결 (사용 후 Dispose 필요)</returns>
         public IDbConnection CreateConnection()
         {
-            if (!_isInitialized)
-            {
-                Initialize();
-            }
-
             return new SQLiteConnection(_connectionString);
         }
 

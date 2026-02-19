@@ -1,5 +1,6 @@
 using System;
 using VisionAlignChamber.Config;
+using VisionAlignChamber.Database;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
 
@@ -225,6 +226,9 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public void Initialize()
         {
+            // 데이터베이스 초기화 (테이블 자동 생성)
+            var db = DatabaseManager.Instance;
+
             SystemStatus = SystemStatus.Idle;
             ControlAuthority = ControlAuthority.Local;
             IsEmergencyStop = false;

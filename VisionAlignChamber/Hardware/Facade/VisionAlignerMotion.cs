@@ -256,6 +256,45 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
+        /// 모션 완료 대기 (비동기)
+        /// </summary>
+        public async Task<bool> WaitForDoneAsync(VAMotionAxis axis, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < timeoutMs)
+            {
+                ct.ThrowIfCancellationRequested();
+                if (_motion.IsMotionDone(info.AxisNo))
+                    return true;
+                await Task.Delay(10, ct);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 절대 위치 이동 (비동기) - 이동 완료까지 대기
+        /// </summary>
+        public async Task<bool> MoveAbsoluteAsync(VAMotionAxis axis, double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            if (!MoveAbsolute(axis, position, velocity))
+                return false;
+
+            return await WaitForDoneAsync(axis, timeoutMs, ct);
+        }
+
+        /// <summary>
+        /// 상대 위치 이동 (비동기) - 이동 완료까지 대기
+        /// </summary>
+        public async Task<bool> MoveRelativeAsync(VAMotionAxis axis, double distance, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            if (!MoveRelative(axis, distance, velocity))
+                return false;
+
+            return await WaitForDoneAsync(axis, timeoutMs, ct);
+        }
+
+        /// <summary>
         /// 모션 중인지 확인
         /// </summary>
         public bool IsMoving(VAMotionAxis axis)
@@ -309,6 +348,14 @@ namespace VisionAlignChamber.Hardware.Facade
         public bool WedgeStageHome()
         {
             return MoveHome(VAMotionAxis.WedgeUpDown);
+        }
+
+        /// <summary>
+        /// Wedge Stage 이동 (비동기)
+        /// </summary>
+        public async Task<bool> WedgeStageMoveAsync(double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            return await MoveAbsoluteAsync(VAMotionAxis.WedgeUpDown, position, velocity, timeoutMs, ct);
         }
 
         #endregion
@@ -378,6 +425,24 @@ namespace VisionAlignChamber.Hardware.Facade
             return ChuckRotateAbsolute(270);
         }
 
+        /// <summary>
+        /// Chuck 회전 (비동기) - 절대 각도
+        /// </summary>
+        public async Task<bool> ChuckRotateAbsoluteAsync(double angle, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            double position = AngleToPulse(angle);
+            return await MoveAbsoluteAsync(VAMotionAxis.ChuckRotation, position, velocity, timeoutMs, ct);
+        }
+
+        /// <summary>
+        /// Chuck 상대 회전 (비동기)
+        /// </summary>
+        public async Task<bool> ChuckRotateRelativeAsync(double angle, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            double distance = AngleToPulse(angle);
+            return await MoveRelativeAsync(VAMotionAxis.ChuckRotation, distance, velocity, timeoutMs, ct);
+        }
+
         // 각도 <-> 펄스 변환 (DD Motor 스펙에 따라 조정)
         private const double PULSE_PER_DEGREE = 10000.0; // 예: 1도 = 10000 pulse
 
@@ -428,6 +493,14 @@ namespace VisionAlignChamber.Hardware.Facade
             return MoveHome(VAMotionAxis.CenteringStage_1);
         }
 
+        /// <summary>
+        /// Centering Stage 1 이동 (비동기)
+        /// </summary>
+        public async Task<bool> CenteringStage1MoveAsync(double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            return await MoveAbsoluteAsync(VAMotionAxis.CenteringStage_1, position, velocity, timeoutMs, ct);
+        }
+
         #endregion
 
         #region Centering Stage 2
@@ -463,6 +536,14 @@ namespace VisionAlignChamber.Hardware.Facade
         public bool CenteringStage2Home()
         {
             return MoveHome(VAMotionAxis.CenteringStage_2);
+        }
+
+        /// <summary>
+        /// Centering Stage 2 이동 (비동기)
+        /// </summary>
+        public async Task<bool> CenteringStage2MoveAsync(double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            return await MoveAbsoluteAsync(VAMotionAxis.CenteringStage_2, position, velocity, timeoutMs, ct);
         }
 
         #endregion
@@ -502,6 +583,27 @@ namespace VisionAlignChamber.Hardware.Facade
             double targetPosition1 = waferEdgePosition1 - marginPulse;
             double targetPosition2 = waferEdgePosition2 - marginPulse;
             return CenteringStagesMoveSync(targetPosition1, targetPosition2);
+        }
+
+        /// <summary>
+        /// 두 Centering Stage 동시 이동 (비동기)
+        /// </summary>
+        public async Task<bool> CenteringStagesMoveSyncAsync(double position1, double position2, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            // 이동 시작 (동시)
+            bool start1 = CenteringStage1Move(position1, velocity);
+            bool start2 = CenteringStage2Move(position2, velocity);
+
+            if (!start1 || !start2)
+                return false;
+
+            // 완료 대기 (동시)
+            var wait1 = WaitForDoneAsync(VAMotionAxis.CenteringStage_1, timeoutMs, ct);
+            var wait2 = WaitForDoneAsync(VAMotionAxis.CenteringStage_2, timeoutMs, ct);
+
+            await Task.WhenAll(wait1, wait2);
+
+            return wait1.Result && wait2.Result;
         }
 
         #endregion

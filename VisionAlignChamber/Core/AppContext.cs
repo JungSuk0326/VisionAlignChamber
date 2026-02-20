@@ -1,20 +1,19 @@
 using System;
-using VisionAlignChamber.Config;
 using VisionAlignChamber.Database;
-using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
 
 namespace VisionAlignChamber.Core
 {
     /// <summary>
-    /// 애플리케이션 전역 컨텍스트 (싱글톤)
-    /// 시스템 상태, 공유 데이터, 서비스 참조를 중앙에서 관리합니다.
+    /// 애플리케이션 전역 상태 관리 (싱글톤)
     /// </summary>
     /// <remarks>
-    /// 사용 예시:
-    /// - 상태 접근: AppContext.Current.SystemState
-    /// - 데이터 접근: AppContext.Current.LastVisionResult
-    /// - 서비스 접근: AppContext.Current.Vision
+    /// 역할:
+    /// - 시스템 상태 중앙 관리 (SystemStatus, IsEmergencyStop 등)
+    /// - 프로세스 데이터 공유 (LastVisionResult, TotalRunCount 등)
+    /// - UI 알림용 EventManager 연동
+    ///
+    /// 하드웨어 제어는 VisionAlignerSystem이 담당합니다.
     /// </remarks>
     public class AppContext
     {
@@ -29,7 +28,6 @@ namespace VisionAlignChamber.Core
 
         private AppContext()
         {
-            // 기본값 초기화
             _systemStatus = SystemStatus.Idle;
             _controlAuthority = ControlAuthority.Local;
         }
@@ -50,7 +48,7 @@ namespace VisionAlignChamber.Core
                 if (_systemStatus != value)
                 {
                     _systemStatus = value;
-                    OnDataChanged(nameof(SystemStatus));
+                    OnStateChanged(nameof(SystemStatus));
                 }
             }
         }
@@ -67,7 +65,7 @@ namespace VisionAlignChamber.Core
                 if (_controlAuthority != value)
                 {
                     _controlAuthority = value;
-                    OnDataChanged(nameof(ControlAuthority));
+                    OnStateChanged(nameof(ControlAuthority));
                     EventManager.Publish(EventManager.ControlAuthorityChanged, value);
                 }
             }
@@ -85,7 +83,7 @@ namespace VisionAlignChamber.Core
                 if (_isEmergencyStop != value)
                 {
                     _isEmergencyStop = value;
-                    OnDataChanged(nameof(IsEmergencyStop));
+                    OnStateChanged(nameof(IsEmergencyStop));
                 }
             }
         }
@@ -102,7 +100,7 @@ namespace VisionAlignChamber.Core
                 if (_isInitialized != value)
                 {
                     _isInitialized = value;
-                    OnDataChanged(nameof(IsInitialized));
+                    OnStateChanged(nameof(IsInitialized));
                 }
             }
         }
@@ -121,8 +119,7 @@ namespace VisionAlignChamber.Core
             set
             {
                 _lastVisionResult = value;
-                OnDataChanged(nameof(LastVisionResult));
-                EventManager.Publish(EventManager.InspectionComplete, value);
+                OnStateChanged(nameof(LastVisionResult));
             }
         }
 
@@ -138,7 +135,7 @@ namespace VisionAlignChamber.Core
                 if (_currentRunStep != value)
                 {
                     _currentRunStep = value;
-                    OnDataChanged(nameof(CurrentRunStep));
+                    OnStateChanged(nameof(CurrentRunStep));
                 }
             }
         }
@@ -155,50 +152,25 @@ namespace VisionAlignChamber.Core
                 if (_totalRunCount != value)
                 {
                     _totalRunCount = value;
-                    OnDataChanged(nameof(TotalRunCount));
+                    OnStateChanged(nameof(TotalRunCount));
                 }
             }
         }
 
         #endregion
 
-        #region Services
-
-        /// <summary>
-        /// 비전 프로세서
-        /// </summary>
-        public IVisionProcessor Vision { get; set; }
-
-        /// <summary>
-        /// 모션 컨트롤러
-        /// </summary>
-        public IMotionController Motion { get; set; }
-
-        /// <summary>
-        /// 디지털 I/O
-        /// </summary>
-        public IDigitalIO DigitalIO { get; set; }
-
-        #endregion
-
-        #region Settings
-
-        // Note: AppSettings는 static 클래스이므로 직접 접근 (예: AppSettings.SimulationMode)
-
-        #endregion
-
         #region Helper Methods
 
         /// <summary>
-        /// 데이터 변경 알림 (EventManager 연동)
+        /// 상태 변경 알림 (UI 갱신용)
         /// </summary>
-        private void OnDataChanged(string propertyName)
+        private void OnStateChanged(string propertyName)
         {
             EventManager.Publish(EventManager.SystemStateChanged, propertyName);
         }
 
         /// <summary>
-        /// 시스템 상태 메시지 발행
+        /// 상태 메시지 발행 (UI 상태바용)
         /// </summary>
         public void PublishStatusMessage(string message)
         {
@@ -206,23 +178,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// 알람 발생
-        /// </summary>
-        public void RaiseAlarm(AlarmInfo alarm)
-        {
-            EventManager.Publish(EventManager.AlarmOccurred, alarm);
-        }
-
-        /// <summary>
-        /// 알람 해제
-        /// </summary>
-        public void ClearAlarm(AlarmInfo alarm)
-        {
-            EventManager.Publish(EventManager.AlarmCleared, alarm);
-        }
-
-        /// <summary>
-        /// 시스템 초기화
+        /// 상태 초기화
         /// </summary>
         public void Initialize()
         {
@@ -232,26 +188,21 @@ namespace VisionAlignChamber.Core
             SystemStatus = SystemStatus.Idle;
             ControlAuthority = ControlAuthority.Local;
             IsEmergencyStop = false;
-            IsInitialized = true;
+            IsInitialized = false;  // VisionAlignerSystem.InitializeAll() 후 true로 설정됨
             CurrentRunStep = 0;
             TotalRunCount = 0;
             _lastVisionResult = WaferVisionResult.Empty;
         }
 
         /// <summary>
-        /// 시스템 종료 정리
+        /// 상태 정리
         /// </summary>
         public void Shutdown()
         {
             IsInitialized = false;
             SystemStatus = SystemStatus.Idle;
 
-            // 서비스 정리
-            Vision?.Dispose();
-            Motion?.Close();
-            DigitalIO?.Close();
-
-            // 이벤트 정리
+            // 이벤트 구독 정리
             EventManager.Clear();
         }
 

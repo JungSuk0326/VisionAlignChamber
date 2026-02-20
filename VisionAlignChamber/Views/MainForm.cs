@@ -194,10 +194,6 @@ namespace VisionAlignChamber.Views
             // VisionAlignerSystem 생성 (사용 가능한 모듈만 전달)
             _system = new VisionAlignerSystem(_vaMotion, _vaIO, _vision, _eddySensor, _ctcController);
 
-            // AppContext에 서비스 등록
-            Core.AppContext.Current.Motion = _motionController;
-            Core.AppContext.Current.DigitalIO = _digitalIO;
-
             // ViewModel 생성 및 초기화
             _viewModel = new MainViewModel();
             _viewModel.Initialize(_system);

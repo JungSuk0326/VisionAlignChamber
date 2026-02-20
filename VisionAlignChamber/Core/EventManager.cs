@@ -4,14 +4,16 @@ using System.Collections.Generic;
 namespace VisionAlignChamber.Core
 {
     /// <summary>
-    /// 전역 이벤트 관리자 (싱글톤 패턴)
-    /// 애플리케이션 전역에서 이벤트 발행/구독을 관리합니다.
+    /// UI 알림용 전역 이벤트 관리자 (싱글톤)
     /// </summary>
     /// <remarks>
-    /// 사용 예시:
-    /// - 발행: EventManager.Publish("ImageGrabbed", bitmap);
-    /// - 구독: EventManager.Subscribe("ImageGrabbed", data => ProcessImage((Bitmap)data));
-    /// - 해제: EventManager.Unsubscribe("ImageGrabbed", handler);
+    /// 용도:
+    /// - 상태 변경 → UI 갱신 알림
+    /// - 알람 발생/해제 알림
+    /// - 상태 메시지 표시
+    ///
+    /// 모듈 간 직접 통신은 C# 이벤트를 사용합니다.
+    /// (예: VisionAlignerSequence.StepChanged 이벤트)
     /// </remarks>
     public static class EventManager
     {
@@ -22,15 +24,9 @@ namespace VisionAlignChamber.Core
 
         #endregion
 
-        #region Event Names (상수 정의)
+        #region Event Names
 
-        /// <summary>이미지 획득 완료</summary>
-        public const string ImageGrabbed = "ImageGrabbed";
-
-        /// <summary>검사 완료</summary>
-        public const string InspectionComplete = "InspectionComplete";
-
-        /// <summary>시스템 상태 변경</summary>
+        /// <summary>시스템 상태 변경 (UI 갱신용)</summary>
         public const string SystemStateChanged = "SystemStateChanged";
 
         /// <summary>알람 발생</summary>
@@ -39,16 +35,10 @@ namespace VisionAlignChamber.Core
         /// <summary>알람 해제</summary>
         public const string AlarmCleared = "AlarmCleared";
 
-        /// <summary>모션 완료</summary>
-        public const string MotionComplete = "MotionComplete";
-
-        /// <summary>Control Authority 변경</summary>
+        /// <summary>제어 권한 변경</summary>
         public const string ControlAuthorityChanged = "ControlAuthorityChanged";
 
-        /// <summary>로그 메시지</summary>
-        public const string LogMessage = "LogMessage";
-
-        /// <summary>상태 메시지 업데이트</summary>
+        /// <summary>상태 메시지 (상태바용)</summary>
         public const string StatusMessage = "StatusMessage";
 
         #endregion
@@ -58,8 +48,6 @@ namespace VisionAlignChamber.Core
         /// <summary>
         /// 이벤트 발행
         /// </summary>
-        /// <param name="eventName">이벤트 이름</param>
-        /// <param name="data">전달할 데이터 (optional)</param>
         public static void Publish(string eventName, object data = null)
         {
             if (string.IsNullOrEmpty(eventName))
@@ -71,7 +59,6 @@ namespace VisionAlignChamber.Core
             {
                 if (_subscribers.TryGetValue(eventName, out var list))
                 {
-                    // 복사본을 만들어 순회 중 수정 방지
                     handlers = new List<Action<object>>(list);
                 }
             }
@@ -95,8 +82,6 @@ namespace VisionAlignChamber.Core
         /// <summary>
         /// 이벤트 구독
         /// </summary>
-        /// <param name="eventName">이벤트 이름</param>
-        /// <param name="handler">이벤트 핸들러</param>
         public static void Subscribe(string eventName, Action<object> handler)
         {
             if (string.IsNullOrEmpty(eventName) || handler == null)
@@ -120,8 +105,6 @@ namespace VisionAlignChamber.Core
         /// <summary>
         /// 이벤트 구독 해제
         /// </summary>
-        /// <param name="eventName">이벤트 이름</param>
-        /// <param name="handler">이벤트 핸들러</param>
         public static void Unsubscribe(string eventName, Action<object> handler)
         {
             if (string.IsNullOrEmpty(eventName) || handler == null)
@@ -133,7 +116,6 @@ namespace VisionAlignChamber.Core
                 {
                     list.Remove(handler);
 
-                    // 빈 리스트 정리
                     if (list.Count == 0)
                     {
                         _subscribers.Remove(eventName);
@@ -143,43 +125,13 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// 특정 이벤트의 모든 구독 해제
-        /// </summary>
-        /// <param name="eventName">이벤트 이름</param>
-        public static void UnsubscribeAll(string eventName)
-        {
-            if (string.IsNullOrEmpty(eventName))
-                return;
-
-            lock (_lock)
-            {
-                _subscribers.Remove(eventName);
-            }
-        }
-
-        /// <summary>
-        /// 모든 이벤트 구독 해제 (앱 종료 시 호출)
+        /// 모든 이벤트 구독 해제 (앱 종료 시)
         /// </summary>
         public static void Clear()
         {
             lock (_lock)
             {
                 _subscribers.Clear();
-            }
-        }
-
-        /// <summary>
-        /// 특정 이벤트의 구독자 수 반환 (디버깅용)
-        /// </summary>
-        public static int GetSubscriberCount(string eventName)
-        {
-            lock (_lock)
-            {
-                if (_subscribers.TryGetValue(eventName, out var list))
-                {
-                    return list.Count;
-                }
-                return 0;
             }
         }
 

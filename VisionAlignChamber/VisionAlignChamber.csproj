@@ -154,7 +154,6 @@
     <!-- Core (비즈니스 로직) -->
     <Compile Include="Core\VisionAlignerSystem.cs" />
     <Compile Include="Core\VisionAlignerSequence.cs" />
-    <Compile Include="Core\AlarmManager.cs" />
     <!-- Interlock (알람/인터락 관리) -->
     <Compile Include="Interlock\InterlockDefinition.cs" />
     <Compile Include="Interlock\InterlockManager.cs" />

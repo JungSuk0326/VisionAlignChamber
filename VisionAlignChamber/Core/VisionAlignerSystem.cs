@@ -241,6 +241,9 @@ namespace VisionAlignChamber.Core
                 // 초기화 완료 시 CTC 상태: PutReady (웨이퍼 수신 대기)
                 SetCTCTransferStatus(CTCTransferStatus.PutReady);
 
+                // AppContext 상태 동기화
+                SyncAppContextState();
+
                 RaiseInitializationProgress("시스템 초기화 완료", totalSteps, totalSteps);
                 return anySuccess;
             }
@@ -381,6 +384,9 @@ namespace VisionAlignChamber.Core
                 }
 
                 _isInitialized = false;
+
+                // AppContext 상태 동기화
+                AppContext.Current.IsInitialized = false;
             }
             catch (Exception ex)
             {
@@ -442,6 +448,15 @@ namespace VisionAlignChamber.Core
         private void RaiseInitializationProgress(string message, int currentStep, int totalSteps)
         {
             InitializationProgress?.Invoke(this, new InitializationProgressEventArgs(message, currentStep, totalSteps));
+        }
+
+        /// <summary>
+        /// AppContext 상태 동기화
+        /// </summary>
+        private void SyncAppContextState()
+        {
+            AppContext.Current.IsInitialized = _isInitialized;
+            AppContext.Current.SystemStatus = _isInitialized ? SystemStatus.Idle : SystemStatus.Error;
         }
 
         #endregion
@@ -507,13 +522,14 @@ namespace VisionAlignChamber.Core
         #region Sequence-CTC Coordination
 
         /// <summary>
-        /// Sequence 이벤트 구독 (CTC 상태 연동용)
+        /// Sequence 이벤트 구독
         /// </summary>
         private void SubscribeSequenceEvents()
         {
             if (_sequence == null) return;
 
             _sequence.TransferStatusChangeRequested += OnSequenceTransferStatusChanged;
+            _sequence.SequenceCompleted += OnSequenceCompleted;
         }
 
         /// <summary>
@@ -524,6 +540,18 @@ namespace VisionAlignChamber.Core
             if (_sequence == null) return;
 
             _sequence.TransferStatusChangeRequested -= OnSequenceTransferStatusChanged;
+            _sequence.SequenceCompleted -= OnSequenceCompleted;
+        }
+
+        /// <summary>
+        /// Sequence 완료 처리 - AppContext 동기화
+        /// </summary>
+        private void OnSequenceCompleted(object sender, WaferVisionResult result)
+        {
+            // AppContext에 결과 저장
+            AppContext.Current.LastVisionResult = result;
+            AppContext.Current.TotalRunCount++;
+            AppContext.Current.SystemStatus = SystemStatus.Idle;
         }
 
         /// <summary>

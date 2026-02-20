@@ -322,6 +322,12 @@ namespace VisionAlignChamber.Views
         {
             if (_viewModel == null) return;
 
+            // Main 탭 바인딩
+            if (_viewModel.MainTab != null)
+            {
+                mainTabPanel.BindViewModel(_viewModel.MainTab);
+            }
+
             // Motion 탭 바인딩
             if (_viewModel.Motion != null)
             {

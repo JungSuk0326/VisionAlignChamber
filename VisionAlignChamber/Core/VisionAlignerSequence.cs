@@ -11,29 +11,29 @@ using VisionAlignChamber.Log;
 namespace VisionAlignChamber.Core
 {
     /// <summary>
-    /// Vision Align Chamber 9-Step 측정 시퀀스
-    /// Receive -> PreCtr(FOV) -> Ready -> ScanStart -> Scan(xN) -> Rewind -> Align(Center+Theta) -> Eddy -> Release
+    /// Vision Align Chamber 7-Step 측정 시퀀스
+    /// PreCtr(FOV) -> Ready -> ScanStart -> Scan(xN) -> Rewind -> Align(Center+Theta) -> Eddy
+    /// Receive/Release는 CTC 상태 전환(GetReady/TransferReady)으로 처리
     /// </summary>
     public class VisionAlignerSequence
     {
         #region Enums
 
         /// <summary>
-        /// 시퀀스 스텝 정의
+        /// 시퀀스 스텝 정의 (7-Step)
+        /// Receive/Release는 CTC 상태 전환으로 처리
         /// </summary>
         public enum SequenceStep
         {
             Idle = 0,
-            Receive = 1,      // Step 1: 웨이퍼 수신
-            PreCenter = 2,    // Step 2: FOV용 Pre-Centering
-            Ready = 3,        // Step 3: Vision 스캔 준비
-            ScanStart = 4,    // Step 4: 스캔 시작 위치
-            Scan = 5,         // Step 5: Vision 스캔 (xN)
-            Rewind = 6,       // Step 6: Theta Rewind
-            Align = 7,        // Step 7: Center + Theta 정렬
-            Eddy = 8,         // Step 8: Eddy Current 측정
-            Release = 9,      // Step 9: 웨이퍼 배출
-            Complete = 10,    // 완료
+            PreCenter = 1,    // Step 1: FOV용 Pre-Centering
+            Ready = 2,        // Step 2: Vision 스캔 준비
+            ScanStart = 3,    // Step 3: 스캔 시작 위치
+            Scan = 4,         // Step 4: Vision 스캔 (xN)
+            Rewind = 5,       // Step 5: Theta Rewind
+            Align = 6,        // Step 6: Center + Theta 정렬
+            Eddy = 7,         // Step 7: Eddy Current 측정
+            Complete = 8,     // 완료
             Error = -1        // 에러
         }
 
@@ -63,6 +63,7 @@ namespace VisionAlignChamber.Core
         private CancellationTokenSource _cts;
         private SequenceStep _currentStep;
         private SequenceState _state;
+        private bool _isFlat; // Flat 타입 웨이퍼 여부
 
         // Vision 결과
         private WaferVisionResult _visionResult;
@@ -142,6 +143,12 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public event EventHandler<string> ErrorOccurred;
 
+        /// <summary>
+        /// CTC Transfer 상태 변경 요청 이벤트
+        /// Stage 입장: GetReady = 가져가도 됨, PutReady = 올려놓아도 됨
+        /// </summary>
+        public event EventHandler<CTCTransferStatusEventArgs> TransferStatusChangeRequested;
+
         #endregion
 
         #region Constructor
@@ -167,9 +174,11 @@ namespace VisionAlignChamber.Core
         #region Public Methods
 
         /// <summary>
-        /// 전체 시퀀스 실행
+        /// 전체 시퀀스 실행 (7-Step)
         /// </summary>
-        public async Task<bool> RunSequenceAsync()
+        /// <param name="isFlat">Flat 타입 웨이퍼 여부 (false = Notch 타입)</param>
+        /// <param name="skipEddy">Eddy 스텝 스킵 여부</param>
+        public async Task<bool> RunSequenceAsync(bool isFlat = false, bool skipEddy = false)
         {
             if (IsRunning)
             {
@@ -177,54 +186,66 @@ namespace VisionAlignChamber.Core
                 return false;
             }
 
+            // 웨이퍼 센서 인터락 체크
+            if (!CheckWaferSensorInterlock())
+            {
+                return false;
+            }
+
             _cts = new CancellationTokenSource();
             State = SequenceState.Running;
             _visionResult = WaferVisionResult.Empty;
+            _isFlat = isFlat;
+
+            // CTC 상태: 측정 중 - 이송 불가
+            RequestTransferStatusChange(CTCTransferStatus.NotReady);
 
             try
             {
-                LogManager.System.Info("[Sequence] 시퀀스 시작");
+                LogManager.System.Info($"[Sequence] 시퀀스 시작 (Type: {(isFlat ? "Flat" : "Notch")}, SkipEddy: {skipEddy})");
 
-                // Step 1: Receive
-                if (!await ExecuteStepAsync(SequenceStep.Receive, ExecuteReceiveAsync))
-                    return false;
-
-                // Step 2: PreCenter
+                // Step 1: PreCenter
                 if (!await ExecuteStepAsync(SequenceStep.PreCenter, ExecutePreCenterAsync))
                     return false;
 
-                // Step 3: Ready
+                // Step 2: Ready
                 if (!await ExecuteStepAsync(SequenceStep.Ready, ExecuteReadyAsync))
                     return false;
 
-                // Step 4: ScanStart
+                // Step 3: ScanStart
                 if (!await ExecuteStepAsync(SequenceStep.ScanStart, ExecuteScanStartAsync))
                     return false;
 
-                // Step 5: Scan
+                // Step 4: Scan
                 if (!await ExecuteStepAsync(SequenceStep.Scan, ExecuteScanAsync))
                     return false;
 
-                // Step 6: Rewind
+                // Step 5: Rewind
                 if (!await ExecuteStepAsync(SequenceStep.Rewind, ExecuteRewindAsync))
                     return false;
 
-                // Step 7: Align (Center + Theta)
+                // Step 6: Align (Center + Theta)
                 if (!await ExecuteStepAsync(SequenceStep.Align, ExecuteAlignAsync))
                     return false;
 
-                // Step 8: Eddy
-                if (!await ExecuteStepAsync(SequenceStep.Eddy, ExecuteEddyAsync))
-                    return false;
-
-                // Step 9: Release
-                if (!await ExecuteStepAsync(SequenceStep.Release, ExecuteReleaseAsync))
-                    return false;
+                // Step 7: Eddy (스킵 가능)
+                if (!skipEddy)
+                {
+                    if (!await ExecuteStepAsync(SequenceStep.Eddy, ExecuteEddyAsync))
+                        return false;
+                }
+                else
+                {
+                    LogManager.System.Info("[Sequence] Step 7: Eddy - Skipped");
+                }
 
                 // 완료
                 CurrentStep = SequenceStep.Complete;
                 State = SequenceState.Completed;
                 LogManager.System.Info("[Sequence] 시퀀스 완료");
+
+                // CTC 상태: 측정 완료 - 웨이퍼 가져갈 수 있음
+                RequestTransferStatusChange(CTCTransferStatus.GetReady);
 
                 SequenceCompleted?.Invoke(this, _visionResult);
                 return true;
@@ -240,6 +261,27 @@ namespace VisionAlignChamber.Core
                 SetError($"시퀀스 예외: {ex.Message}");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 웨이퍼 센서 인터락 체크
+        /// </summary>
+        private bool CheckWaferSensorInterlock()
+        {
+            if (_io == null)
+            {
+                LogManager.System.Warn("[Sequence] IO 모듈이 없어 인터락 체크를 건너뜁니다.");
+                return true;
+            }
+
+            if (!_io.IsWaferDetectedOnAllSensors())
+            {
+                SetError("웨이퍼가 감지되지 않았습니다. (Interlock)");
+                return false;
+            }
+
+            LogManager.System.Info("[Sequence] 웨이퍼 센서 인터락 체크 OK");
+            return true;
         }
 
         /// <summary>
@@ -291,46 +333,7 @@ namespace VisionAlignChamber.Core
         #region Step Implementations
 
         /// <summary>
-        /// Step 1: RECEIVE - 웨이퍼 수신 위치
-        /// ChuckZ=Down, Center=Open, Theta=Home
-        /// </summary>
-        private async Task<bool> ExecuteReceiveAsync()
-        {
-            try
-            {
-                // Chuck Z Down
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
-                {
-                    SetError("Chuck Z Down 이동 실패");
-                    return false;
-                }
-
-                // Centering Open (L/R 동시)
-                if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
-                {
-                    SetError("Centering Open 이동 실패");
-                    return false;
-                }
-
-                // Theta Home
-                if (!await _motion.ChuckRotateAbsoluteAsync(_param.Theta_Home, ct: _cts.Token))
-                {
-                    SetError("Theta Home 이동 실패");
-                    return false;
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SetError($"Receive 스텝 실패: {ex.Message}");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Step 2: PRE_CENTER - FOV용 최소 센터링
+        /// Step 1: PRE_CENTER - FOV용 최소 센터링
         /// ChuckZ=Down, Center=MinCtr, Theta=Home
         /// </summary>
         private async Task<bool> ExecutePreCenterAsync()
@@ -355,7 +358,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Step 3: READY - Vision 스캔 준비
+        /// Step 2: READY - Vision 스캔 준비
         /// ChuckZ=Vision, Center=Open, Theta=ScanStart
         /// </summary>
         private async Task<bool> ExecuteReadyAsync()
@@ -390,7 +393,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Step 4: SCAN_START - 스캔 시작 위치
+        /// Step 3: SCAN_START - 스캔 시작 위치
         /// Theta=ScanStart
         /// </summary>
         private async Task<bool> ExecuteScanStartAsync()
@@ -414,7 +417,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Step 5: SCAN - Vision 스캔 (xN)
+        /// Step 4: SCAN - Vision 스캔 (xN)
         /// Theta를 StepAngle씩 회전하며 이미지 촬영
         /// </summary>
         private async Task<bool> ExecuteScanAsync()
@@ -454,16 +457,15 @@ namespace VisionAlignChamber.Core
                     }
                 }
 
-                // Vision 분석 수행 (isFlat: false = 노치 모드)
-                bool isFlat = false; // TODO: 설정에서 가져오기
-                if (!_vision.ExecuteInspection(isFlat))
+                // Vision 분석 수행
+                if (!_vision.ExecuteInspection(_isFlat))
                 {
                     SetError("Vision 검사 실행 실패");
                     return false;
                 }
 
                 // 결과 가져오기
-                _visionResult = _vision.GetResult(isFlat);
+                _visionResult = _vision.GetResult(_isFlat);
 
                 if (!_visionResult.IsValid)
                 {
@@ -482,7 +484,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Step 6: REWIND - Theta 와이어 풀림
+        /// Step 5: REWIND - Theta 와이어 풀림
         /// Theta를 역방향으로 회전
         /// </summary>
         private async Task<bool> ExecuteRewindAsync()
@@ -509,7 +511,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Step 7: ALIGN - 센터링 + Theta 정렬
+        /// Step 6: ALIGN - 센터링 + Theta 정렬
         /// ChuckZ=Down, Center=Radius, Theta=AbsAngle
         /// </summary>
         private async Task<bool> ExecuteAlignAsync()
@@ -556,7 +558,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Step 8: EDDY - Eddy Current 측정
+        /// Step 7: EDDY - Eddy Current 측정
         /// ChuckZ=Eddy, Center=Open
         /// </summary>
         private async Task<bool> ExecuteEddyAsync()
@@ -595,40 +597,6 @@ namespace VisionAlignChamber.Core
             }
         }
 
-        /// <summary>
-        /// Step 9: RELEASE - 웨이퍼 배출 대기
-        /// ChuckZ=Down, Center=Open, Theta=Hold
-        /// </summary>
-        private async Task<bool> ExecuteReleaseAsync()
-        {
-            try
-            {
-                // Chuck Z Down
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
-                {
-                    SetError("Chuck Z Down 이동 실패");
-                    return false;
-                }
-
-                // Centering Open (L/R 동시)
-                if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
-                {
-                    SetError("Centering Open 이동 실패");
-                    return false;
-                }
-
-                // Theta는 정렬 각도 유지 (HOLD)
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SetError($"Release 스텝 실패: {ex.Message}");
-                return false;
-            }
-        }
-
         #endregion
 
         #region Private Methods
@@ -641,6 +609,55 @@ namespace VisionAlignChamber.Core
             ErrorOccurred?.Invoke(this, message);
         }
 
+        /// <summary>
+        /// CTC Transfer 상태 변경 요청 발생
+        /// </summary>
+        private void RequestTransferStatusChange(CTCTransferStatus status)
+        {
+            LogManager.System.Info($"[Sequence] CTC Transfer Status 변경 요청: {status}");
+            TransferStatusChangeRequested?.Invoke(this, new CTCTransferStatusEventArgs(status, _visionResult));
+        }
+
         #endregion
     }
+
+    #region CTC Transfer Status
+
+    /// <summary>
+    /// CTC Transfer 상태 (Stage 입장)
+    /// </summary>
+    public enum CTCTransferStatus
+    {
+        /// <summary>
+        /// CTC가 웨이퍼를 가져갈 수 있음 (측정 완료)
+        /// </summary>
+        GetReady,
+
+        /// <summary>
+        /// CTC가 웨이퍼를 올려놓을 수 있음 (수신 대기)
+        /// </summary>
+        PutReady,
+
+        /// <summary>
+        /// 이송 불가 (측정 중 등)
+        /// </summary>
+        NotReady
+    }
+
+    /// <summary>
+    /// CTC Transfer 상태 변경 이벤트 인자
+    /// </summary>
+    public class CTCTransferStatusEventArgs : EventArgs
+    {
+        public CTCTransferStatus Status { get; }
+        public WaferVisionResult? Result { get; }
+
+        public CTCTransferStatusEventArgs(CTCTransferStatus status, WaferVisionResult? result = null)
+        {
+            Status = status;
+            Result = result;
+        }
+    }
+
+    #endregion
 }

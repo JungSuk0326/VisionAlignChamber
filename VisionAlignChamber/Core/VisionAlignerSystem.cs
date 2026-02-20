@@ -4,6 +4,7 @@ using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Vision;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Communication.Interfaces;
+using VisionAlignChamber.Models;
 
 namespace VisionAlignChamber.Core
 {
@@ -21,6 +22,7 @@ namespace VisionAlignChamber.Core
         private readonly IEddyCurrentSensor _eddy;
         private readonly ICTCCommunication _ctcComm;
 
+        private VisionAlignerSequence _sequence;
         private bool _isInitialized;
         private bool _disposed;
 
@@ -142,6 +144,11 @@ namespace VisionAlignChamber.Core
         /// </summary>
         public ICTCCommunication CTCComm => _ctcComm;
 
+        /// <summary>
+        /// Vision Align 시퀀스 (Main Tab ViewModel용)
+        /// </summary>
+        public VisionAlignerSequence Sequence => _sequence;
+
         #endregion
 
         /// <summary>
@@ -223,6 +230,17 @@ namespace VisionAlignChamber.Core
                 }
 
                 _isInitialized = anySuccess;
+
+                // Sequence 생성 (Motion과 IO가 필수)
+                if (HasMotion && HasIO)
+                {
+                    _sequence = new VisionAlignerSequence(_motion, _io, _vision, _eddy);
+                    SubscribeSequenceEvents();
+                }
+
+                // 초기화 완료 시 CTC 상태: PutReady (웨이퍼 수신 대기)
+                SetCTCTransferStatus(CTCTransferStatus.PutReady);
+
                 RaiseInitializationProgress("시스템 초기화 완료", totalSteps, totalSteps);
                 return anySuccess;
             }
@@ -328,6 +346,9 @@ namespace VisionAlignChamber.Core
         {
             try
             {
+                // Sequence 이벤트 해제
+                UnsubscribeSequenceEvents();
+
                 // CTC 통신 종료
                 StopCTCCommunication();
 
@@ -479,6 +500,94 @@ namespace VisionAlignChamber.Core
 
                 // 다른 명령들은 필요에 따라 추가
             }
+        }
+
+        #endregion
+
+        #region Sequence-CTC Coordination
+
+        /// <summary>
+        /// Sequence 이벤트 구독 (CTC 상태 연동용)
+        /// </summary>
+        private void SubscribeSequenceEvents()
+        {
+            if (_sequence == null) return;
+
+            _sequence.TransferStatusChangeRequested += OnSequenceTransferStatusChanged;
+        }
+
+        /// <summary>
+        /// Sequence 이벤트 해제
+        /// </summary>
+        private void UnsubscribeSequenceEvents()
+        {
+            if (_sequence == null) return;
+
+            _sequence.TransferStatusChangeRequested -= OnSequenceTransferStatusChanged;
+        }
+
+        /// <summary>
+        /// Sequence의 CTC 상태 전환 요청 처리
+        /// </summary>
+        private void OnSequenceTransferStatusChanged(object sender, CTCTransferStatusEventArgs e)
+        {
+            SetCTCTransferStatus(e.Status, e.Result);
+        }
+
+        /// <summary>
+        /// CTC Transfer 상태 설정 및 전송
+        /// </summary>
+        /// <param name="status">설정할 상태</param>
+        /// <param name="result">측정 결과 (GetReady 시 전송)</param>
+        private void SetCTCTransferStatus(CTCTransferStatus status, WaferVisionResult? result = null)
+        {
+            if (_ctcComm == null) return;
+
+            // CTCTransferStatus를 StatusObject.eTransferStatus로 변환
+            CommObject.StatusObject.eTransferStatus ctcStatus;
+            switch (status)
+            {
+                case CTCTransferStatus.GetReady:
+                    ctcStatus = CommObject.StatusObject.eTransferStatus.GetReady;
+                    break;
+                case CTCTransferStatus.PutReady:
+                    ctcStatus = CommObject.StatusObject.eTransferStatus.PutReady;
+                    break;
+                case CTCTransferStatus.NotReady:
+                default:
+                    ctcStatus = CommObject.StatusObject.eTransferStatus.NotReady;
+                    break;
+            }
+
+            // 상태 직접 업데이트
+            _ctcComm.CurrentStatus.TransferStatus = ctcStatus;
+
+            // 상태 전송
+            _ctcComm.SendStatus();
+
+            // GetReady 상태일 때 결과 데이터 전송
+            if (status == CTCTransferStatus.GetReady && result.HasValue)
+            {
+                SendMeasurementResult(result.Value);
+            }
+        }
+
+        /// <summary>
+        /// 측정 결과 전송
+        /// </summary>
+        private void SendMeasurementResult(WaferVisionResult result)
+        {
+            if (_ctcComm == null) return;
+
+            var resultObj = new CommObject.ResultObject
+            {
+                MeasureTime = DateTime.Now,
+                EddyValue = result.EddyValue
+                // TODO: CenterX, CenterY, ThetaOffset 등 결과 데이터 추가 필요
+                // ResultObject 확장 또는 별도 전송 방식 필요
+            };
+
+            _ctcComm.SendResult(resultObj);
         }
 
         #endregion

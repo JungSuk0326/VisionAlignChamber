@@ -178,6 +178,7 @@
     <Compile Include="Models\AlignParameters.cs" />
     <Compile Include="Models\AlarmInfo.cs" />
     <Compile Include="Models\AlarmDefinition.cs" />
+    <Compile Include="Models\StepStatusInfo.cs" />
     <Compile Include="Models\ControlAuthority.cs" />
     <!-- 설정 -->
     <Compile Include="Config\AppSettings.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <!-- ViewModels -->
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MainTabViewModel.cs" />
     <Compile Include="ViewModels\AxisViewModel.cs" />
     <Compile Include="ViewModels\MotionViewModel.cs" />
     <Compile Include="ViewModels\IOViewModel.cs" />
@@ -201,6 +203,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <!-- Views/Controls -->
+    <Compile Include="Views\Controls\MainTabPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\MainTabPanel.Designer.cs">
+      <DependentUpon>MainTabPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\AxisControlPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -264,6 +272,9 @@
     </Compile>
     <EmbeddedResource Include="Views\Controls\AxisControlPanel.resx">
       <DependentUpon>AxisControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\MainTabPanel.resx">
+      <DependentUpon>MainTabPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\VisionPanel.resx">
       <DependentUpon>VisionPanel.cs</DependentUpon>

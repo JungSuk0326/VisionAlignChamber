@@ -21,6 +21,7 @@ namespace VisionAlignChamber.ViewModels
 
         #region Child ViewModels
 
+        public MainTabViewModel MainTab { get; private set; }
         public MotionViewModel Motion { get; private set; }
         public IOViewModel IO { get; private set; }
         public VisionViewModel Vision { get; private set; }
@@ -198,6 +199,9 @@ namespace VisionAlignChamber.ViewModels
             AlignParameters = AlignParameters.CreateDefault();
             ActiveAlarms = new ObservableCollection<AlarmInfo>();
 
+            // MainTab ViewModel 생성
+            MainTab = new MainTabViewModel();
+
             InitializeCommands();
         }
 
@@ -236,6 +240,12 @@ namespace VisionAlignChamber.ViewModels
             OnPropertyChanged(nameof(IO));
             OnPropertyChanged(nameof(Vision));
             OnPropertyChanged(nameof(Eddy));
+
+            // MainTab에 Sequence 연결
+            if (_system.Sequence != null)
+            {
+                MainTab.Initialize(_system.Sequence);
+            }
 
             StatusMessage = GetInitStatusMessage();
         }
@@ -495,6 +505,7 @@ namespace VisionAlignChamber.ViewModels
             }
 
             // Child ViewModel Dispose
+            MainTab?.Dispose();
             Motion?.Dispose();
             IO?.Dispose();
             Vision?.Dispose();

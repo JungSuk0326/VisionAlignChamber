@@ -17,6 +17,7 @@ namespace VisionAlignChamber.Views
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.panelVisionDisplay = new System.Windows.Forms.Panel();
             this.picVisionDisplay = new System.Windows.Forms.PictureBox();
@@ -24,6 +25,7 @@ namespace VisionAlignChamber.Views
             this.panelRight = new System.Windows.Forms.Panel();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabProcess = new System.Windows.Forms.TabPage();
+            this.mainTabPanel = new VisionAlignChamber.Views.Controls.MainTabPanel();
             this.tabHistory = new System.Windows.Forms.TabPage();
             this.tabControlHistory = new System.Windows.Forms.TabControl();
             this.tabResult = new System.Windows.Forms.TabPage();
@@ -46,6 +48,9 @@ namespace VisionAlignChamber.Views
             this.tabParameter = new System.Windows.Forms.TabPage();
             this.parameterPanel = new VisionAlignChamber.Views.Controls.ParameterPanel();
             this.panelTop = new System.Windows.Forms.Panel();
+            this.lblAlarmIndicator = new System.Windows.Forms.Label();
+            this.lblCTCLabel = new System.Windows.Forms.Label();
+            this.lblCTCStatus = new System.Windows.Forms.Label();
             this.btnResetAlarm = new System.Windows.Forms.Button();
             this.btnHomeAll = new System.Windows.Forms.Button();
             this.btnInitialize = new System.Windows.Forms.Button();
@@ -61,10 +66,7 @@ namespace VisionAlignChamber.Views
             this.label1 = new System.Windows.Forms.Label();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.lblStatusMessage = new System.Windows.Forms.Label();
-            this.lblAlarmIndicator = new System.Windows.Forms.Label();
-            this.timerAlarmBlink = new System.Windows.Forms.Timer();
-            this.lblCTCLabel = new System.Windows.Forms.Label();
-            this.lblCTCStatus = new System.Windows.Forms.Label();
+            this.timerAlarmBlink = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -73,6 +75,7 @@ namespace VisionAlignChamber.Views
             ((System.ComponentModel.ISupportInitialize)(this.picVisionDisplay)).BeginInit();
             this.panelRight.SuspendLayout();
             this.tabMain.SuspendLayout();
+            this.tabProcess.SuspendLayout();
             this.tabHistory.SuspendLayout();
             this.tabControlHistory.SuspendLayout();
             this.tabLog.SuspendLayout();
@@ -154,7 +157,7 @@ namespace VisionAlignChamber.Views
             this.panelRight.TabIndex = 0;
             // 
             // tabMain
-            //
+            // 
             this.tabMain.Controls.Add(this.tabProcess);
             this.tabMain.Controls.Add(this.tabHistory);
             this.tabMain.Controls.Add(this.tabLog);
@@ -170,15 +173,27 @@ namespace VisionAlignChamber.Views
             // tabProcess
             // 
             this.tabProcess.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.tabProcess.Controls.Add(this.mainTabPanel);
             this.tabProcess.Location = new System.Drawing.Point(4, 29);
             this.tabProcess.Name = "tabProcess";
             this.tabProcess.Padding = new System.Windows.Forms.Padding(3);
             this.tabProcess.Size = new System.Drawing.Size(788, 667);
             this.tabProcess.TabIndex = 0;
             this.tabProcess.Text = "Main";
-            //
+            // 
+            // mainTabPanel
+            // 
+            this.mainTabPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.mainTabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainTabPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.mainTabPanel.Location = new System.Drawing.Point(3, 3);
+            this.mainTabPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.mainTabPanel.Name = "mainTabPanel";
+            this.mainTabPanel.Size = new System.Drawing.Size(782, 661);
+            this.mainTabPanel.TabIndex = 0;
+            // 
             // tabHistory
-            //
+            // 
             this.tabHistory.Controls.Add(this.tabControlHistory);
             this.tabHistory.Location = new System.Drawing.Point(4, 29);
             this.tabHistory.Name = "tabHistory";
@@ -186,9 +201,9 @@ namespace VisionAlignChamber.Views
             this.tabHistory.TabIndex = 1;
             this.tabHistory.Text = "History";
             this.tabHistory.UseVisualStyleBackColor = true;
-            //
+            // 
             // tabControlHistory
-            //
+            // 
             this.tabControlHistory.Controls.Add(this.tabResult);
             this.tabControlHistory.Controls.Add(this.tabAlarm);
             this.tabControlHistory.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -198,9 +213,9 @@ namespace VisionAlignChamber.Views
             this.tabControlHistory.SelectedIndex = 0;
             this.tabControlHistory.Size = new System.Drawing.Size(788, 667);
             this.tabControlHistory.TabIndex = 0;
-            //
+            // 
             // tabResult
-            //
+            // 
             this.tabResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabResult.Location = new System.Drawing.Point(4, 26);
             this.tabResult.Name = "tabResult";
@@ -208,9 +223,9 @@ namespace VisionAlignChamber.Views
             this.tabResult.Size = new System.Drawing.Size(780, 637);
             this.tabResult.TabIndex = 0;
             this.tabResult.Text = "Result";
-            //
+            // 
             // tabAlarm
-            //
+            // 
             this.tabAlarm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabAlarm.Location = new System.Drawing.Point(4, 26);
             this.tabAlarm.Name = "tabAlarm";
@@ -218,9 +233,9 @@ namespace VisionAlignChamber.Views
             this.tabAlarm.Size = new System.Drawing.Size(780, 637);
             this.tabAlarm.TabIndex = 1;
             this.tabAlarm.Text = "Alarm";
-            //
+            // 
             // tabLog
-            //
+            // 
             this.tabLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabLog.Controls.Add(this.logPanel);
             this.tabLog.Location = new System.Drawing.Point(4, 29);
@@ -229,19 +244,20 @@ namespace VisionAlignChamber.Views
             this.tabLog.Size = new System.Drawing.Size(788, 667);
             this.tabLog.TabIndex = 2;
             this.tabLog.Text = "Log";
-            //
+            // 
             // logPanel
-            //
+            // 
             this.logPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.logPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.logPanel.Location = new System.Drawing.Point(3, 3);
+            this.logPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.logPanel.Name = "logPanel";
             this.logPanel.Size = new System.Drawing.Size(782, 661);
             this.logPanel.TabIndex = 0;
-            //
+            // 
             // tabMaint
-            //
+            // 
             this.tabMaint.Controls.Add(this.tabControlMaint);
             this.tabMaint.Location = new System.Drawing.Point(4, 29);
             this.tabMaint.Name = "tabMaint";
@@ -356,9 +372,9 @@ namespace VisionAlignChamber.Views
             this.motionPanel.Name = "motionPanel";
             this.motionPanel.Size = new System.Drawing.Size(774, 631);
             this.motionPanel.TabIndex = 0;
-            //
+            // 
             // tabComm
-            //
+            // 
             this.tabComm.Controls.Add(this.commPanel);
             this.tabComm.Location = new System.Drawing.Point(4, 26);
             this.tabComm.Name = "tabComm";
@@ -367,36 +383,38 @@ namespace VisionAlignChamber.Views
             this.tabComm.TabIndex = 6;
             this.tabComm.Text = "Comm";
             this.tabComm.UseVisualStyleBackColor = true;
-            //
+            // 
             // commPanel
-            //
+            // 
+            this.commPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.commPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.commPanel.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.commPanel.Location = new System.Drawing.Point(3, 3);
             this.commPanel.Name = "commPanel";
             this.commPanel.Size = new System.Drawing.Size(774, 631);
             this.commPanel.TabIndex = 0;
-            //
+            // 
             // tabParameter
-            //
-            this.tabParameter.Controls.Add(this.parameterPanel);
+            // 
             this.tabParameter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.tabParameter.Controls.Add(this.parameterPanel);
             this.tabParameter.Location = new System.Drawing.Point(4, 26);
             this.tabParameter.Name = "tabParameter";
             this.tabParameter.Padding = new System.Windows.Forms.Padding(3);
             this.tabParameter.Size = new System.Drawing.Size(780, 637);
             this.tabParameter.TabIndex = 5;
             this.tabParameter.Text = "Parameter";
-            //
+            // 
             // parameterPanel
-            //
+            // 
+            this.parameterPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.parameterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.parameterPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.parameterPanel.Location = new System.Drawing.Point(3, 3);
             this.parameterPanel.Name = "parameterPanel";
             this.parameterPanel.Size = new System.Drawing.Size(774, 631);
             this.parameterPanel.TabIndex = 0;
-            //
+            // 
             // panelTop
             // 
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
@@ -419,6 +437,43 @@ namespace VisionAlignChamber.Views
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(1400, 60);
             this.panelTop.TabIndex = 1;
+            // 
+            // lblAlarmIndicator
+            // 
+            this.lblAlarmIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAlarmIndicator.BackColor = System.Drawing.Color.Red;
+            this.lblAlarmIndicator.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblAlarmIndicator.ForeColor = System.Drawing.Color.White;
+            this.lblAlarmIndicator.Location = new System.Drawing.Point(1270, 10);
+            this.lblAlarmIndicator.Name = "lblAlarmIndicator";
+            this.lblAlarmIndicator.Size = new System.Drawing.Size(120, 40);
+            this.lblAlarmIndicator.TabIndex = 11;
+            this.lblAlarmIndicator.Text = "ALARM";
+            this.lblAlarmIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAlarmIndicator.Visible = false;
+            this.lblAlarmIndicator.Click += new System.EventHandler(this.lblAlarmIndicator_Click);
+            // 
+            // lblCTCLabel
+            // 
+            this.lblCTCLabel.AutoSize = true;
+            this.lblCTCLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblCTCLabel.ForeColor = System.Drawing.Color.White;
+            this.lblCTCLabel.Location = new System.Drawing.Point(920, 12);
+            this.lblCTCLabel.Name = "lblCTCLabel";
+            this.lblCTCLabel.Size = new System.Drawing.Size(36, 19);
+            this.lblCTCLabel.TabIndex = 12;
+            this.lblCTCLabel.Text = "CTC:";
+            // 
+            // lblCTCStatus
+            // 
+            this.lblCTCStatus.AutoSize = true;
+            this.lblCTCStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblCTCStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblCTCStatus.Location = new System.Drawing.Point(960, 12);
+            this.lblCTCStatus.Name = "lblCTCStatus";
+            this.lblCTCStatus.Size = new System.Drawing.Size(98, 19);
+            this.lblCTCStatus.TabIndex = 13;
+            this.lblCTCStatus.Text = "Disconnected";
             // 
             // btnResetAlarm
             // 
@@ -582,49 +637,7 @@ namespace VisionAlignChamber.Views
             this.label1.Size = new System.Drawing.Size(50, 19);
             this.label1.TabIndex = 4;
             this.label1.Text = "Status:";
-            //
-            // lblAlarmIndicator
-            //
-            this.lblAlarmIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblAlarmIndicator.BackColor = System.Drawing.Color.Red;
-            this.lblAlarmIndicator.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblAlarmIndicator.ForeColor = System.Drawing.Color.White;
-            this.lblAlarmIndicator.Location = new System.Drawing.Point(1270, 10);
-            this.lblAlarmIndicator.Name = "lblAlarmIndicator";
-            this.lblAlarmIndicator.Size = new System.Drawing.Size(120, 40);
-            this.lblAlarmIndicator.TabIndex = 11;
-            this.lblAlarmIndicator.Text = "ALARM";
-            this.lblAlarmIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblAlarmIndicator.Visible = false;
-            this.lblAlarmIndicator.Click += new System.EventHandler(this.lblAlarmIndicator_Click);
-            //
-            // lblCTCLabel
-            //
-            this.lblCTCLabel.AutoSize = true;
-            this.lblCTCLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblCTCLabel.ForeColor = System.Drawing.Color.White;
-            this.lblCTCLabel.Location = new System.Drawing.Point(920, 12);
-            this.lblCTCLabel.Name = "lblCTCLabel";
-            this.lblCTCLabel.Size = new System.Drawing.Size(35, 19);
-            this.lblCTCLabel.TabIndex = 12;
-            this.lblCTCLabel.Text = "CTC:";
-            //
-            // lblCTCStatus
-            //
-            this.lblCTCStatus.AutoSize = true;
-            this.lblCTCStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblCTCStatus.ForeColor = System.Drawing.Color.Gray;
-            this.lblCTCStatus.Location = new System.Drawing.Point(960, 12);
-            this.lblCTCStatus.Name = "lblCTCStatus";
-            this.lblCTCStatus.Size = new System.Drawing.Size(95, 19);
-            this.lblCTCStatus.TabIndex = 13;
-            this.lblCTCStatus.Text = "Disconnected";
-            //
-            // timerAlarmBlink
-            //
-            this.timerAlarmBlink.Interval = 500;
-            this.timerAlarmBlink.Tick += new System.EventHandler(this.timerAlarmBlink_Tick);
-            //
+            // 
             // panelBottom
             // 
             this.panelBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
@@ -645,6 +658,11 @@ namespace VisionAlignChamber.Views
             this.lblStatusMessage.Size = new System.Drawing.Size(39, 15);
             this.lblStatusMessage.TabIndex = 0;
             this.lblStatusMessage.Text = "Ready";
+            // 
+            // timerAlarmBlink
+            // 
+            this.timerAlarmBlink.Interval = 500;
+            this.timerAlarmBlink.Tick += new System.EventHandler(this.timerAlarmBlink_Tick);
             // 
             // MainForm
             // 
@@ -668,6 +686,7 @@ namespace VisionAlignChamber.Views
             ((System.ComponentModel.ISupportInitialize)(this.picVisionDisplay)).EndInit();
             this.panelRight.ResumeLayout(false);
             this.tabMain.ResumeLayout(false);
+            this.tabProcess.ResumeLayout(false);
             this.tabHistory.ResumeLayout(false);
             this.tabControlHistory.ResumeLayout(false);
             this.tabLog.ResumeLayout(false);
@@ -741,6 +760,7 @@ namespace VisionAlignChamber.Views
         private System.Windows.Forms.Label lblAlarmIndicator;
         private System.Windows.Forms.Timer timerAlarmBlink;
         private Controls.LogPanel logPanel;
+        private Controls.MainTabPanel mainTabPanel;
         private System.Windows.Forms.Label lblCTCLabel;
         private System.Windows.Forms.Label lblCTCStatus;
     }

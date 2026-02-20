@@ -83,7 +83,7 @@ namespace VisionAlignChamber.Communication
         /// 특정 클라이언트에게 전송
         /// </summary>
         public async Task SendAsync(string ipAddress, int port, CommObjectBase obj)
-        {
+        { 
             try
             {
                 if (_server != null)

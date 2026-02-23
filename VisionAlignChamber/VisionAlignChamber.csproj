@@ -281,13 +281,17 @@
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <!-- Communication DLL (실행 파일과 같은 경로에 복사) -->
     <Content Include="Communication\DLLs\CommObject.dll">
+      <Link>CommObject.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Communication\DLLs\ObjectCommunication.dll">
+      <Link>ObjectCommunication.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Communication\DLLs\System.Threading.Tasks.Dataflow.dll">
+      <Link>System.Threading.Tasks.Dataflow.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Log\DLLs\NLog.config">
@@ -319,32 +323,41 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <!-- DLL 파일 복사 설정 -->
+    <!-- DLL 파일 복사 설정 (실행 파일과 같은 경로에 복사) -->
+    <!-- 아진 모션 컨트롤러 DLL -->
     <Content Include="Hardware\Ajin\DLLs\AXL.dll">
+      <Link>AXL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Hardware\Ajin\DLLs\EzBasicAxl.dll">
+      <Link>EzBasicAxl.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <!-- Vision DLL -->
     <Content Include="Vision\eMotion\DLLs\eMotionAlign.dll">
+      <Link>eMotionAlign.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Vision\eMotion\DLLs\OpenCvSharp.dll">
+      <Link>OpenCvSharp.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Vision\eMotion\DLLs\Newtonsoft.Json.dll">
+      <Link>Newtonsoft.Json.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <!-- OpenCvSharp 네이티브 DLL (bin 폴더에 직접 복사) -->
+    <!-- OpenCvSharp 네이티브 DLL -->
     <Content Include="Vision\eMotion\DLLs\OpenCvSharpExtern.dll">
+      <Link>OpenCvSharpExtern.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Vision\eMotion\DLLs\opencv_videoio_ffmpeg4110_64.dll">
+      <Link>opencv_videoio_ffmpeg4110_64.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <!-- SQLite DLL -->
-    <!-- Dapper DLL -->
+    <!-- Database DLL -->
     <Content Include="Database\DLLs\Dapper.dll">
+      <Link>Dapper.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

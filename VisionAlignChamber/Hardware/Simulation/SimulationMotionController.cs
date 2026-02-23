@@ -231,7 +231,8 @@ namespace VisionAlignChamber.Hardware.Simulation
 
         private bool CheckAxisNo(int axisNo)
         {
-            return axisNo >= 0 && axisNo < _axisCount;
+            //return axisNo >= 0 && axisNo < _axisCount;
+            return true;
         }
 
         #endregion

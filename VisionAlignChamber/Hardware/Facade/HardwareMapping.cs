@@ -8,7 +8,7 @@ namespace VisionAlignChamber.Hardware.Facade
 {
     /// <summary>
     /// I/O 및 Motion 채널 매핑 관리
-    /// Settings.ini 파일에서 매핑 정보를 로드
+    /// I/O: Settings.ini, Motion Axis: Parameter.ini에서 로드
     /// </summary>
     public class HardwareMapping
     {
@@ -23,7 +23,8 @@ namespace VisionAlignChamber.Hardware.Facade
 
         #region Fields
 
-        private readonly string _configFilePath;
+        private readonly string _ioConfigFilePath;      // Settings.ini (I/O 매핑)
+        private readonly string _axisConfigFilePath;    // Parameter.ini (Axis 매핑)
         private readonly Dictionary<VADigitalInput, IOChannelInfo> _diMapping;
         private readonly Dictionary<VADigitalOutput, IOChannelInfo> _doMapping;
         private readonly Dictionary<VAMotionAxis, AxisInfo> _axisMapping;
@@ -51,9 +52,26 @@ namespace VisionAlignChamber.Hardware.Facade
 
         #region Constructor
 
-        public HardwareMapping(string configFilePath)
+        /// <summary>
+        /// HardwareMapping 생성자
+        /// </summary>
+        /// <param name="ioConfigFilePath">I/O 매핑 설정 파일 경로 (Settings.ini)</param>
+        /// <param name="axisConfigFilePath">Axis 매핑 설정 파일 경로 (Parameter.ini), null이면 ioConfigFilePath와 같은 폴더의 Parameter.ini 사용</param>
+        public HardwareMapping(string ioConfigFilePath, string axisConfigFilePath = null)
         {
-            _configFilePath = configFilePath;
+            _ioConfigFilePath = ioConfigFilePath;
+
+            // axisConfigFilePath가 없으면 같은 폴더의 Parameter.ini 사용
+            if (string.IsNullOrEmpty(axisConfigFilePath))
+            {
+                string configDir = Path.GetDirectoryName(ioConfigFilePath);
+                _axisConfigFilePath = Path.Combine(configDir, "Parameter.ini");
+            }
+            else
+            {
+                _axisConfigFilePath = axisConfigFilePath;
+            }
+
             _diMapping = new Dictionary<VADigitalInput, IOChannelInfo>();
             _doMapping = new Dictionary<VADigitalOutput, IOChannelInfo>();
             _axisMapping = new Dictionary<VAMotionAxis, AxisInfo>();
@@ -115,15 +133,26 @@ namespace VisionAlignChamber.Hardware.Facade
 
         private void LoadMapping()
         {
-            if (!File.Exists(_configFilePath))
+            // I/O 매핑 로드 (Settings.ini)
+            if (File.Exists(_ioConfigFilePath))
             {
-                SetDefaultMapping();
-                return;
+                LoadDIMapping();
+                LoadDOMapping();
+            }
+            else
+            {
+                SetDefaultIOMapping();
             }
 
-            LoadDIMapping();
-            LoadDOMapping();
-            LoadAxisMapping();
+            // Axis 매핑 로드 (Parameter.ini)
+            if (File.Exists(_axisConfigFilePath))
+            {
+                LoadAxisMapping();
+            }
+            else
+            {
+                SetDefaultAxisMapping();
+            }
         }
 
         private void LoadDIMapping()
@@ -131,7 +160,7 @@ namespace VisionAlignChamber.Hardware.Facade
             foreach (VADigitalInput di in Enum.GetValues(typeof(VADigitalInput)))
             {
                 string key = di.ToString();
-                string value = ReadValue("IO_DI", key, "0,0");
+                string value = ReadValue(_ioConfigFilePath, "IO_DI", key, "0,0");
                 var parts = value.Split(',');
 
                 int moduleNo = 0;
@@ -156,7 +185,7 @@ namespace VisionAlignChamber.Hardware.Facade
             foreach (VADigitalOutput dout in Enum.GetValues(typeof(VADigitalOutput)))
             {
                 string key = dout.ToString();
-                string value = ReadValue("IO_DO", key, "0,0");
+                string value = ReadValue(_ioConfigFilePath, "IO_DO", key, "0,0");
                 var parts = value.Split(',');
 
                 int moduleNo = 0;
@@ -181,12 +210,12 @@ namespace VisionAlignChamber.Hardware.Facade
             foreach (VAMotionAxis axis in Enum.GetValues(typeof(VAMotionAxis)))
             {
                 string key = axis.ToString();
-                int axisNo = ReadInt("Motion_Axis", key, 0);
+                int axisNo = ReadInt(_axisConfigFilePath, "Motion_Axis", key, 0);
 
-                double velocity = ReadDouble("Motion_Axis", $"{key}_Velocity", 10000);
-                double accel = ReadDouble("Motion_Axis", $"{key}_Accel", 50000);
-                double decel = ReadDouble("Motion_Axis", $"{key}_Decel", 50000);
-                bool enabled = ReadBool("Motion_Axis", $"{key}_Enabled", true);
+                double velocity = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Velocity", 10000);
+                double accel = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Accel", 50000);
+                double decel = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Decel", 50000);
+                bool enabled = ReadBool(_axisConfigFilePath, "Motion_Axis", $"{key}_Enabled", true);
 
                 _axisMapping[axis] = new AxisInfo(axisNo, key)
                 {
@@ -198,7 +227,7 @@ namespace VisionAlignChamber.Hardware.Facade
             }
         }
 
-        private void SetDefaultMapping()
+        private void SetDefaultIOMapping()
         {
             // DI 기본값
             int diChannel = 0;
@@ -213,7 +242,10 @@ namespace VisionAlignChamber.Hardware.Facade
             {
                 _doMapping[dout] = new IOChannelInfo(0, doChannel++, dout.ToString());
             }
+        }
 
+        private void SetDefaultAxisMapping()
+        {
             // Axis 기본값
             int axisNo = 0;
             foreach (VAMotionAxis axis in Enum.GetValues(typeof(VAMotionAxis)))
@@ -222,28 +254,28 @@ namespace VisionAlignChamber.Hardware.Facade
             }
         }
 
-        private string ReadValue(string section, string key, string defaultValue)
+        private string ReadValue(string filePath, string section, string key, string defaultValue)
         {
             StringBuilder sb = new StringBuilder(256);
-            GetPrivateProfileString(section, key, defaultValue, sb, sb.Capacity, _configFilePath);
+            GetPrivateProfileString(section, key, defaultValue, sb, sb.Capacity, filePath);
             return sb.ToString();
         }
 
-        private int ReadInt(string section, string key, int defaultValue)
+        private int ReadInt(string filePath, string section, string key, int defaultValue)
         {
-            string value = ReadValue(section, key, defaultValue.ToString());
+            string value = ReadValue(filePath, section, key, defaultValue.ToString());
             return int.TryParse(value, out int result) ? result : defaultValue;
         }
 
-        private double ReadDouble(string section, string key, double defaultValue)
+        private double ReadDouble(string filePath, string section, string key, double defaultValue)
         {
-            string value = ReadValue(section, key, defaultValue.ToString());
+            string value = ReadValue(filePath, section, key, defaultValue.ToString());
             return double.TryParse(value, out double result) ? result : defaultValue;
         }
 
-        private bool ReadBool(string section, string key, bool defaultValue)
+        private bool ReadBool(string filePath, string section, string key, bool defaultValue)
         {
-            string value = ReadValue(section, key, defaultValue ? "true" : "false").ToLower();
+            string value = ReadValue(filePath, section, key, defaultValue ? "true" : "false").ToLower();
             return value == "true" || value == "1" || value == "yes";
         }
 

@@ -312,6 +312,15 @@ namespace VisionAlignChamber.Hardware.Facade
             return _motion.HomeMove(info.AxisNo);
         }
 
+        /// <summary>
+        /// 홈 완료 여부 확인
+        /// </summary>
+        public bool IsHomeDone(VAMotionAxis axis)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.IsHomeDone(info.AxisNo);
+        }
+
         #endregion
 
         #region Wedge Up/Down Stage

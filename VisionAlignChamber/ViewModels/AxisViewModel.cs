@@ -402,6 +402,7 @@ namespace VisionAlignChamber.ViewModels
             IsMoving = _motion.IsMoving(_axis);
             IsServoOn = _motion.IsServoOn(_axis);
             IsAlarm = _motion.IsAlarm(_axis);
+            IsHomed = _motion.IsHomeDone(_axis);
 
             // 알람 발생 시 HasError 설정
             if (IsAlarm)

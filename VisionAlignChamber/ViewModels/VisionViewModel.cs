@@ -49,8 +49,8 @@ namespace VisionAlignChamber.ViewModels
         private void OnSystemStateChanged(object data)
         {
             var propertyName = data as string;
-            if (propertyName == nameof(Core.AppContext.IsEmergencyStop) &&
-                Core.AppContext.Current.IsEmergencyStop)
+            if (propertyName == nameof(Core.AppState.IsEmergencyStop) &&
+                Core.AppState.Current.IsEmergencyStop)
             {
                 // 비상정지 시 Running 중지
                 if (IsRunning)
@@ -383,7 +383,7 @@ namespace VisionAlignChamber.ViewModels
                     WaferImage = _vision.GetWaferImage(isFlat);
 
                     // AppContext에 검사 결과 저장 (자동으로 InspectionComplete 이벤트 발행)
-                    Core.AppContext.Current.LastVisionResult = AlignResult;
+                    Core.AppState.Current.LastVisionResult = AlignResult;
 
                     if (AlignResult.IsValid)
                     {

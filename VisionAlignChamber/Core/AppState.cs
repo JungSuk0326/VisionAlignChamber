@@ -15,18 +15,18 @@ namespace VisionAlignChamber.Core
     ///
     /// 하드웨어 제어는 VisionAlignerSystem이 담당합니다.
     /// </remarks>
-    public class AppContext
+    public class AppState
     {
         #region Singleton
 
-        private static readonly Lazy<AppContext> _instance = new Lazy<AppContext>(() => new AppContext());
+        private static readonly Lazy<AppState> _instance = new Lazy<AppState>(() => new AppState());
 
         /// <summary>
         /// 싱글톤 인스턴스
         /// </summary>
-        public static AppContext Current => _instance.Value;
+        public static AppState Current => _instance.Value;
 
-        private AppContext()
+        private AppState()
         {
             _systemStatus = SystemStatus.Idle;
             _controlAuthority = ControlAuthority.Local;

@@ -386,7 +386,7 @@ namespace VisionAlignChamber.Core
                 _isInitialized = false;
 
                 // AppContext 상태 동기화
-                AppContext.Current.IsInitialized = false;
+                AppState.Current.IsInitialized = false;
             }
             catch (Exception ex)
             {
@@ -455,8 +455,8 @@ namespace VisionAlignChamber.Core
         /// </summary>
         private void SyncAppContextState()
         {
-            AppContext.Current.IsInitialized = _isInitialized;
-            AppContext.Current.SystemStatus = _isInitialized ? SystemStatus.Idle : SystemStatus.Error;
+            AppState.Current.IsInitialized = _isInitialized;
+            AppState.Current.SystemStatus = _isInitialized ? SystemStatus.Idle : SystemStatus.Error;
         }
 
         #endregion
@@ -549,9 +549,9 @@ namespace VisionAlignChamber.Core
         private void OnSequenceCompleted(object sender, WaferVisionResult result)
         {
             // AppContext에 결과 저장
-            AppContext.Current.LastVisionResult = result;
-            AppContext.Current.TotalRunCount++;
-            AppContext.Current.SystemStatus = SystemStatus.Idle;
+            AppState.Current.LastVisionResult = result;
+            AppState.Current.TotalRunCount++;
+            AppState.Current.SystemStatus = SystemStatus.Idle;
         }
 
         /// <summary>

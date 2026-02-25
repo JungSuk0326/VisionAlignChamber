@@ -72,7 +72,7 @@ namespace VisionAlignChamber.Views
             LogManager.Initialize();
 
             // AppContext 초기화
-            Core.AppContext.Current.Initialize();
+            Core.AppState.Current.Initialize();
             // Note: AppSettings는 static 클래스이므로 직접 접근
         }
 
@@ -648,11 +648,11 @@ namespace VisionAlignChamber.Views
                 // 시스템 상태 변경에 따른 UI 업데이트
                 switch (propertyName)
                 {
-                    case nameof(Core.AppContext.SystemStatus):
-                        lblSystemStatus.Text = Core.AppContext.Current.SystemStatus.ToString();
+                    case nameof(Core.AppState.SystemStatus):
+                        lblSystemStatus.Text = Core.AppState.Current.SystemStatus.ToString();
                         break;
-                    case nameof(Core.AppContext.IsEmergencyStop):
-                        if (Core.AppContext.Current.IsEmergencyStop)
+                    case nameof(Core.AppState.IsEmergencyStop):
+                        if (Core.AppState.Current.IsEmergencyStop)
                         {
                             lblSystemStatus.Text = "EMO";
                             lblSystemStatus.ForeColor = Color.Red;
@@ -760,7 +760,7 @@ namespace VisionAlignChamber.Views
             LogManager.Shutdown();
 
             // AppContext 종료
-            Core.AppContext.Current.Shutdown();
+            Core.AppState.Current.Shutdown();
         }
 
         #endregion

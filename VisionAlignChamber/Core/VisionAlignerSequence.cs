@@ -197,6 +197,9 @@ namespace VisionAlignChamber.Core
             _visionResult = WaferVisionResult.Empty;
             _isFlat = isFlat;
 
+            // AppState 상태 동기화 (SSOT)
+            AppState.Current.SystemStatus = SystemStatus.Running;
+
             // CTC 상태: 측정 중 - 이송 불가
             RequestTransferStatusChange(CTCTransferStatus.NotReady);
 

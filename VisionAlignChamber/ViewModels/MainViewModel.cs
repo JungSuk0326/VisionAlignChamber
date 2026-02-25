@@ -17,6 +17,13 @@ namespace VisionAlignChamber.ViewModels
 
         private VisionAlignerSystem _system;
 
+        // AppState 동기화 플래그 (무한 루프 방지)
+        private bool _isSyncing = false;
+
+        // EventManager 핸들러 (Unsubscribe용)
+        private Action<object> _systemStateChangedHandler;
+        private Action<object> _controlAuthorityChangedHandler;
+
         #endregion
 
         #region Child ViewModels
@@ -48,6 +55,12 @@ namespace VisionAlignChamber.ViewModels
                     if (value == ControlAuthority.Remote)
                     {
                         CurrentMode = SystemMode.Auto;
+                    }
+
+                    // AppState 동기화 (SSOT)
+                    if (!_isSyncing)
+                    {
+                        AppState.Current.ControlAuthority = value;
                     }
 
                     RaiseCanExecuteChanged();
@@ -118,6 +131,12 @@ namespace VisionAlignChamber.ViewModels
                     OnPropertyChanged(nameof(IsIdle));
                     OnPropertyChanged(nameof(IsRunning));
                     OnPropertyChanged(nameof(IsError));
+
+                    // AppState 동기화 (SSOT)
+                    if (!_isSyncing)
+                    {
+                        AppState.Current.SystemStatus = value;
+                    }
                 }
             }
         }
@@ -139,6 +158,12 @@ namespace VisionAlignChamber.ViewModels
                 if (SetProperty(ref _isInitialized, value))
                 {
                     SystemState.IsInitialized = value;
+
+                    // AppState 동기화 (SSOT)
+                    if (!_isSyncing)
+                    {
+                        AppState.Current.IsInitialized = value;
+                    }
                 }
             }
         }
@@ -203,6 +228,12 @@ namespace VisionAlignChamber.ViewModels
             MainTab = new MainTabViewModel();
 
             InitializeCommands();
+
+            // AppState 이벤트 구독 (SSOT 동기화)
+            SubscribeToAppState();
+
+            // AppState 초기값으로 동기화
+            SyncFromAppState();
         }
 
         /// <summary>
@@ -479,6 +510,131 @@ namespace VisionAlignChamber.ViewModels
 
         #endregion
 
+        #region Private Methods - AppState Sync
+
+        /// <summary>
+        /// AppState 이벤트 구독
+        /// </summary>
+        private void SubscribeToAppState()
+        {
+            _systemStateChangedHandler = OnAppStateChanged;
+            _controlAuthorityChangedHandler = OnControlAuthorityChanged;
+
+            EventManager.Subscribe(EventManager.SystemStateChanged, _systemStateChangedHandler);
+            EventManager.Subscribe(EventManager.ControlAuthorityChanged, _controlAuthorityChangedHandler);
+        }
+
+        /// <summary>
+        /// AppState로부터 초기값 동기화
+        /// </summary>
+        private void SyncFromAppState()
+        {
+            _isSyncing = true;
+            try
+            {
+                _controlAuthority = AppState.Current.ControlAuthority;
+                _currentStatus = AppState.Current.SystemStatus;
+                _isInitialized = AppState.Current.IsInitialized;
+
+                OnPropertyChanged(nameof(ControlAuthority));
+                OnPropertyChanged(nameof(CurrentStatus));
+                OnPropertyChanged(nameof(IsInitialized));
+                OnPropertyChanged(nameof(IsLocalControl));
+                OnPropertyChanged(nameof(IsRemoteControl));
+                OnPropertyChanged(nameof(IsLocked));
+                OnPropertyChanged(nameof(CanOperateUI));
+                OnPropertyChanged(nameof(IsIdle));
+                OnPropertyChanged(nameof(IsRunning));
+                OnPropertyChanged(nameof(IsError));
+            }
+            finally
+            {
+                _isSyncing = false;
+            }
+        }
+
+        /// <summary>
+        /// AppState 상태 변경 핸들러
+        /// </summary>
+        private void OnAppStateChanged(object data)
+        {
+            if (_isSyncing) return;
+
+            var propertyName = data as string;
+            if (string.IsNullOrEmpty(propertyName)) return;
+
+            _isSyncing = true;
+            try
+            {
+                switch (propertyName)
+                {
+                    case nameof(AppState.SystemStatus):
+                        if (_currentStatus != AppState.Current.SystemStatus)
+                        {
+                            _currentStatus = AppState.Current.SystemStatus;
+                            SystemState.Status = _currentStatus;
+                            OnPropertyChanged(nameof(CurrentStatus));
+                            OnPropertyChanged(nameof(IsIdle));
+                            OnPropertyChanged(nameof(IsRunning));
+                            OnPropertyChanged(nameof(IsError));
+                            OnPropertyChanged(nameof(CanOperateUI));
+                            RaiseCanExecuteChanged();
+                        }
+                        break;
+
+                    case nameof(AppState.IsInitialized):
+                        if (_isInitialized != AppState.Current.IsInitialized)
+                        {
+                            _isInitialized = AppState.Current.IsInitialized;
+                            SystemState.IsInitialized = _isInitialized;
+                            OnPropertyChanged(nameof(IsInitialized));
+                            RaiseCanExecuteChanged();
+                        }
+                        break;
+                }
+            }
+            finally
+            {
+                _isSyncing = false;
+            }
+        }
+
+        /// <summary>
+        /// 제어 권한 변경 핸들러
+        /// </summary>
+        private void OnControlAuthorityChanged(object data)
+        {
+            if (_isSyncing) return;
+
+            if (data is ControlAuthority newAuthority && _controlAuthority != newAuthority)
+            {
+                _isSyncing = true;
+                try
+                {
+                    _controlAuthority = newAuthority;
+                    OnPropertyChanged(nameof(ControlAuthority));
+                    OnPropertyChanged(nameof(IsLocalControl));
+                    OnPropertyChanged(nameof(IsRemoteControl));
+                    OnPropertyChanged(nameof(IsLocked));
+                    OnPropertyChanged(nameof(CanOperateUI));
+
+                    // Remote로 전환 시 Auto 모드 강제
+                    if (newAuthority == ControlAuthority.Remote)
+                    {
+                        CurrentMode = SystemMode.Auto;
+                    }
+
+                    RaiseCanExecuteChanged();
+                }
+                finally
+                {
+                    _isSyncing = false;
+                }
+            }
+        }
+
+        #endregion
+
         #region Private Methods
 
         private void RaiseCanExecuteChanged()
@@ -504,7 +660,17 @@ namespace VisionAlignChamber.ViewModels
 
         protected override void OnDisposing()
         {
-            // 이벤트 구독 해제
+            // AppState 이벤트 구독 해제
+            if (_systemStateChangedHandler != null)
+            {
+                EventManager.Unsubscribe(EventManager.SystemStateChanged, _systemStateChangedHandler);
+            }
+            if (_controlAuthorityChangedHandler != null)
+            {
+                EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, _controlAuthorityChangedHandler);
+            }
+
+            // VisionAlignerSystem 이벤트 구독 해제
             if (_system != null)
             {
                 _system.InitializationProgress -= OnInitializationProgress;

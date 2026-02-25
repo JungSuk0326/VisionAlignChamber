@@ -109,7 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- 기존 파일 -->
-    <Compile Include="Core\AppContext.cs" />
+    <Compile Include="Core\AppState.cs" />
     <Compile Include="Core\EventManager.cs" />
     <Compile Include="Eddy\EddyCurrentSensor.cs" />
     <Compile Include="Form1.cs">

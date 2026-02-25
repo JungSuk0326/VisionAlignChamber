@@ -237,6 +237,36 @@ namespace VisionAlignChamber.Hardware.Facade
 
         #endregion
 
+        #region Simulation Input Toggle
+
+        /// <summary>
+        /// 시뮬레이션 Digital IO 여부
+        /// </summary>
+        public bool IsSimulationMode => _dio is Hardware.Simulation.SimulationDigitalIO;
+
+        /// <summary>
+        /// 시뮬레이션 모드에서 Digital Input 토글 (테스트용)
+        /// </summary>
+        /// <param name="input">토글할 입력</param>
+        /// <returns>토글 후 상태</returns>
+        public bool ToggleSimulationInput(VADigitalInput input)
+        {
+            var simDio = _dio as Hardware.Simulation.SimulationDigitalIO;
+            if (simDio == null)
+            {
+                System.Diagnostics.Debug.WriteLine("[IO] 시뮬레이션 모드가 아닙니다.");
+                return false;
+            }
+
+            var ch = _mapping.GetDIChannel(input);
+            bool currentValue = simDio.ReadInputBit(ch.ModuleNo, ch.Channel);
+            bool newValue = !currentValue;
+            simDio.SetInputBit(ch.ModuleNo, ch.Channel, newValue);
+            return newValue;
+        }
+
+        #endregion
+
         #region Status Summary
 
         /// <summary>

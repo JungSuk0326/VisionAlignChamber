@@ -16,8 +16,14 @@ namespace VisionAlignChamber.Hardware.Simulation
         private bool _disposed = false;
         private int _axisCount = 4; // WedgeUpDown, ChuckRotation, CenteringStage_1, CenteringStage_2
         private Dictionary<int, double> _positions = new Dictionary<int, double>();
+        private Dictionary<int, double> _targetPositions = new Dictionary<int, double>();
         private Dictionary<int, bool> _servoOn = new Dictionary<int, bool>();
         private Dictionary<int, bool> _isHomed = new Dictionary<int, bool>();
+        private Dictionary<int, DateTime> _moveStartTime = new Dictionary<int, DateTime>();
+        private Dictionary<int, int> _moveDurationMs = new Dictionary<int, int>();
+
+        // 시뮬레이션 모션 딜레이 (ms)
+        private const int DEFAULT_MOTION_DELAY_MS = 500;
 
         #endregion
 
@@ -130,9 +136,17 @@ namespace VisionAlignChamber.Hardware.Simulation
         {
             if (!_isInitialized || !CheckAxisNo(axisNo)) return false;
 
-            // 시뮬레이션: 즉시 목표 위치로 설정
-            _positions[axisNo] = position;
-            System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} MoveAbs to {position}");
+            // 시뮬레이션: 목표 위치 설정 및 이동 시간 계산
+            _targetPositions[axisNo] = position;
+            _moveStartTime[axisNo] = DateTime.Now;
+
+            // 이동 거리에 따른 딜레이 계산 (최소 200ms, 최대 2000ms)
+            double currentPos = _positions.ContainsKey(axisNo) ? _positions[axisNo] : 0;
+            double distance = Math.Abs(position - currentPos);
+            int delayMs = Math.Max(200, Math.Min(2000, (int)(distance / (velocity > 0 ? velocity : 1) * 1000)));
+            _moveDurationMs[axisNo] = delayMs;
+
+            System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} MoveAbs to {position} (delay: {delayMs}ms)");
             return true;
         }
 
@@ -141,8 +155,15 @@ namespace VisionAlignChamber.Hardware.Simulation
             if (!_isInitialized || !CheckAxisNo(axisNo)) return false;
 
             double currentPos = _positions.ContainsKey(axisNo) ? _positions[axisNo] : 0;
-            _positions[axisNo] = currentPos + distance;
-            System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} MoveRel by {distance}");
+            double targetPos = currentPos + distance;
+            _targetPositions[axisNo] = targetPos;
+            _moveStartTime[axisNo] = DateTime.Now;
+
+            // 이동 거리에 따른 딜레이 계산 (최소 200ms, 최대 2000ms)
+            int delayMs = Math.Max(200, Math.Min(2000, (int)(Math.Abs(distance) / (velocity > 0 ? velocity : 1) * 1000)));
+            _moveDurationMs[axisNo] = delayMs;
+
+            System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} MoveRel by {distance} (delay: {delayMs}ms)");
             return true;
         }
 
@@ -173,8 +194,34 @@ namespace VisionAlignChamber.Hardware.Simulation
 
         public bool IsMotionDone(int axisNo)
         {
-            // 시뮬레이션에서는 항상 완료
-            return true;
+            if (!_isInitialized || !CheckAxisNo(axisNo)) return true;
+
+            // 이동 중인지 확인
+            if (!_moveStartTime.ContainsKey(axisNo) || !_moveDurationMs.ContainsKey(axisNo))
+                return true;
+
+            // 경과 시간 확인
+            var elapsed = (DateTime.Now - _moveStartTime[axisNo]).TotalMilliseconds;
+            if (elapsed >= _moveDurationMs[axisNo])
+            {
+                // 이동 완료 - 목표 위치로 설정
+                if (_targetPositions.ContainsKey(axisNo))
+                {
+                    _positions[axisNo] = _targetPositions[axisNo];
+                }
+                return true;
+            }
+
+            // 아직 이동 중 - 현재 위치 보간
+            if (_targetPositions.ContainsKey(axisNo))
+            {
+                double startPos = _positions.ContainsKey(axisNo) ? _positions[axisNo] : 0;
+                double targetPos = _targetPositions[axisNo];
+                double progress = elapsed / _moveDurationMs[axisNo];
+                // 실제 위치는 업데이트하지 않고 이동 중임을 표시
+            }
+
+            return false;
         }
 
         #endregion
@@ -185,17 +232,40 @@ namespace VisionAlignChamber.Hardware.Simulation
         {
             if (!_isInitialized || !CheckAxisNo(axisNo)) return false;
 
-            // 시뮬레이션: 즉시 원점으로 설정
-            _positions[axisNo] = 0;
-            _isHomed[axisNo] = true;
-            System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} HomeMove completed");
+            // 시뮬레이션: 원점 복귀 시작 (딜레이 적용)
+            _targetPositions[axisNo] = 0;
+            _moveStartTime[axisNo] = DateTime.Now;
+            _moveDurationMs[axisNo] = 1000; // 원점 복귀 1초
+            _isHomed[axisNo] = false; // 아직 완료 안됨
+
+            System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} HomeMove started");
             return true;
         }
 
         public bool IsHomeDone(int axisNo)
         {
             if (!_isInitialized || !CheckAxisNo(axisNo)) return false;
-            return _isHomed.ContainsKey(axisNo) && _isHomed[axisNo];
+
+            // 이미 완료된 경우
+            if (_isHomed.ContainsKey(axisNo) && _isHomed[axisNo])
+                return true;
+
+            // 원점 복귀 중인지 확인
+            if (!_moveStartTime.ContainsKey(axisNo) || !_moveDurationMs.ContainsKey(axisNo))
+                return false;
+
+            // 경과 시간 확인
+            var elapsed = (DateTime.Now - _moveStartTime[axisNo]).TotalMilliseconds;
+            if (elapsed >= _moveDurationMs[axisNo])
+            {
+                // 원점 복귀 완료
+                _positions[axisNo] = 0;
+                _isHomed[axisNo] = true;
+                System.Diagnostics.Debug.WriteLine($"[Simulation] Axis {axisNo} HomeMove completed");
+                return true;
+            }
+
+            return false;
         }
 
         #endregion
@@ -211,7 +281,9 @@ namespace VisionAlignChamber.Hardware.Simulation
             {
                 if (CheckAxisNo(axisNos[i]))
                 {
-                    _positions[axisNos[i]] = positions[i];
+                    int axisNo = axisNos[i];
+                    double velocity = (velocities != null && i < velocities.Length) ? velocities[i] : 10000;
+                    MoveAbs(axisNo, positions[i], velocity, 0, 0);
                 }
             }
 

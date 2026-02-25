@@ -63,6 +63,11 @@ namespace VisionAlignChamber.Models
         public double EddyValue;
 
         /// <summary>
+        /// PN 측정값 (1=P, 0=N)
+        /// </summary>
+        public int PNValue;
+
+        /// <summary>
         /// 기본값 생성
         /// </summary>
         public static WaferVisionResult Empty => new WaferVisionResult
@@ -76,7 +81,8 @@ namespace VisionAlignChamber.Models
             Width = 0,
             Height = 0,
             Wafer = WaferInfo.Empty,
-            EddyValue = 0
+            EddyValue = 0,
+            PNValue = 0
         };
 
         public override string ToString()

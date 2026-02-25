@@ -2,6 +2,7 @@ using System;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Hardware.Facade;
+using VisionAlignChamber.Config;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -179,6 +180,12 @@ namespace VisionAlignChamber.ViewModels
 
         public ICommand AllOutputOffCommand { get; private set; }
 
+        // 시뮬레이션 입력 토글 커맨드
+        public ICommand ToggleSensor1Command { get; private set; }
+        public ICommand ToggleSensor2Command { get; private set; }
+        public ICommand TogglePNCheckPCommand { get; private set; }
+        public ICommand TogglePNCheckNCommand { get; private set; }
+
         private void InitializeCommands()
         {
             // Initialize Command
@@ -202,6 +209,20 @@ namespace VisionAlignChamber.ViewModels
 
             // All Off Command
             AllOutputOffCommand = new RelayCommand(ExecuteAllOutputOff, () => IsInitialized);
+
+            // 시뮬레이션 입력 토글 커맨드 (시뮬레이션 모드에서만 활성화)
+            ToggleSensor1Command = new RelayCommand(
+                () => _io.ToggleSimulationInput(VADigitalInput.Sensor1_Wafer_Check),
+                () => IsInitialized && _io.IsSimulationMode);
+            ToggleSensor2Command = new RelayCommand(
+                () => _io.ToggleSimulationInput(VADigitalInput.Sensor2_Wafer_Check),
+                () => IsInitialized && _io.IsSimulationMode);
+            TogglePNCheckPCommand = new RelayCommand(
+                () => _io.ToggleSimulationInput(VADigitalInput.PN_Check_P),
+                () => IsInitialized && _io.IsSimulationMode);
+            TogglePNCheckNCommand = new RelayCommand(
+                () => _io.ToggleSimulationInput(VADigitalInput.PN_Check_N),
+                () => IsInitialized && _io.IsSimulationMode);
         }
 
         #endregion
@@ -247,6 +268,12 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)VisionLightOnCommand).RaiseCanExecuteChanged();
             ((RelayCommand)VisionLightOffCommand).RaiseCanExecuteChanged();
             ((RelayCommand)AllOutputOffCommand).RaiseCanExecuteChanged();
+
+            // 시뮬레이션 입력 토글 커맨드
+            ((RelayCommand)ToggleSensor1Command).RaiseCanExecuteChanged();
+            ((RelayCommand)ToggleSensor2Command).RaiseCanExecuteChanged();
+            ((RelayCommand)TogglePNCheckPCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)TogglePNCheckNCommand).RaiseCanExecuteChanged();
         }
 
         #endregion

@@ -359,6 +359,12 @@ namespace VisionAlignChamber.ViewModels
                 OnPropertyChanged(nameof(IO));
                 OnPropertyChanged(nameof(Vision));
 
+                // InitializeAll 완료 후 Sequence가 생성되었으므로 MainTab에 연결
+                if (_system.Sequence != null)
+                {
+                    MainTab.Initialize(_system.Sequence);
+                }
+
                 IsInitialized = true;
                 CurrentStatus = SystemStatus.Idle;
                 StatusMessage = "시스템 초기화 완료";

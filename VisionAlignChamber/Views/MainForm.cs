@@ -99,11 +99,13 @@ namespace VisionAlignChamber.Views
             try
             {
                 _hardwareMapping = new HardwareMapping(configPath);
+                System.Diagnostics.Debug.WriteLine($"[MainForm] HardwareMapping 생성 성공: {configPath}");
             }
             catch (Exception ex)
             {
                 initErrors.Add($"HardwareMapping: {ex.Message}");
                 _hardwareMapping = null;
+                System.Diagnostics.Debug.WriteLine($"[MainForm] HardwareMapping 생성 실패: {ex.Message}");
             }
 
             // 2. Motion 초기화 (Simulation 모드 분기)
@@ -192,6 +194,7 @@ namespace VisionAlignChamber.Views
             }
 
             // VisionAlignerSystem 생성 (사용 가능한 모듈만 전달)
+            System.Diagnostics.Debug.WriteLine($"[MainForm] Creating VisionAlignerSystem - _vaMotion: {(_vaMotion != null ? "OK" : "NULL")}, _vaIO: {(_vaIO != null ? "OK" : "NULL")}, _hardwareMapping: {(_hardwareMapping != null ? "OK" : "NULL")}");
             _system = new VisionAlignerSystem(_vaMotion, _vaIO, _vision, _eddySensor, _ctcController);
 
             // ViewModel 생성 및 초기화

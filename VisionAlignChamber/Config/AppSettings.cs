@@ -188,6 +188,42 @@ namespace VisionAlignChamber.Config
             set => WriteValue("System", "Simulation", value ? "true" : "false");
         }
 
+        /// <summary>
+        /// 시뮬레이션용 Notch 이미지 폴더 경로
+        /// </summary>
+        public static string SimulationImagePath_Notch
+        {
+            get => ReadValue("Simulation", "ImagePath_Notch", "");
+            set => WriteValue("Simulation", "ImagePath_Notch", value);
+        }
+
+        /// <summary>
+        /// 시뮬레이션용 Flat 이미지 폴더 경로
+        /// </summary>
+        public static string SimulationImagePath_Flat
+        {
+            get => ReadValue("Simulation", "ImagePath_Flat", "");
+            set => WriteValue("Simulation", "ImagePath_Flat", value);
+        }
+
+        /// <summary>
+        /// 시뮬레이션용 Eddy 더미값
+        /// </summary>
+        public static double SimulationEddyValue
+        {
+            get => GetDouble("Simulation", "EddyValue", 0.0);
+            set => WriteValue("Simulation", "EddyValue", value.ToString());
+        }
+
+        /// <summary>
+        /// 시뮬레이션용 PN 더미값 (1=P, 0=N)
+        /// </summary>
+        public static int SimulationPNValue
+        {
+            get => GetInt("Simulation", "PNValue", 1);
+            set => WriteValue("Simulation", "PNValue", value.ToString());
+        }
+
         #endregion
 
         #region Communication Properties

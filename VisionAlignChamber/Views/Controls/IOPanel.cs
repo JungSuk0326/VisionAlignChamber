@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using VisionAlignChamber.ViewModels;
+using VisionAlignChamber.Config;
 
 namespace VisionAlignChamber.Views.Controls
 {
@@ -49,7 +50,36 @@ namespace VisionAlignChamber.Views.Controls
 
             if (_viewModel == null) return;
 
+            // 시뮬레이션 모드에서 Digital Input Label 클릭 이벤트 연결
+            if (AppSettings.SimulationMode)
+            {
+                SetupSimulationInputClickEvents();
+            }
+
             _updateTimer.Start();
+        }
+
+        /// <summary>
+        /// 시뮬레이션 모드에서 Digital Input Label 클릭 이벤트 설정
+        /// </summary>
+        private void SetupSimulationInputClickEvents()
+        {
+            lblSensor1.Cursor = Cursors.Hand;
+            lblSensor2.Cursor = Cursors.Hand;
+            lblPNCheckP.Cursor = Cursors.Hand;
+            lblPNCheckN.Cursor = Cursors.Hand;
+
+            lblSensor1.Click += lblSensor1_Click;
+            lblSensor2.Click += lblSensor2_Click;
+            lblPNCheckP.Click += lblPNCheckP_Click;
+            lblPNCheckN.Click += lblPNCheckN_Click;
+
+            // 툴팁 추가
+            var toolTip = new ToolTip();
+            toolTip.SetToolTip(lblSensor1, "[Simulation] 클릭하여 토글");
+            toolTip.SetToolTip(lblSensor2, "[Simulation] 클릭하여 토글");
+            toolTip.SetToolTip(lblPNCheckP, "[Simulation] 클릭하여 토글");
+            toolTip.SetToolTip(lblPNCheckN, "[Simulation] 클릭하여 토글");
         }
 
         #endregion
@@ -183,6 +213,30 @@ namespace VisionAlignChamber.Views.Controls
         private void btnAllOff_Click(object sender, EventArgs e)
         {
             _viewModel?.AllOutputOffCommand?.Execute(null);
+        }
+
+        #endregion
+
+        #region Event Handlers - Simulation Input Toggle
+
+        private void lblSensor1_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ToggleSensor1Command?.Execute(null);
+        }
+
+        private void lblSensor2_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ToggleSensor2Command?.Execute(null);
+        }
+
+        private void lblPNCheckP_Click(object sender, EventArgs e)
+        {
+            _viewModel?.TogglePNCheckPCommand?.Execute(null);
+        }
+
+        private void lblPNCheckN_Click(object sender, EventArgs e)
+        {
+            _viewModel?.TogglePNCheckNCommand?.Execute(null);
         }
 
         #endregion

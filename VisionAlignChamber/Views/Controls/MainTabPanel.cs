@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using VisionAlignChamber.Core;
+using VisionAlignChamber.Log;
 using VisionAlignChamber.ViewModels;
 using VisionAlignChamber.Models;
 
@@ -23,6 +24,9 @@ namespace VisionAlignChamber.Views.Controls
         public MainTabPanel()
         {
             InitializeComponent();
+
+            // 시퀀스 로그 구독
+            UILogTarget.LogReceived += OnLogReceived;
         }
 
         #endregion
@@ -53,6 +57,7 @@ namespace VisionAlignChamber.Views.Controls
                 // 초기 상태 표시
                 UpdateStateDisplay();
                 UpdateProgressDisplay();
+                UpdateResultDisplay();
             }
         }
 
@@ -102,6 +107,10 @@ namespace VisionAlignChamber.Views.Controls
                 case nameof(MainTabViewModel.CanStop):
                     btnStart.Enabled = _viewModel.CanStart;
                     btnStop.Enabled = _viewModel.CanStop;
+                    break;
+
+                case nameof(MainTabViewModel.LastResult):
+                    UpdateResultDisplay();
                     break;
             }
         }
@@ -254,6 +263,81 @@ namespace VisionAlignChamber.Views.Controls
             lblProgress.Text = $"{_viewModel.ProgressPercent}%";
         }
 
+        private void UpdateResultDisplay()
+        {
+            if (_viewModel == null) return;
+
+            var result = _viewModel.LastResult;
+
+            if (result.IsValid)
+            {
+                // Angle
+                lblAngleValue.Text = $"{result.AbsAngle:F3}°";
+
+                // Center (X, Y)
+                lblCenterValue.Text = $"({result.Wafer.CenterX:F3}, {result.Wafer.CenterY:F3})";
+
+                // Offset
+                lblOffsetValue.Text = $"{result.Wafer.TotalOffset:F3} mm";
+
+                // Size (Width x Height)
+                lblSizeValue.Text = $"{result.Width:F2} x {result.Height:F2}";
+
+                // Eddy
+                lblEddyValue.Text = $"{result.EddyValue:F2}";
+
+                // P/N
+                lblPNValue.Text = result.PNValue == 1 ? "P" : "N";
+                lblPNValue.ForeColor = result.PNValue == 1 ? Color.Lime : Color.Orange;
+            }
+            else
+            {
+                // 결과 없음 - 초기화
+                lblAngleValue.Text = "--";
+                lblCenterValue.Text = "--";
+                lblOffsetValue.Text = "--";
+                lblSizeValue.Text = "--";
+                lblEddyValue.Text = "--";
+                lblPNValue.Text = "--";
+                lblPNValue.ForeColor = Color.Cyan;
+            }
+        }
+
+        private void OnLogReceived(LogEntry entry)
+        {
+            // Sequence 로거만 필터링
+            if (entry.Logger != "Sequence")
+                return;
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => OnLogReceived(entry)));
+                return;
+            }
+
+            AppendSequenceLog(entry);
+        }
+
+        private void AppendSequenceLog(LogEntry entry)
+        {
+            // 최대 라인 수 제한 (1000줄)
+            const int MaxLines = 1000;
+
+            var logLine = $"[{entry.Timestamp:HH:mm:ss.fff}] [{entry.Level}] {entry.Message}";
+
+            if (txtSequenceLog.Lines.Length >= MaxLines)
+            {
+                // 오래된 로그 제거
+                var lines = new string[MaxLines - 1];
+                Array.Copy(txtSequenceLog.Lines, txtSequenceLog.Lines.Length - MaxLines + 1, lines, 0, MaxLines - 1);
+                txtSequenceLog.Lines = lines;
+            }
+
+            txtSequenceLog.AppendText(logLine + Environment.NewLine);
+            txtSequenceLog.SelectionStart = txtSequenceLog.TextLength;
+            txtSequenceLog.ScrollToCaret();
+        }
+
         #endregion
 
         #region Dispose
@@ -262,6 +346,9 @@ namespace VisionAlignChamber.Views.Controls
         {
             if (disposing)
             {
+                // 로그 구독 해제
+                UILogTarget.LogReceived -= OnLogReceived;
+
                 if (_viewModel != null)
                 {
                     _viewModel.PropertyChanged -= OnViewModelPropertyChanged;

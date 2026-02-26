@@ -115,6 +115,11 @@ namespace VisionAlignChamber.Core
         public WaferVisionResult VisionResult => _visionResult;
 
         /// <summary>
+        /// Flat 타입 웨이퍼 여부
+        /// </summary>
+        public bool IsFlat => _isFlat;
+
+        /// <summary>
         /// 마지막 에러 메시지
         /// </summary>
         public string LastError { get; private set; }
@@ -205,7 +210,7 @@ namespace VisionAlignChamber.Core
 
             try
             {
-                LogManager.System.Info($"[Sequence] 시퀀스 시작 (Type: {(isFlat ? "Flat" : "Notch")}, SkipEddy: {skipEddy})");
+                LogManager.Sequence.Info($"시퀀스 시작 (Type: {(isFlat ? "Flat" : "Notch")}, SkipEddy: {skipEddy})");
 
                 // Step 1: PreCenter
                 if (!await ExecuteStepAsync(SequenceStep.PreCenter, ExecutePreCenterAsync))
@@ -239,13 +244,13 @@ namespace VisionAlignChamber.Core
                 }
                 else
                 {
-                    LogManager.System.Info("[Sequence] Step 7: Eddy - Skipped");
+                    LogManager.Sequence.Info("Step 7: Eddy - Skipped");
                 }
 
                 // 완료
                 CurrentStep = SequenceStep.Complete;
                 State = SequenceState.Completed;
-                LogManager.System.Info("[Sequence] 시퀀스 완료");
+                LogManager.Sequence.Info("시퀀스 완료");
 
                 // CTC 상태: 측정 완료 - 웨이퍼 가져갈 수 있음
                 RequestTransferStatusChange(CTCTransferStatus.GetReady);
@@ -256,7 +261,7 @@ namespace VisionAlignChamber.Core
             catch (OperationCanceledException)
             {
                 State = SequenceState.Aborted;
-                LogManager.System.Warn("[Sequence] 시퀀스 중단됨");
+                LogManager.Sequence.Warn("시퀀스 중단됨");
                 return false;
             }
             catch (Exception ex)
@@ -273,7 +278,7 @@ namespace VisionAlignChamber.Core
         {
             if (_io == null)
             {
-                LogManager.System.Warn("[Sequence] IO 모듈이 없어 인터락 체크를 건너뜁니다.");
+                LogManager.Sequence.Warn("IO 모듈이 없어 인터락 체크를 건너뜁니다.");
                 return true;
             }
 
@@ -283,7 +288,7 @@ namespace VisionAlignChamber.Core
                 return false;
             }
 
-            LogManager.System.Info("[Sequence] 웨이퍼 센서 인터락 체크 OK");
+            LogManager.Sequence.Info("웨이퍼 센서 인터락 체크 OK");
             return true;
         }
 
@@ -295,7 +300,7 @@ namespace VisionAlignChamber.Core
             _cts?.Cancel();
             _motion?.EmergencyStopAll();
             State = SequenceState.Aborted;
-            LogManager.System.Warn("[Sequence] 시퀀스 정지 요청");
+            LogManager.Sequence.Warn("시퀀스 정지 요청");
         }
 
         /// <summary>
@@ -318,7 +323,7 @@ namespace VisionAlignChamber.Core
             _cts.Token.ThrowIfCancellationRequested();
 
             CurrentStep = step;
-            LogManager.System.Info($"[Sequence] Step {(int)step}: {step}");
+            LogManager.Sequence.Info($"Step {(int)step}: {step}");
 
             bool result = await stepAction();
 
@@ -452,7 +457,7 @@ namespace VisionAlignChamber.Core
                         return false;
                     }
 
-                    LogManager.System.Info($"[Sequence] 시뮬레이션 모드 - 이미지 로드: {imagePath}");
+                    LogManager.Sequence.Info($"시뮬레이션 모드 - 이미지 로드: {imagePath}");
 
                     if (!_vision.AddImagesFromFolder(imagePath))
                     {
@@ -460,7 +465,7 @@ namespace VisionAlignChamber.Core
                         return false;
                     }
 
-                    LogManager.System.Info($"[Sequence] 이미지 {_vision.ImageCount}개 로드 완료");
+                    LogManager.Sequence.Info($"이미지 {_vision.ImageCount}개 로드 완료");
                 }
                 else
                 {
@@ -502,7 +507,7 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                LogManager.System.Info($"[Sequence] Vision Result - Radius: {_visionResult.Radius:F3}, AbsAngle: {_visionResult.AbsAngle:F3}");
+                LogManager.Sequence.Info($"Vision Result - Radius: {_visionResult.Radius:F3}, AbsAngle: {_visionResult.AbsAngle:F3}");
                 return true;
             }
             catch (Exception ex)
@@ -576,7 +581,7 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                LogManager.System.Info($"[Sequence] Align 완료 - Center: {centerPosition:F3}, Theta: {_visionResult.AbsAngle:F3}°");
+                LogManager.Sequence.Info($"Align 완료 - Center: {centerPosition:F3}, Theta: {_visionResult.AbsAngle:F3}°");
                 return true;
             }
             catch (Exception ex)
@@ -619,7 +624,7 @@ namespace VisionAlignChamber.Core
                     _visionResult.EddyValue = eddyValue;
                     _visionResult.PNValue = pnValue;
 
-                    LogManager.System.Info($"[Sequence] Eddy Value (Simulation): {eddyValue:F3}, PN: {(pnValue == 1 ? "P" : "N")}");
+                    LogManager.Sequence.Info($"Eddy Value (Simulation): {eddyValue:F3}, PN: {(pnValue == 1 ? "P" : "N")}");
                 }
                 else if (_eddy != null && _eddy.IsConnected)
                 {
@@ -630,7 +635,7 @@ namespace VisionAlignChamber.Core
                     // TODO: 실제 PN 센서에서 값 읽기
                     // _visionResult.PNValue = _io.GetPNValue();
 
-                    LogManager.System.Info($"[Sequence] Eddy Value: {eddyValue:F3}");
+                    LogManager.Sequence.Info($"Eddy Value: {eddyValue:F3}");
                 }
 
                 return true;
@@ -650,7 +655,7 @@ namespace VisionAlignChamber.Core
         {
             LastError = message;
             State = SequenceState.Error;
-            LogManager.System.Error($"[Sequence] Error: {message}");
+            LogManager.Sequence.Error($"Error: {message}");
             ErrorOccurred?.Invoke(this, message);
         }
 
@@ -659,7 +664,7 @@ namespace VisionAlignChamber.Core
         /// </summary>
         private void RequestTransferStatusChange(CTCTransferStatus status)
         {
-            LogManager.System.Info($"[Sequence] CTC Transfer Status 변경 요청: {status}");
+            LogManager.Sequence.Info($"CTC Transfer Status 변경 요청: {status}");
             TransferStatusChangeRequested?.Invoke(this, new CTCTransferStatusEventArgs(status, _visionResult));
         }
 

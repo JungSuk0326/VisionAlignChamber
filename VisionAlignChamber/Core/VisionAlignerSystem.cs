@@ -4,6 +4,7 @@ using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Vision;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Communication.Interfaces;
+using VisionAlignChamber.Database;
 using VisionAlignChamber.Models;
 
 namespace VisionAlignChamber.Core
@@ -548,6 +549,10 @@ namespace VisionAlignChamber.Core
         /// </summary>
         private void OnSequenceCompleted(object sender, WaferVisionResult result)
         {
+            // DB에 결과 저장
+            bool isFlat = _sequence?.IsFlat ?? false;
+            ResultRepository.Instance.Insert(result, isFlat);
+
             // AppContext에 결과 저장
             AppState.Current.LastVisionResult = result;
             AppState.Current.TotalRunCount++;

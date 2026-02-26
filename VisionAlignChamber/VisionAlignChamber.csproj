@@ -161,6 +161,7 @@
     <!-- Database (데이터베이스) -->
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\AlarmRepository.cs" />
+    <Compile Include="Database\ResultRepository.cs" />
     <Compile Include="Database\Entities.cs" />
     <!-- Log (로그) -->
     <Compile Include="Log\LogManager.cs" />

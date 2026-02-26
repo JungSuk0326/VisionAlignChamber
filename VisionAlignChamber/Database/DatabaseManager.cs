@@ -148,23 +148,32 @@ namespace VisionAlignChamber.Database
                     CREATE INDEX IF NOT EXISTS IX_AlarmHistory_InterlockId
                     ON AlarmHistory(InterlockId)");
 
-                // 검사 결과 테이블 (향후 확장용)
+                // 측정 결과 이력 테이블
                 connection.Execute(@"
-                    CREATE TABLE IF NOT EXISTS InspectionResult (
+                    CREATE TABLE IF NOT EXISTS ResultHistory (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        WaferId TEXT,
-                        LotId TEXT,
-                        InspectionTime TEXT NOT NULL,
-                        Result INTEGER,
+                        MeasuredTime TEXT NOT NULL,
+                        WaferType INTEGER NOT NULL DEFAULT 0,
+                        IsValid INTEGER NOT NULL DEFAULT 0,
+                        Found INTEGER NOT NULL DEFAULT 0,
+                        Index1st INTEGER,
+                        Index2nd INTEGER,
+                        OffAngle REAL,
+                        AbsAngle REAL,
+                        Width REAL,
+                        Height REAL,
                         CenterX REAL,
                         CenterY REAL,
-                        Angle REAL,
-                        NotchAngle REAL,
-                        FlatAngle REAL,
-                        ProcessTime REAL,
-                        ImagePath TEXT,
-                        AdditionalData TEXT
+                        Radius REAL,
+                        TotalOffset REAL,
+                        EddyValue REAL,
+                        PNValue INTEGER
                     )");
+
+                // 측정 결과 인덱스 (시간순 조회용)
+                connection.Execute(@"
+                    CREATE INDEX IF NOT EXISTS IX_ResultHistory_MeasuredTime
+                    ON ResultHistory(MeasuredTime DESC)");
             }
 
             System.Diagnostics.Debug.WriteLine("[DatabaseManager] Tables created");

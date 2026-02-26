@@ -18,12 +18,12 @@ namespace VisionAlignChamber.Models
         public bool Found;
 
         /// <summary>
-        /// 1차 검출 이미지 인덱스
+        /// Notch 검출 이미지 인덱스
         /// </summary>
         public int Index1st;
 
         /// <summary>
-        /// 2차 검출 이미지 인덱스
+        /// Flat 검출 이미지 인덱스
         /// </summary>
         public int Index2nd;
 

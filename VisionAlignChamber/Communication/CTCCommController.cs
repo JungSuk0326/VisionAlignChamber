@@ -135,7 +135,7 @@ namespace VisionAlignChamber.Communication
         public void SendStatus()
         {
             _server.Send(CurrentStatus.Clone());
-            LogManager.System.Debug($"[CTCComm] Sent Status: Equip={CurrentStatus.EquipmentStatus}, Process={CurrentStatus.ProcessState}, Run={CurrentStatus.RunState}");
+            LogManager.System.Debug($"[CTCComm] Sent Status: Equip={CurrentStatus.EquipmentStatus}, Process={CurrentStatus.ProcessState}");
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace VisionAlignChamber.Communication
         {
             CurrentStatus = status;
             _server.Send(status);
-            LogManager.System.Debug($"[CTCComm] Sent Status: Equip={status.EquipmentStatus}, Process={status.ProcessState}, Run={status.RunState}");
+            LogManager.System.Debug($"[CTCComm] Sent Status: Equip={status.EquipmentStatus}, Process={status.ProcessState},");
         }
 
         /// <summary>
@@ -173,15 +173,7 @@ namespace VisionAlignChamber.Communication
             LogManager.Alarm.Warn($"[CTCComm] Sent ALARM: ID={alarmId}, Name={alarmName}");
         }
 
-        /// <summary>
-        /// 알람 히스토리 전송
-        /// </summary>
-        public void SendAlarmHistory(AlarmHistoryObject alarmHistory)
-        {
-            _server.Send(alarmHistory);
-            LogManager.System.Info("[CTCComm] Sent Alarm History");
-        }
-
+        
         /// <summary>
         /// IO 데이터 전송
         /// </summary>
@@ -244,14 +236,6 @@ namespace VisionAlignChamber.Communication
         public void UpdateTransferStatus(StatusObject.eTransferStatus status)
         {
             CurrentStatus.TransferStatus = status;
-        }
-
-        /// <summary>
-        /// 실행 상태 업데이트
-        /// </summary>
-        public void UpdateRunState(StatusObject.eRunStatus state)
-        {
-            CurrentStatus.RunState = state;
         }
 
         /// <summary>

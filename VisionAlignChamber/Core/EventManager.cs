@@ -41,6 +41,9 @@ namespace VisionAlignChamber.Core
         /// <summary>상태 메시지 (상태바용)</summary>
         public const string StatusMessage = "StatusMessage";
 
+        /// <summary>시퀀스 완료 (결과 데이터 포함)</summary>
+        public const string SequenceCompleted = "SequenceCompleted";
+
         #endregion
 
         #region Public Methods

@@ -544,7 +544,7 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// Sequence 완료 처리 - AppContext 동기화
+        /// Sequence 완료 처리 - AppContext 동기화 및 이벤트 발행
         /// </summary>
         private void OnSequenceCompleted(object sender, WaferVisionResult result)
         {
@@ -552,6 +552,9 @@ namespace VisionAlignChamber.Core
             AppState.Current.LastVisionResult = result;
             AppState.Current.TotalRunCount++;
             AppState.Current.SystemStatus = SystemStatus.Idle;
+
+            // EventManager로 시퀀스 완료 이벤트 발행 (UI 갱신용)
+            EventManager.Publish(EventManager.SequenceCompleted, result);
         }
 
         /// <summary>

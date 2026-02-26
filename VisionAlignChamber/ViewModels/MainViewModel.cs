@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Models;
@@ -23,6 +24,7 @@ namespace VisionAlignChamber.ViewModels
         // EventManager 핸들러 (Unsubscribe용)
         private Action<object> _systemStateChangedHandler;
         private Action<object> _controlAuthorityChangedHandler;
+        private Action<object> _sequenceCompletedHandler;
 
         #endregion
 
@@ -193,6 +195,16 @@ namespace VisionAlignChamber.ViewModels
         {
             get => _alignParameters;
             set => SetProperty(ref _alignParameters, value);
+        }
+
+        private Bitmap _sequenceResultImage;
+        /// <summary>
+        /// 시퀀스 완료 후 결과 이미지 (공용 디스플레이용)
+        /// </summary>
+        public Bitmap SequenceResultImage
+        {
+            get => _sequenceResultImage;
+            set => SetProperty(ref _sequenceResultImage, value);
         }
 
         #endregion
@@ -519,9 +531,11 @@ namespace VisionAlignChamber.ViewModels
         {
             _systemStateChangedHandler = OnAppStateChanged;
             _controlAuthorityChangedHandler = OnControlAuthorityChanged;
+            _sequenceCompletedHandler = OnSequenceCompleted;
 
             EventManager.Subscribe(EventManager.SystemStateChanged, _systemStateChangedHandler);
             EventManager.Subscribe(EventManager.ControlAuthorityChanged, _controlAuthorityChangedHandler);
+            EventManager.Subscribe(EventManager.SequenceCompleted, _sequenceCompletedHandler);
         }
 
         /// <summary>
@@ -633,6 +647,20 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
+        /// <summary>
+        /// 시퀀스 완료 핸들러 - 결과 이미지 업데이트
+        /// </summary>
+        private void OnSequenceCompleted(object data)
+        {
+            if (_system?.Vision == null) return;
+
+            // MainTab의 IsNotchType으로 isFlat 결정
+            bool isFlat = !MainTab.IsNotchType;
+
+            // VisionAlignWrapper에서 결과 이미지 가져오기
+            SequenceResultImage = _system.Vision.GetResultImage(isFlat);
+        }
+
         #endregion
 
         #region Private Methods
@@ -669,6 +697,13 @@ namespace VisionAlignChamber.ViewModels
             {
                 EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, _controlAuthorityChangedHandler);
             }
+            if (_sequenceCompletedHandler != null)
+            {
+                EventManager.Unsubscribe(EventManager.SequenceCompleted, _sequenceCompletedHandler);
+            }
+
+            // 결과 이미지 리소스 해제
+            _sequenceResultImage?.Dispose();
 
             // VisionAlignerSystem 이벤트 구독 해제
             if (_system != null)

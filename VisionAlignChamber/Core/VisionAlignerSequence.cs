@@ -439,23 +439,49 @@ namespace VisionAlignChamber.Core
                 // Vision 이미지 클리어
                 _vision.ClearImages();
 
-                // Vision 스캔 - 각 각도에서 이미지 촬영
-                for (int i = 0; i < imageCount; i++)
+                // 시뮬레이션 모드: 폴더에서 이미지 로드
+                if (AppSettings.SimulationMode)
                 {
-                    _cts.Token.ThrowIfCancellationRequested();
+                    string imagePath = _isFlat
+                        ? AppSettings.SimulationImagePath_Flat
+                        : AppSettings.SimulationImagePath_Notch;
 
-                    // 이미지 촬영 (TODO: 카메라에서 버퍼 획득 후 추가)
-                    // _vision.AddImage(width, height, buffer);
-
-                    // 다음 각도로 이동 (마지막 제외)
-                    if (i < imageCount - 1)
+                    if (string.IsNullOrEmpty(imagePath) || !System.IO.Directory.Exists(imagePath))
                     {
-                        double targetAngle = _param.Theta_ScanStart + (stepAngle * (i + 1));
+                        SetError($"시뮬레이션 이미지 경로가 설정되지 않았거나 존재하지 않습니다: {imagePath}");
+                        return false;
+                    }
 
-                        if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, ct: _cts.Token))
+                    LogManager.System.Info($"[Sequence] 시뮬레이션 모드 - 이미지 로드: {imagePath}");
+
+                    if (!_vision.AddImagesFromFolder(imagePath))
+                    {
+                        SetError("시뮬레이션 이미지 로드 실패");
+                        return false;
+                    }
+
+                    LogManager.System.Info($"[Sequence] 이미지 {_vision.ImageCount}개 로드 완료");
+                }
+                else
+                {
+                    // 실제 하드웨어 모드: 각 각도에서 이미지 촬영
+                    for (int i = 0; i < imageCount; i++)
+                    {
+                        _cts.Token.ThrowIfCancellationRequested();
+
+                        // TODO: 카메라에서 버퍼 획득 후 추가
+                        // _vision.AddImage(width, height, buffer);
+
+                        // 다음 각도로 이동 (마지막 제외)
+                        if (i < imageCount - 1)
                         {
-                            SetError($"Scan 이동 실패 (Image {i + 1})");
-                            return false;
+                            double targetAngle = _param.Theta_ScanStart + (stepAngle * (i + 1));
+
+                            if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, ct: _cts.Token))
+                            {
+                                SetError($"Scan 이동 실패 (Image {i + 1})");
+                                return false;
+                            }
                         }
                     }
                 }
@@ -583,11 +609,27 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Eddy 측정
-                if (_eddy != null && _eddy.IsConnected)
+                // Eddy 측정 및 PN 판정
+                if (AppSettings.SimulationMode)
                 {
+                    // 시뮬레이션 모드: Settings.ini의 더미값 사용
+                    double eddyValue = AppSettings.SimulationEddyValue;
+                    int pnValue = AppSettings.SimulationPNValue;
+
+                    _visionResult.EddyValue = eddyValue;
+                    _visionResult.PNValue = pnValue;
+
+                    LogManager.System.Info($"[Sequence] Eddy Value (Simulation): {eddyValue:F3}, PN: {(pnValue == 1 ? "P" : "N")}");
+                }
+                else if (_eddy != null && _eddy.IsConnected)
+                {
+                    // 실제 하드웨어 모드
                     double eddyValue = _eddy.GetData();
                     _visionResult.EddyValue = eddyValue;
+
+                    // TODO: 실제 PN 센서에서 값 읽기
+                    // _visionResult.PNValue = _io.GetPNValue();
+
                     LogManager.System.Info($"[Sequence] Eddy Value: {eddyValue:F3}");
                 }
 

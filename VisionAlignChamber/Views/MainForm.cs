@@ -501,7 +501,13 @@ namespace VisionAlignChamber.Views
 
         private void UpdateVisionImage()
         {
-            if (_viewModel?.Vision?.CurrentImage != null)
+            // 시퀀스 결과 이미지 우선 (공용 디스플레이)
+            if (_viewModel?.SequenceResultImage != null)
+            {
+                picVisionDisplay.Image = _viewModel.SequenceResultImage;
+            }
+            // Vision 탭 수동 검사용 이미지
+            else if (_viewModel?.Vision?.CurrentImage != null)
             {
                 picVisionDisplay.Image = _viewModel.Vision.CurrentImage;
             }

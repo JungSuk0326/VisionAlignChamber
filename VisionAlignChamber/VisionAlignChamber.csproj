@@ -194,6 +194,7 @@
     <Compile Include="ViewModels\IOViewModel.cs" />
     <Compile Include="ViewModels\VisionViewModel.cs" />
     <Compile Include="ViewModels\EddyViewModel.cs" />
+    <Compile Include="ViewModels\ResultHistoryViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <!-- Views -->
     <Compile Include="Views\MainForm.cs">
@@ -238,6 +239,12 @@
     </Compile>
     <Compile Include="Views\Controls\EddyPanel.Designer.cs">
       <DependentUpon>EddyPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\ResultHistoryPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\ResultHistoryPanel.Designer.cs">
+      <DependentUpon>ResultHistoryPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\LogPanel.cs">
       <SubType>UserControl</SubType>

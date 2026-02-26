@@ -351,6 +351,12 @@ namespace VisionAlignChamber.Views
                 eddyPanel.BindViewModel(_viewModel.Eddy);
             }
 
+            // ResultHistory 탭 바인딩
+            if (_viewModel.ResultHistory != null)
+            {
+                resultHistoryPanel.BindViewModel(_viewModel.ResultHistory);
+            }
+
             // Log 탭 바인딩
             _logViewModel = new LogViewModel();
             logPanel.BindViewModel(_logViewModel);

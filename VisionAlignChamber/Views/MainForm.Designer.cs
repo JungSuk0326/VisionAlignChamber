@@ -29,6 +29,7 @@ namespace VisionAlignChamber.Views
             this.tabHistory = new System.Windows.Forms.TabPage();
             this.tabControlHistory = new System.Windows.Forms.TabControl();
             this.tabResult = new System.Windows.Forms.TabPage();
+            this.resultHistoryPanel = new VisionAlignChamber.Views.Controls.ResultHistoryPanel();
             this.tabAlarm = new System.Windows.Forms.TabPage();
             this.tabLog = new System.Windows.Forms.TabPage();
             this.logPanel = new VisionAlignChamber.Views.Controls.LogPanel();
@@ -215,14 +216,25 @@ namespace VisionAlignChamber.Views
             this.tabControlHistory.TabIndex = 0;
             // 
             // tabResult
-            // 
+            //
             this.tabResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.tabResult.Controls.Add(this.resultHistoryPanel);
             this.tabResult.Location = new System.Drawing.Point(4, 26);
             this.tabResult.Name = "tabResult";
             this.tabResult.Padding = new System.Windows.Forms.Padding(3);
             this.tabResult.Size = new System.Drawing.Size(780, 637);
             this.tabResult.TabIndex = 0;
             this.tabResult.Text = "Result";
+            //
+            // resultHistoryPanel
+            //
+            this.resultHistoryPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.resultHistoryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resultHistoryPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.resultHistoryPanel.Location = new System.Drawing.Point(3, 3);
+            this.resultHistoryPanel.Name = "resultHistoryPanel";
+            this.resultHistoryPanel.Size = new System.Drawing.Size(774, 631);
+            this.resultHistoryPanel.TabIndex = 0;
             // 
             // tabAlarm
             // 
@@ -724,6 +736,7 @@ namespace VisionAlignChamber.Views
         // 하위 탭 (History)
         private System.Windows.Forms.TabControl tabControlHistory;
         private System.Windows.Forms.TabPage tabResult;
+        private Controls.ResultHistoryPanel resultHistoryPanel;
         private System.Windows.Forms.TabPage tabAlarm;
         // 하위 탭 (Maint)
         private System.Windows.Forms.TabControl tabControlMaint;

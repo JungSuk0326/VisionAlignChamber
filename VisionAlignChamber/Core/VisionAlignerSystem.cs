@@ -617,8 +617,13 @@ namespace VisionAlignChamber.Core
 
             var resultObj = new CommObject.ResultObject
             {
-                MeasureTime = DateTime.Now,
-                EddyValue = result.EddyValue
+                Type = result.Index1st >= 0 ? RecipeEvalType.Notch : 
+                            result.Index2nd >= 0 ?RecipeEvalType.Flat : RecipeEvalType.Glass,
+                Radius = result.Radius,
+                Width = result.Width,
+                Height = result.Height,
+                Eddy = result.EddyValue,
+                PN = result.PNValue.Equals(1) ? true : false, 
                 // TODO: CenterX, CenterY, ThetaOffset 등 결과 데이터 추가 필요
                 // ResultObject 확장 또는 별도 전송 방식 필요
             };

@@ -60,6 +60,11 @@ namespace VisionAlignChamber.Communication.Interfaces
         /// </summary>
         void SendAlarm(int alarmId, string alarmName, string description);
 
+        /// <summary>
+        /// 웨이퍼 존재 여부 업데이트
+        /// </summary>
+        void UpdateWaferPresence(bool isWaferOn);
+
         #region Events
 
         /// <summary>

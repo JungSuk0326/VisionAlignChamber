@@ -670,8 +670,22 @@ namespace VisionAlignChamber.Views
                             lblSystemStatus.ForeColor = Color.Red;
                         }
                         break;
+                    case nameof(Core.AppState.IsWaferExist):
+                        UpdateWaferStatusDisplay();
+                        break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Wafer 상태 표시 업데이트
+        /// </summary>
+        private void UpdateWaferStatusDisplay()
+        {
+            bool isWaferExist = Core.AppState.Current.IsWaferExist;
+            lblWaferStatus.Text = isWaferExist ? "ON" : "OFF";
+            lblWaferStatus.ForeColor = isWaferExist ? Color.LimeGreen : Color.Gray;
+            lblWaferStatus.BackColor = isWaferExist ? Color.FromArgb(0, 80, 0) : Color.FromArgb(60, 60, 60);
         }
 
         #endregion

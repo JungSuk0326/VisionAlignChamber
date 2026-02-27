@@ -3,6 +3,7 @@ using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Config;
+using VisionAlignChamber.Core;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -311,6 +312,9 @@ namespace VisionAlignChamber.ViewModels
 
             // IsWaferDetected 업데이트 알림
             OnPropertyChanged(nameof(IsWaferDetected));
+
+            // AppState 웨이퍼 존재 상태 동기화
+            AppState.Current.IsWaferExist = IsWaferDetected;
         }
 
         /// <summary>

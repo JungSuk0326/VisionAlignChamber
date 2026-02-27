@@ -239,11 +239,12 @@ namespace VisionAlignChamber.Communication
         }
 
         /// <summary>
-        /// 웨이퍼 존재 여부 업데이트
+        /// 웨이퍼 존재 여부 업데이트 및 상태 전송
         /// </summary>
         public void UpdateWaferPresence(bool isWaferOn)
         {
             CurrentStatus.IsWaferOn = isWaferOn;
+            SendStatus();
         }
 
         #endregion

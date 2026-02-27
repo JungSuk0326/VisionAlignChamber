@@ -105,6 +105,23 @@ namespace VisionAlignChamber.Core
             }
         }
 
+        private bool _isWaferExist;
+        /// <summary>
+        /// 웨이퍼 존재 여부 (Sensor1 AND Sensor2)
+        /// </summary>
+        public bool IsWaferExist
+        {
+            get => _isWaferExist;
+            set
+            {
+                if (_isWaferExist != value)
+                {
+                    _isWaferExist = value;
+                    OnStateChanged(nameof(IsWaferExist));
+                }
+            }
+        }
+
         #endregion
 
         #region Process Data
@@ -189,6 +206,7 @@ namespace VisionAlignChamber.Core
             ControlAuthority = ControlAuthority.Local;
             IsEmergencyStop = false;
             IsInitialized = false;  // VisionAlignerSystem.InitializeAll() 후 true로 설정됨
+            IsWaferExist = false;
             CurrentRunStep = 0;
             TotalRunCount = 0;
             _lastVisionResult = WaferVisionResult.Empty;

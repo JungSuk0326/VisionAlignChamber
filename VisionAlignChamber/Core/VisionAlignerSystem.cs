@@ -49,6 +49,9 @@ namespace VisionAlignChamber.Core
 
             // CTC 통신 이벤트 구독 (비즈니스 로직용)
             SubscribeCTCEvents();
+
+            // AppState 변경 이벤트 구독 (CTC 상태 동기화용)
+            SubscribeAppStateEvents();
         }
 
         #endregion
@@ -633,6 +636,50 @@ namespace VisionAlignChamber.Core
 
         #endregion
 
+        #region AppState Events
+
+        private Action<object> _appStateChangedHandler;
+
+        /// <summary>
+        /// AppState 변경 이벤트 구독
+        /// </summary>
+        private void SubscribeAppStateEvents()
+        {
+            _appStateChangedHandler = OnAppStateChanged;
+            EventManager.Subscribe(EventManager.SystemStateChanged, _appStateChangedHandler);
+        }
+
+        /// <summary>
+        /// AppState 변경 이벤트 해제
+        /// </summary>
+        private void UnsubscribeAppStateEvents()
+        {
+            if (_appStateChangedHandler != null)
+            {
+                EventManager.Unsubscribe(EventManager.SystemStateChanged, _appStateChangedHandler);
+                _appStateChangedHandler = null;
+            }
+        }
+
+        /// <summary>
+        /// AppState 변경 핸들러 - CTC 상태 동기화
+        /// </summary>
+        private void OnAppStateChanged(object data)
+        {
+            if (data is string propertyName)
+            {
+                switch (propertyName)
+                {
+                    case nameof(AppState.IsWaferExist):
+                        // CTC에 웨이퍼 존재 상태 동기화
+                        _ctcComm?.UpdateWaferPresence(AppState.Current.IsWaferExist);
+                        break;
+                }
+            }
+        }
+
+        #endregion
+
         #region IDisposable
 
         public void Dispose()
@@ -647,6 +694,9 @@ namespace VisionAlignChamber.Core
 
             if (disposing)
             {
+                // AppState 이벤트 구독 해제
+                UnsubscribeAppStateEvents();
+
                 ShutdownAll();
             }
 

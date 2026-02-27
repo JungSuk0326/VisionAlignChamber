@@ -50,6 +50,8 @@ namespace VisionAlignChamber.Views
             this.parameterPanel = new VisionAlignChamber.Views.Controls.ParameterPanel();
             this.panelTop = new System.Windows.Forms.Panel();
             this.lblAlarmIndicator = new System.Windows.Forms.Label();
+            this.lblWaferLabel = new System.Windows.Forms.Label();
+            this.lblWaferStatus = new System.Windows.Forms.Label();
             this.lblCTCLabel = new System.Windows.Forms.Label();
             this.lblCTCStatus = new System.Windows.Forms.Label();
             this.btnResetAlarm = new System.Windows.Forms.Button();
@@ -79,6 +81,7 @@ namespace VisionAlignChamber.Views
             this.tabProcess.SuspendLayout();
             this.tabHistory.SuspendLayout();
             this.tabControlHistory.SuspendLayout();
+            this.tabResult.SuspendLayout();
             this.tabLog.SuspendLayout();
             this.tabMaint.SuspendLayout();
             this.tabControlMaint.SuspendLayout();
@@ -216,7 +219,7 @@ namespace VisionAlignChamber.Views
             this.tabControlHistory.TabIndex = 0;
             // 
             // tabResult
-            //
+            // 
             this.tabResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabResult.Controls.Add(this.resultHistoryPanel);
             this.tabResult.Location = new System.Drawing.Point(4, 26);
@@ -225,13 +228,14 @@ namespace VisionAlignChamber.Views
             this.tabResult.Size = new System.Drawing.Size(780, 637);
             this.tabResult.TabIndex = 0;
             this.tabResult.Text = "Result";
-            //
+            // 
             // resultHistoryPanel
-            //
+            // 
             this.resultHistoryPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.resultHistoryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resultHistoryPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.resultHistoryPanel.Location = new System.Drawing.Point(3, 3);
+            this.resultHistoryPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.resultHistoryPanel.Name = "resultHistoryPanel";
             this.resultHistoryPanel.Size = new System.Drawing.Size(774, 631);
             this.resultHistoryPanel.TabIndex = 0;
@@ -431,6 +435,8 @@ namespace VisionAlignChamber.Views
             // 
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.panelTop.Controls.Add(this.lblAlarmIndicator);
+            this.panelTop.Controls.Add(this.lblWaferLabel);
+            this.panelTop.Controls.Add(this.lblWaferStatus);
             this.panelTop.Controls.Add(this.lblCTCLabel);
             this.panelTop.Controls.Add(this.lblCTCStatus);
             this.panelTop.Controls.Add(this.btnResetAlarm);
@@ -465,12 +471,34 @@ namespace VisionAlignChamber.Views
             this.lblAlarmIndicator.Visible = false;
             this.lblAlarmIndicator.Click += new System.EventHandler(this.lblAlarmIndicator_Click);
             // 
+            // lblWaferLabel
+            // 
+            this.lblWaferLabel.AutoSize = true;
+            this.lblWaferLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblWaferLabel.ForeColor = System.Drawing.Color.White;
+            this.lblWaferLabel.Location = new System.Drawing.Point(820, 12);
+            this.lblWaferLabel.Name = "lblWaferLabel";
+            this.lblWaferLabel.Size = new System.Drawing.Size(47, 19);
+            this.lblWaferLabel.TabIndex = 14;
+            this.lblWaferLabel.Text = "Wafer:";
+            // 
+            // lblWaferStatus
+            // 
+            this.lblWaferStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblWaferStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblWaferStatus.Location = new System.Drawing.Point(875, 10);
+            this.lblWaferStatus.Name = "lblWaferStatus";
+            this.lblWaferStatus.Size = new System.Drawing.Size(40, 24);
+            this.lblWaferStatus.TabIndex = 15;
+            this.lblWaferStatus.Text = "OFF";
+            this.lblWaferStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblCTCLabel
             // 
             this.lblCTCLabel.AutoSize = true;
             this.lblCTCLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblCTCLabel.ForeColor = System.Drawing.Color.White;
-            this.lblCTCLabel.Location = new System.Drawing.Point(920, 12);
+            this.lblCTCLabel.Location = new System.Drawing.Point(942, 12);
             this.lblCTCLabel.Name = "lblCTCLabel";
             this.lblCTCLabel.Size = new System.Drawing.Size(36, 19);
             this.lblCTCLabel.TabIndex = 12;
@@ -481,7 +509,7 @@ namespace VisionAlignChamber.Views
             this.lblCTCStatus.AutoSize = true;
             this.lblCTCStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblCTCStatus.ForeColor = System.Drawing.Color.Gray;
-            this.lblCTCStatus.Location = new System.Drawing.Point(960, 12);
+            this.lblCTCStatus.Location = new System.Drawing.Point(982, 12);
             this.lblCTCStatus.Name = "lblCTCStatus";
             this.lblCTCStatus.Size = new System.Drawing.Size(98, 19);
             this.lblCTCStatus.TabIndex = 13;
@@ -701,6 +729,7 @@ namespace VisionAlignChamber.Views
             this.tabProcess.ResumeLayout(false);
             this.tabHistory.ResumeLayout(false);
             this.tabControlHistory.ResumeLayout(false);
+            this.tabResult.ResumeLayout(false);
             this.tabLog.ResumeLayout(false);
             this.tabMaint.ResumeLayout(false);
             this.tabControlMaint.ResumeLayout(false);
@@ -776,5 +805,7 @@ namespace VisionAlignChamber.Views
         private Controls.MainTabPanel mainTabPanel;
         private System.Windows.Forms.Label lblCTCLabel;
         private System.Windows.Forms.Label lblCTCStatus;
+        private System.Windows.Forms.Label lblWaferLabel;
+        private System.Windows.Forms.Label lblWaferStatus;
     }
 }

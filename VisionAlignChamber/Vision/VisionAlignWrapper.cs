@@ -2,6 +2,7 @@ using eMotion;
 using System;
 using System.Drawing;
 using System.IO;
+using VisionAlignChamber.Config;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
 
@@ -30,9 +31,11 @@ namespace VisionAlignChamber.Vision
         private bool _isInitialized = false;
         private bool _disposed = false;
         private ClassAlign _aligner = null;
+        private LfineLight _light = null;
         private VisionSettings _settings = null;
         private bool _inspectionComplete = false;
         private int _imageCount = 0;
+        private bool _isLightInitialized = false;
 
         #endregion
 
@@ -69,6 +72,11 @@ namespace VisionAlignChamber.Vision
 
         public VisionSettings Settings => _settings;
 
+        /// <summary>
+        /// 조명 초기화 여부
+        /// </summary>
+        public bool IsLightInitialized => _isLightInitialized;
+
         #endregion
 
         #region 초기화
@@ -84,6 +92,7 @@ namespace VisionAlignChamber.Vision
             try
             {
                 _aligner = new ClassAlign();
+                _light = new LfineLight();
 
                 // 기본 설정값 사용 (DLL에서 Setting 프로퍼티 사용)
                 _settings = new VisionSettings
@@ -108,6 +117,10 @@ namespace VisionAlignChamber.Vision
                 }
 
                 _isInitialized = true;
+
+                // 조명 초기화 (실패해도 비전은 사용 가능)
+                InitializeLight();
+
                 return true;
             }
             catch (Exception ex)
@@ -128,6 +141,7 @@ namespace VisionAlignChamber.Vision
             try
             {
                 ClearImages();
+                CloseLight();
                 _aligner = null;
             }
             catch (Exception ex)
@@ -423,6 +437,131 @@ namespace VisionAlignChamber.Vision
             {
                 System.Diagnostics.Debug.WriteLine($"SetSettings Error: {ex.Message}");
                 return false;
+            }
+        }
+
+        #endregion
+
+        #region 조명 제어
+
+        /// <summary>
+        /// 조명 초기화 (Settings.ini에서 ComPort 설정 사용)
+        /// </summary>
+        public bool InitializeLight()
+        {
+            if (_isLightInitialized)
+                return true;
+
+            try
+            {
+                if (_light == null)
+                    _light = new LfineLight();
+
+                int comPort = AppSettings.LightComPort;
+                if (comPort <= 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Light ComPort not configured in Settings.ini");
+                    return false;
+                }
+
+                // COM 포트 열기
+                _light.PortOpen(comPort);
+
+                // 초기 Power 설정
+                int power = AppSettings.LightPower;
+                _light.Power(power);
+
+                _isLightInitialized = true;
+                System.Diagnostics.Debug.WriteLine($"Light initialized: COM{comPort}, Power={power}");
+
+                // AutoOn 설정 시 조명 켜기
+                if (AppSettings.LightAutoOn)
+                {
+                    SetLightOn();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"InitializeLight Error: {ex.Message}");
+                _isLightInitialized = false;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 조명 켜기
+        /// </summary>
+        public void SetLightOn()
+        {
+            if (!_isLightInitialized || _light == null) return;
+
+            try
+            {
+                _light.OnOff(true);
+                System.Diagnostics.Debug.WriteLine("Light ON");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetLightOn Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 조명 끄기
+        /// </summary>
+        public void SetLightOff()
+        {
+            if (!_isLightInitialized || _light == null) return;
+
+            try
+            {
+                _light.OnOff(false);
+                System.Diagnostics.Debug.WriteLine("Light OFF");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetLightOff Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 조명 강도 설정 (1~100)
+        /// </summary>
+        public void SetLightPower(int power)
+        {
+            if (!_isLightInitialized || _light == null) return;
+
+            try
+            {
+                int clampedPower = Math.Min(Math.Max(power, 1), 100);
+                _light.Power(clampedPower);
+                System.Diagnostics.Debug.WriteLine($"Light Power set to {clampedPower}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetLightPower Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 조명 종료 (COM 포트 닫기)
+        /// </summary>
+        public void CloseLight()
+        {
+            if (!_isLightInitialized || _light == null) return;
+
+            try
+            {
+                SetLightOff();
+                _light.PortClose();
+                _isLightInitialized = false;
+                System.Diagnostics.Debug.WriteLine("Light closed");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CloseLight Error: {ex.Message}");
             }
         }
 

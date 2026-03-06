@@ -135,6 +135,41 @@ namespace VisionAlignChamber.Config
 
         #endregion
 
+        #region Light Properties
+
+        /// <summary>
+        /// 조명 COM 포트 번호 (1=COM1, 2=COM2, 0=사용안함)
+        /// </summary>
+        public static int LightComPort
+        {
+            get => GetInt("Light", "ComPort", 0);
+            set => WriteValue("Light", "ComPort", value.ToString());
+        }
+
+        /// <summary>
+        /// 조명 강도 (1-100)
+        /// </summary>
+        public static int LightPower
+        {
+            get
+            {
+                int value = GetInt("Light", "Power", 80);
+                return Math.Min(Math.Max(value, 1), 100);
+            }
+            set => WriteValue("Light", "Power", Math.Min(Math.Max(value, 1), 100).ToString());
+        }
+
+        /// <summary>
+        /// 비전 검사 시 조명 자동 켜기 여부
+        /// </summary>
+        public static bool LightAutoOn
+        {
+            get => GetBool("Light", "AutoOn", true);
+            set => WriteValue("Light", "AutoOn", value ? "true" : "false");
+        }
+
+        #endregion
+
         #region Camera Properties
 
         /// <summary>

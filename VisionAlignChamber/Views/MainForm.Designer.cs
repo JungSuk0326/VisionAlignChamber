@@ -39,7 +39,6 @@ namespace VisionAlignChamber.Views
             this.visionPanel = new VisionAlignChamber.Views.Controls.VisionPanel();
             this.tabEddy = new System.Windows.Forms.TabPage();
             this.eddyPanel = new VisionAlignChamber.Views.Controls.EddyPanel();
-            this.tabPN = new System.Windows.Forms.TabPage();
             this.tabIO = new System.Windows.Forms.TabPage();
             this.ioPanel = new VisionAlignChamber.Views.Controls.IOPanel();
             this.tabMotion = new System.Windows.Forms.TabPage();
@@ -286,7 +285,6 @@ namespace VisionAlignChamber.Views
             // 
             this.tabControlMaint.Controls.Add(this.tabVision);
             this.tabControlMaint.Controls.Add(this.tabEddy);
-            this.tabControlMaint.Controls.Add(this.tabPN);
             this.tabControlMaint.Controls.Add(this.tabIO);
             this.tabControlMaint.Controls.Add(this.tabMotion);
             this.tabControlMaint.Controls.Add(this.tabComm);
@@ -338,17 +336,7 @@ namespace VisionAlignChamber.Views
             this.eddyPanel.Name = "eddyPanel";
             this.eddyPanel.Size = new System.Drawing.Size(774, 631);
             this.eddyPanel.TabIndex = 0;
-            // 
-            // tabPN
-            // 
-            this.tabPN.Location = new System.Drawing.Point(4, 26);
-            this.tabPN.Name = "tabPN";
-            this.tabPN.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPN.Size = new System.Drawing.Size(780, 637);
-            this.tabPN.TabIndex = 4;
-            this.tabPN.Text = "PN";
-            this.tabPN.UseVisualStyleBackColor = true;
-            // 
+            //
             // tabIO
             // 
             this.tabIO.Controls.Add(this.ioPanel);
@@ -357,7 +345,7 @@ namespace VisionAlignChamber.Views
             this.tabIO.Padding = new System.Windows.Forms.Padding(3);
             this.tabIO.Size = new System.Drawing.Size(780, 637);
             this.tabIO.TabIndex = 1;
-            this.tabIO.Text = "I/O";
+            this.tabIO.Text = "I/O(PN)";
             this.tabIO.UseVisualStyleBackColor = true;
             // 
             // ioPanel
@@ -773,7 +761,6 @@ namespace VisionAlignChamber.Views
         private System.Windows.Forms.TabPage tabIO;
         private System.Windows.Forms.TabPage tabVision;
         private System.Windows.Forms.TabPage tabEddy;
-        private System.Windows.Forms.TabPage tabPN;
         private System.Windows.Forms.TabPage tabParameter;
         private System.Windows.Forms.TabPage tabComm;
         // 패널

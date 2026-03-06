@@ -125,6 +125,10 @@ namespace VisionAlignChamber.Views.Controls
             // Chuck
             chkChuckVacuum.Checked = _viewModel.ChuckVacuum;
             chkChuckBlow.Checked = _viewModel.ChuckBlow;
+
+            // PN Switch
+            chkPNSwitch1.Checked = _viewModel.PNSwitch1;
+            chkPNSwitch2.Checked = _viewModel.PNSwitch2;
         }
 
         private void UpdateIndicator(Label label, bool isOn)
@@ -187,6 +191,30 @@ namespace VisionAlignChamber.Views.Controls
         private void btnChuckBlowOff_Click(object sender, EventArgs e)
         {
             _viewModel?.ChuckBlowOffCommand?.Execute(null);
+        }
+
+        #endregion
+
+        #region Event Handlers - PN Switch
+
+        private void btnPNSwitch1On_Click(object sender, EventArgs e)
+        {
+            _viewModel?.PNSwitch1OnCommand?.Execute(null);
+        }
+
+        private void btnPNSwitch1Off_Click(object sender, EventArgs e)
+        {
+            _viewModel?.PNSwitch1OffCommand?.Execute(null);
+        }
+
+        private void btnPNSwitch2On_Click(object sender, EventArgs e)
+        {
+            _viewModel?.PNSwitch2OnCommand?.Execute(null);
+        }
+
+        private void btnPNSwitch2Off_Click(object sender, EventArgs e)
+        {
+            _viewModel?.PNSwitch2OffCommand?.Execute(null);
         }
 
         #endregion

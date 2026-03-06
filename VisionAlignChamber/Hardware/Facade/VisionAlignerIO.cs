@@ -217,6 +217,42 @@ namespace VisionAlignChamber.Hardware.Facade
 
         #endregion
 
+        #region PN Switch
+
+        /// <summary>
+        /// PN Switch 1 제어
+        /// </summary>
+        public void SetPNSwitch1(bool on)
+        {
+            SetOutput(VADigitalOutput.PN_Switch_1, on);
+        }
+
+        /// <summary>
+        /// PN Switch 2 제어
+        /// </summary>
+        public void SetPNSwitch2(bool on)
+        {
+            SetOutput(VADigitalOutput.PN_Switch_2, on);
+        }
+
+        /// <summary>
+        /// PN Switch 1 상태 확인
+        /// </summary>
+        public bool IsPNSwitch1On()
+        {
+            return GetOutput(VADigitalOutput.PN_Switch_1);
+        }
+
+        /// <summary>
+        /// PN Switch 2 상태 확인
+        /// </summary>
+        public bool IsPNSwitch2On()
+        {
+            return GetOutput(VADigitalOutput.PN_Switch_2);
+        }
+
+        #endregion
+
         #region Simulation Input Toggle
 
         /// <summary>
@@ -263,7 +299,9 @@ namespace VisionAlignChamber.Hardware.Facade
                 LiftPinVacuum = IsLiftPinVacuumOn(),
                 LiftPinBlow = IsLiftPinBlowOn(),
                 ChuckVacuum = IsChuckVacuumOn(),
-                ChuckBlow = IsChuckBlowOn()
+                ChuckBlow = IsChuckBlowOn(),
+                PNSwitch1 = IsPNSwitch1On(),
+                PNSwitch2 = IsPNSwitch2On()
             };
         }
 
@@ -283,5 +321,7 @@ namespace VisionAlignChamber.Hardware.Facade
         public bool LiftPinBlow { get; set; }
         public bool ChuckVacuum { get; set; }
         public bool ChuckBlow { get; set; }
+        public bool PNSwitch1 { get; set; }
+        public bool PNSwitch2 { get; set; }
     }
 }

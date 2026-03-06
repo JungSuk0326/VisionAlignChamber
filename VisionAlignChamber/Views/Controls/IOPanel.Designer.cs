@@ -38,6 +38,14 @@ namespace VisionAlignChamber.Views.Controls
             this.btnChuckBlowOn = new System.Windows.Forms.Button();
             this.btnChuckBlowOff = new System.Windows.Forms.Button();
 
+            this.grpPNSwitch = new System.Windows.Forms.GroupBox();
+            this.chkPNSwitch1 = new System.Windows.Forms.CheckBox();
+            this.btnPNSwitch1On = new System.Windows.Forms.Button();
+            this.btnPNSwitch1Off = new System.Windows.Forms.Button();
+            this.chkPNSwitch2 = new System.Windows.Forms.CheckBox();
+            this.btnPNSwitch2On = new System.Windows.Forms.Button();
+            this.btnPNSwitch2Off = new System.Windows.Forms.Button();
+
             this.btnAllOff = new System.Windows.Forms.Button();
 
             this.grpInitialize.SuspendLayout();
@@ -45,6 +53,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableInputs.SuspendLayout();
             this.grpLiftPin.SuspendLayout();
             this.grpChuck.SuspendLayout();
+            this.grpPNSwitch.SuspendLayout();
             this.SuspendLayout();
 
             //
@@ -399,13 +408,104 @@ namespace VisionAlignChamber.Views.Controls
             this.btnChuckBlowOff.Click += new System.EventHandler(this.btnChuckBlowOff_Click);
 
             //
+            // grpPNSwitch
+            //
+            this.grpPNSwitch.Controls.Add(this.chkPNSwitch1);
+            this.grpPNSwitch.Controls.Add(this.btnPNSwitch1On);
+            this.grpPNSwitch.Controls.Add(this.btnPNSwitch1Off);
+            this.grpPNSwitch.Controls.Add(this.chkPNSwitch2);
+            this.grpPNSwitch.Controls.Add(this.btnPNSwitch2On);
+            this.grpPNSwitch.Controls.Add(this.btnPNSwitch2Off);
+            this.grpPNSwitch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.grpPNSwitch.Location = new System.Drawing.Point(10, 460);
+            this.grpPNSwitch.Name = "grpPNSwitch";
+            this.grpPNSwitch.Size = new System.Drawing.Size(350, 100);
+            this.grpPNSwitch.TabIndex = 3;
+            this.grpPNSwitch.TabStop = false;
+            this.grpPNSwitch.Text = "PN Switch";
+
+            //
+            // chkPNSwitch1
+            //
+            this.chkPNSwitch1.AutoSize = true;
+            this.chkPNSwitch1.Enabled = false;
+            this.chkPNSwitch1.Location = new System.Drawing.Point(15, 30);
+            this.chkPNSwitch1.Name = "chkPNSwitch1";
+            this.chkPNSwitch1.Size = new System.Drawing.Size(72, 19);
+            this.chkPNSwitch1.TabIndex = 0;
+            this.chkPNSwitch1.Text = "Switch 1";
+
+            //
+            // btnPNSwitch1On
+            //
+            this.btnPNSwitch1On.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
+            this.btnPNSwitch1On.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPNSwitch1On.ForeColor = System.Drawing.Color.White;
+            this.btnPNSwitch1On.Location = new System.Drawing.Point(100, 25);
+            this.btnPNSwitch1On.Name = "btnPNSwitch1On";
+            this.btnPNSwitch1On.Size = new System.Drawing.Size(60, 28);
+            this.btnPNSwitch1On.TabIndex = 1;
+            this.btnPNSwitch1On.Text = "ON";
+            this.btnPNSwitch1On.UseVisualStyleBackColor = false;
+            this.btnPNSwitch1On.Click += new System.EventHandler(this.btnPNSwitch1On_Click);
+
+            //
+            // btnPNSwitch1Off
+            //
+            this.btnPNSwitch1Off.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPNSwitch1Off.Location = new System.Drawing.Point(165, 25);
+            this.btnPNSwitch1Off.Name = "btnPNSwitch1Off";
+            this.btnPNSwitch1Off.Size = new System.Drawing.Size(60, 28);
+            this.btnPNSwitch1Off.TabIndex = 2;
+            this.btnPNSwitch1Off.Text = "OFF";
+            this.btnPNSwitch1Off.UseVisualStyleBackColor = true;
+            this.btnPNSwitch1Off.Click += new System.EventHandler(this.btnPNSwitch1Off_Click);
+
+            //
+            // chkPNSwitch2
+            //
+            this.chkPNSwitch2.AutoSize = true;
+            this.chkPNSwitch2.Enabled = false;
+            this.chkPNSwitch2.Location = new System.Drawing.Point(15, 65);
+            this.chkPNSwitch2.Name = "chkPNSwitch2";
+            this.chkPNSwitch2.Size = new System.Drawing.Size(72, 19);
+            this.chkPNSwitch2.TabIndex = 3;
+            this.chkPNSwitch2.Text = "Switch 2";
+
+            //
+            // btnPNSwitch2On
+            //
+            this.btnPNSwitch2On.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
+            this.btnPNSwitch2On.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPNSwitch2On.ForeColor = System.Drawing.Color.White;
+            this.btnPNSwitch2On.Location = new System.Drawing.Point(100, 60);
+            this.btnPNSwitch2On.Name = "btnPNSwitch2On";
+            this.btnPNSwitch2On.Size = new System.Drawing.Size(60, 28);
+            this.btnPNSwitch2On.TabIndex = 4;
+            this.btnPNSwitch2On.Text = "ON";
+            this.btnPNSwitch2On.UseVisualStyleBackColor = false;
+            this.btnPNSwitch2On.Click += new System.EventHandler(this.btnPNSwitch2On_Click);
+
+            //
+            // btnPNSwitch2Off
+            //
+            this.btnPNSwitch2Off.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPNSwitch2Off.Location = new System.Drawing.Point(165, 60);
+            this.btnPNSwitch2Off.Name = "btnPNSwitch2Off";
+            this.btnPNSwitch2Off.Size = new System.Drawing.Size(60, 28);
+            this.btnPNSwitch2Off.TabIndex = 5;
+            this.btnPNSwitch2Off.Text = "OFF";
+            this.btnPNSwitch2Off.UseVisualStyleBackColor = true;
+            this.btnPNSwitch2Off.Click += new System.EventHandler(this.btnPNSwitch2Off_Click);
+
+            //
             // btnAllOff
             //
             this.btnAllOff.BackColor = System.Drawing.Color.OrangeRed;
             this.btnAllOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAllOff.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAllOff.ForeColor = System.Drawing.Color.White;
-            this.btnAllOff.Location = new System.Drawing.Point(10, 460);
+            this.btnAllOff.Location = new System.Drawing.Point(10, 570);
             this.btnAllOff.Name = "btnAllOff";
             this.btnAllOff.Size = new System.Drawing.Size(350, 40);
             this.btnAllOff.TabIndex = 4;
@@ -422,10 +522,11 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpInputs);
             this.Controls.Add(this.grpLiftPin);
             this.Controls.Add(this.grpChuck);
+            this.Controls.Add(this.grpPNSwitch);
             this.Controls.Add(this.btnAllOff);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "IOPanel";
-            this.Size = new System.Drawing.Size(780, 660);
+            this.Size = new System.Drawing.Size(780, 720);
 
             this.grpInitialize.ResumeLayout(false);
             this.grpInitialize.PerformLayout();
@@ -435,6 +536,8 @@ namespace VisionAlignChamber.Views.Controls
             this.grpLiftPin.PerformLayout();
             this.grpChuck.ResumeLayout(false);
             this.grpChuck.PerformLayout();
+            this.grpPNSwitch.ResumeLayout(false);
+            this.grpPNSwitch.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -467,6 +570,13 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.CheckBox chkChuckBlow;
         private System.Windows.Forms.Button btnChuckBlowOn;
         private System.Windows.Forms.Button btnChuckBlowOff;
+        private System.Windows.Forms.GroupBox grpPNSwitch;
+        private System.Windows.Forms.CheckBox chkPNSwitch1;
+        private System.Windows.Forms.Button btnPNSwitch1On;
+        private System.Windows.Forms.Button btnPNSwitch1Off;
+        private System.Windows.Forms.CheckBox chkPNSwitch2;
+        private System.Windows.Forms.Button btnPNSwitch2On;
+        private System.Windows.Forms.Button btnPNSwitch2Off;
         private System.Windows.Forms.Button btnAllOff;
     }
 }

@@ -25,6 +25,9 @@ namespace VisionAlignChamber.Hardware.Facade
         // Chuck Vacuum Solenoid
         Chuck_BlowSol,
         Chuck_VacuumSol,
+
+        PN_Switch_1,
+        PN_Switch_2,
     }
 
     /// <summary>

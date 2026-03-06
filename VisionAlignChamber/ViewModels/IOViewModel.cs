@@ -134,6 +134,36 @@ namespace VisionAlignChamber.ViewModels
 
         #endregion
 
+        #region PN Switch Output Properties
+
+        private bool _pnSwitch1;
+        public bool PNSwitch1
+        {
+            get => _pnSwitch1;
+            set
+            {
+                if (SetProperty(ref _pnSwitch1, value))
+                {
+                    _io.SetPNSwitch1(value);
+                }
+            }
+        }
+
+        private bool _pnSwitch2;
+        public bool PNSwitch2
+        {
+            get => _pnSwitch2;
+            set
+            {
+                if (SetProperty(ref _pnSwitch2, value))
+                {
+                    _io.SetPNSwitch2(value);
+                }
+            }
+        }
+
+        #endregion
+
         #region Status Properties
 
         private string _statusMessage;
@@ -159,6 +189,11 @@ namespace VisionAlignChamber.ViewModels
         public ICommand ChuckBlowOnCommand { get; private set; }
         public ICommand ChuckBlowOffCommand { get; private set; }
 
+        public ICommand PNSwitch1OnCommand { get; private set; }
+        public ICommand PNSwitch1OffCommand { get; private set; }
+        public ICommand PNSwitch2OnCommand { get; private set; }
+        public ICommand PNSwitch2OffCommand { get; private set; }
+
         public ICommand AllOutputOffCommand { get; private set; }
 
         // 시뮬레이션 입력 토글 커맨드
@@ -183,6 +218,12 @@ namespace VisionAlignChamber.ViewModels
             ChuckVacuumOffCommand = new RelayCommand(() => ChuckVacuum = false, () => IsInitialized);
             ChuckBlowOnCommand = new RelayCommand(() => ChuckBlow = true, () => IsInitialized);
             ChuckBlowOffCommand = new RelayCommand(() => ChuckBlow = false, () => IsInitialized);
+
+            // PN Switch Commands
+            PNSwitch1OnCommand = new RelayCommand(() => PNSwitch1 = true, () => IsInitialized);
+            PNSwitch1OffCommand = new RelayCommand(() => PNSwitch1 = false, () => IsInitialized);
+            PNSwitch2OnCommand = new RelayCommand(() => PNSwitch2 = true, () => IsInitialized);
+            PNSwitch2OffCommand = new RelayCommand(() => PNSwitch2 = false, () => IsInitialized);
 
             // All Off Command
             AllOutputOffCommand = new RelayCommand(ExecuteAllOutputOff, () => IsInitialized);
@@ -227,6 +268,8 @@ namespace VisionAlignChamber.ViewModels
             LiftPinBlow = false;
             ChuckVacuum = false;
             ChuckBlow = false;
+            PNSwitch1 = false;
+            PNSwitch2 = false;
             StatusMessage = "모든 출력 OFF";
         }
 
@@ -241,6 +284,10 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)ChuckVacuumOffCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ChuckBlowOnCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ChuckBlowOffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)PNSwitch1OnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)PNSwitch1OffCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)PNSwitch2OnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)PNSwitch2OffCommand).RaiseCanExecuteChanged();
             ((RelayCommand)AllOutputOffCommand).RaiseCanExecuteChanged();
 
             // 시뮬레이션 입력 토글 커맨드
@@ -279,6 +326,12 @@ namespace VisionAlignChamber.ViewModels
 
             _chuckBlow = status.ChuckBlow;
             OnPropertyChanged(nameof(ChuckBlow));
+
+            _pnSwitch1 = status.PNSwitch1;
+            OnPropertyChanged(nameof(PNSwitch1));
+
+            _pnSwitch2 = status.PNSwitch2;
+            OnPropertyChanged(nameof(PNSwitch2));
 
             // IsWaferDetected 업데이트 알림
             OnPropertyChanged(nameof(IsWaferDetected));

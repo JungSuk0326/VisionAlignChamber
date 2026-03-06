@@ -38,11 +38,6 @@ namespace VisionAlignChamber.Views.Controls
             this.btnChuckBlowOn = new System.Windows.Forms.Button();
             this.btnChuckBlowOff = new System.Windows.Forms.Button();
 
-            this.grpVisionLight = new System.Windows.Forms.GroupBox();
-            this.chkVisionLight = new System.Windows.Forms.CheckBox();
-            this.btnVisionLightOn = new System.Windows.Forms.Button();
-            this.btnVisionLightOff = new System.Windows.Forms.Button();
-
             this.btnAllOff = new System.Windows.Forms.Button();
 
             this.grpInitialize.SuspendLayout();
@@ -50,7 +45,6 @@ namespace VisionAlignChamber.Views.Controls
             this.tableInputs.SuspendLayout();
             this.grpLiftPin.SuspendLayout();
             this.grpChuck.SuspendLayout();
-            this.grpVisionLight.SuspendLayout();
             this.SuspendLayout();
 
             //
@@ -405,64 +399,13 @@ namespace VisionAlignChamber.Views.Controls
             this.btnChuckBlowOff.Click += new System.EventHandler(this.btnChuckBlowOff_Click);
 
             //
-            // grpVisionLight
-            //
-            this.grpVisionLight.Controls.Add(this.chkVisionLight);
-            this.grpVisionLight.Controls.Add(this.btnVisionLightOn);
-            this.grpVisionLight.Controls.Add(this.btnVisionLightOff);
-            this.grpVisionLight.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.grpVisionLight.Location = new System.Drawing.Point(10, 460);
-            this.grpVisionLight.Name = "grpVisionLight";
-            this.grpVisionLight.Size = new System.Drawing.Size(350, 65);
-            this.grpVisionLight.TabIndex = 3;
-            this.grpVisionLight.TabStop = false;
-            this.grpVisionLight.Text = "Vision Light";
-
-            //
-            // chkVisionLight
-            //
-            this.chkVisionLight.AutoSize = true;
-            this.chkVisionLight.Enabled = false;
-            this.chkVisionLight.Location = new System.Drawing.Point(15, 30);
-            this.chkVisionLight.Name = "chkVisionLight";
-            this.chkVisionLight.Size = new System.Drawing.Size(53, 19);
-            this.chkVisionLight.TabIndex = 0;
-            this.chkVisionLight.Text = "Light";
-
-            //
-            // btnVisionLightOn
-            //
-            this.btnVisionLightOn.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
-            this.btnVisionLightOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnVisionLightOn.ForeColor = System.Drawing.Color.White;
-            this.btnVisionLightOn.Location = new System.Drawing.Point(100, 25);
-            this.btnVisionLightOn.Name = "btnVisionLightOn";
-            this.btnVisionLightOn.Size = new System.Drawing.Size(60, 28);
-            this.btnVisionLightOn.TabIndex = 1;
-            this.btnVisionLightOn.Text = "ON";
-            this.btnVisionLightOn.UseVisualStyleBackColor = false;
-            this.btnVisionLightOn.Click += new System.EventHandler(this.btnVisionLightOn_Click);
-
-            //
-            // btnVisionLightOff
-            //
-            this.btnVisionLightOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnVisionLightOff.Location = new System.Drawing.Point(165, 25);
-            this.btnVisionLightOff.Name = "btnVisionLightOff";
-            this.btnVisionLightOff.Size = new System.Drawing.Size(60, 28);
-            this.btnVisionLightOff.TabIndex = 2;
-            this.btnVisionLightOff.Text = "OFF";
-            this.btnVisionLightOff.UseVisualStyleBackColor = true;
-            this.btnVisionLightOff.Click += new System.EventHandler(this.btnVisionLightOff_Click);
-
-            //
             // btnAllOff
             //
             this.btnAllOff.BackColor = System.Drawing.Color.OrangeRed;
             this.btnAllOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAllOff.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAllOff.ForeColor = System.Drawing.Color.White;
-            this.btnAllOff.Location = new System.Drawing.Point(10, 535);
+            this.btnAllOff.Location = new System.Drawing.Point(10, 460);
             this.btnAllOff.Name = "btnAllOff";
             this.btnAllOff.Size = new System.Drawing.Size(350, 40);
             this.btnAllOff.TabIndex = 4;
@@ -479,7 +422,6 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpInputs);
             this.Controls.Add(this.grpLiftPin);
             this.Controls.Add(this.grpChuck);
-            this.Controls.Add(this.grpVisionLight);
             this.Controls.Add(this.btnAllOff);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "IOPanel";
@@ -493,8 +435,6 @@ namespace VisionAlignChamber.Views.Controls
             this.grpLiftPin.PerformLayout();
             this.grpChuck.ResumeLayout(false);
             this.grpChuck.PerformLayout();
-            this.grpVisionLight.ResumeLayout(false);
-            this.grpVisionLight.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -527,10 +467,6 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.CheckBox chkChuckBlow;
         private System.Windows.Forms.Button btnChuckBlowOn;
         private System.Windows.Forms.Button btnChuckBlowOff;
-        private System.Windows.Forms.GroupBox grpVisionLight;
-        private System.Windows.Forms.CheckBox chkVisionLight;
-        private System.Windows.Forms.Button btnVisionLightOn;
-        private System.Windows.Forms.Button btnVisionLightOff;
         private System.Windows.Forms.Button btnAllOff;
     }
 }

@@ -376,7 +376,6 @@ namespace VisionAlignChamber.Core
                     _io.SetLiftPinBlow(false);
                     _io.SetChuckVacuum(false);
                     _io.SetChuckBlow(false);
-                    _io.SetVisionLight(false);
                     _io.Close();
                 }
 
@@ -417,8 +416,10 @@ namespace VisionAlignChamber.Core
                 _io.SetLiftPinBlow(false);
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(false);
-                _io.SetVisionLight(false);
             }
+
+            // Vision Light OFF
+            _vision?.SetLightOff();
         }
 
         #endregion

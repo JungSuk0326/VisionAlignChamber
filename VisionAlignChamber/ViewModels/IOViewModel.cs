@@ -134,23 +134,6 @@ namespace VisionAlignChamber.ViewModels
 
         #endregion
 
-        #region Vision Light Properties
-
-        private bool _visionLightOn;
-        public bool VisionLightOn
-        {
-            get => _visionLightOn;
-            set
-            {
-                if (SetProperty(ref _visionLightOn, value))
-                {
-                    _io.SetVisionLight(value);
-                }
-            }
-        }
-
-        #endregion
-
         #region Status Properties
 
         private string _statusMessage;
@@ -176,9 +159,6 @@ namespace VisionAlignChamber.ViewModels
         public ICommand ChuckBlowOnCommand { get; private set; }
         public ICommand ChuckBlowOffCommand { get; private set; }
 
-        public ICommand VisionLightOnCommand { get; private set; }
-        public ICommand VisionLightOffCommand { get; private set; }
-
         public ICommand AllOutputOffCommand { get; private set; }
 
         // 시뮬레이션 입력 토글 커맨드
@@ -203,10 +183,6 @@ namespace VisionAlignChamber.ViewModels
             ChuckVacuumOffCommand = new RelayCommand(() => ChuckVacuum = false, () => IsInitialized);
             ChuckBlowOnCommand = new RelayCommand(() => ChuckBlow = true, () => IsInitialized);
             ChuckBlowOffCommand = new RelayCommand(() => ChuckBlow = false, () => IsInitialized);
-
-            // Vision Light Commands
-            VisionLightOnCommand = new RelayCommand(() => VisionLightOn = true, () => IsInitialized);
-            VisionLightOffCommand = new RelayCommand(() => VisionLightOn = false, () => IsInitialized);
 
             // All Off Command
             AllOutputOffCommand = new RelayCommand(ExecuteAllOutputOff, () => IsInitialized);
@@ -251,7 +227,6 @@ namespace VisionAlignChamber.ViewModels
             LiftPinBlow = false;
             ChuckVacuum = false;
             ChuckBlow = false;
-            VisionLightOn = false;
             StatusMessage = "모든 출력 OFF";
         }
 
@@ -266,8 +241,6 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)ChuckVacuumOffCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ChuckBlowOnCommand).RaiseCanExecuteChanged();
             ((RelayCommand)ChuckBlowOffCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)VisionLightOnCommand).RaiseCanExecuteChanged();
-            ((RelayCommand)VisionLightOffCommand).RaiseCanExecuteChanged();
             ((RelayCommand)AllOutputOffCommand).RaiseCanExecuteChanged();
 
             // 시뮬레이션 입력 토글 커맨드
@@ -306,9 +279,6 @@ namespace VisionAlignChamber.ViewModels
 
             _chuckBlow = status.ChuckBlow;
             OnPropertyChanged(nameof(ChuckBlow));
-
-            _visionLightOn = status.VisionLightOn;
-            OnPropertyChanged(nameof(VisionLightOn));
 
             // IsWaferDetected 업데이트 알림
             OnPropertyChanged(nameof(IsWaferDetected));

@@ -217,26 +217,6 @@ namespace VisionAlignChamber.Hardware.Facade
 
         #endregion
 
-        #region Vision Light
-
-        /// <summary>
-        /// Vision Light 제어
-        /// </summary>
-        public void SetVisionLight(bool on)
-        {
-            SetOutput(VADigitalOutput.Vision_Light, on);
-        }
-
-        /// <summary>
-        /// Vision Light 상태 확인
-        /// </summary>
-        public bool IsVisionLightOn()
-        {
-            return GetOutput(VADigitalOutput.Vision_Light);
-        }
-
-        #endregion
-
         #region Simulation Input Toggle
 
         /// <summary>
@@ -283,8 +263,7 @@ namespace VisionAlignChamber.Hardware.Facade
                 LiftPinVacuum = IsLiftPinVacuumOn(),
                 LiftPinBlow = IsLiftPinBlowOn(),
                 ChuckVacuum = IsChuckVacuumOn(),
-                ChuckBlow = IsChuckBlowOn(),
-                VisionLightOn = IsVisionLightOn()
+                ChuckBlow = IsChuckBlowOn()
             };
         }
 
@@ -304,6 +283,5 @@ namespace VisionAlignChamber.Hardware.Facade
         public bool LiftPinBlow { get; set; }
         public bool ChuckVacuum { get; set; }
         public bool ChuckBlow { get; set; }
-        public bool VisionLightOn { get; set; }
     }
 }

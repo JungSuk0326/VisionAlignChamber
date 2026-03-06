@@ -388,8 +388,8 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Vision Light ON
-                _io?.SetVisionLight(true);
+                // Vision Light ON (LfineLight 조명 제어)
+                _vision?.SetLightOn();
 
                 return true;
             }
@@ -532,8 +532,8 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Vision Light OFF
-                _io?.SetVisionLight(false);
+                // Vision Light OFF (LfineLight 조명 제어)
+                _vision?.SetLightOff();
 
                 return true;
             }

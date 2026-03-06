@@ -125,9 +125,6 @@ namespace VisionAlignChamber.Views.Controls
             // Chuck
             chkChuckVacuum.Checked = _viewModel.ChuckVacuum;
             chkChuckBlow.Checked = _viewModel.ChuckBlow;
-
-            // Vision Light
-            chkVisionLight.Checked = _viewModel.VisionLightOn;
         }
 
         private void UpdateIndicator(Label label, bool isOn)
@@ -190,20 +187,6 @@ namespace VisionAlignChamber.Views.Controls
         private void btnChuckBlowOff_Click(object sender, EventArgs e)
         {
             _viewModel?.ChuckBlowOffCommand?.Execute(null);
-        }
-
-        #endregion
-
-        #region Event Handlers - Vision Light
-
-        private void btnVisionLightOn_Click(object sender, EventArgs e)
-        {
-            _viewModel?.VisionLightOnCommand?.Execute(null);
-        }
-
-        private void btnVisionLightOff_Click(object sender, EventArgs e)
-        {
-            _viewModel?.VisionLightOffCommand?.Execute(null);
         }
 
         #endregion

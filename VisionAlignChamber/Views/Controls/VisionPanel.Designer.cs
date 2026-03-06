@@ -46,6 +46,12 @@ namespace VisionAlignChamber.Views.Controls
             this.btnClearImages = new System.Windows.Forms.Button();
             this.btnLoadImages = new System.Windows.Forms.Button();
             this.btnInitialize = new System.Windows.Forms.Button();
+            this.grpLight = new System.Windows.Forms.GroupBox();
+            this.lblLightPowerValue = new System.Windows.Forms.Label();
+            this.trkLightPower = new System.Windows.Forms.TrackBar();
+            this.lblLightPower = new System.Windows.Forms.Label();
+            this.lblLightStatus = new System.Windows.Forms.Label();
+            this.btnLightOnOff = new System.Windows.Forms.Button();
             this.grpResult = new System.Windows.Forms.GroupBox();
             this.listResult = new System.Windows.Forms.ListView();
             this.colNo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -67,6 +73,8 @@ namespace VisionAlignChamber.Views.Controls
             this.grpRunning.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCount)).BeginInit();
             this.grpControl.SuspendLayout();
+            this.grpLight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trkLightPower)).BeginInit();
             this.grpResult.SuspendLayout();
             this.pnlStatusBar.SuspendLayout();
             this.SuspendLayout();
@@ -435,15 +443,82 @@ namespace VisionAlignChamber.Views.Controls
             this.btnInitialize.Text = "초기화";
             this.btnInitialize.UseVisualStyleBackColor = true;
             this.btnInitialize.Click += new System.EventHandler(this.btnInitialize_Click);
-            // 
+            //
+            // grpLight
+            //
+            this.grpLight.Controls.Add(this.lblLightPowerValue);
+            this.grpLight.Controls.Add(this.trkLightPower);
+            this.grpLight.Controls.Add(this.lblLightPower);
+            this.grpLight.Controls.Add(this.lblLightStatus);
+            this.grpLight.Controls.Add(this.btnLightOnOff);
+            this.grpLight.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpLight.Location = new System.Drawing.Point(0, 300);
+            this.grpLight.Name = "grpLight";
+            this.grpLight.Size = new System.Drawing.Size(350, 60);
+            this.grpLight.TabIndex = 4;
+            this.grpLight.TabStop = false;
+            this.grpLight.Text = "Light";
+            //
+            // lblLightPowerValue
+            //
+            this.lblLightPowerValue.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.lblLightPowerValue.Location = new System.Drawing.Point(305, 22);
+            this.lblLightPowerValue.Name = "lblLightPowerValue";
+            this.lblLightPowerValue.Size = new System.Drawing.Size(40, 20);
+            this.lblLightPowerValue.TabIndex = 4;
+            this.lblLightPowerValue.Text = "80%";
+            this.lblLightPowerValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // trkLightPower
+            //
+            this.trkLightPower.AutoSize = false;
+            this.trkLightPower.Location = new System.Drawing.Point(175, 20);
+            this.trkLightPower.Maximum = 100;
+            this.trkLightPower.Minimum = 1;
+            this.trkLightPower.Name = "trkLightPower";
+            this.trkLightPower.Size = new System.Drawing.Size(130, 25);
+            this.trkLightPower.TabIndex = 3;
+            this.trkLightPower.TickFrequency = 10;
+            this.trkLightPower.Value = 80;
+            this.trkLightPower.Scroll += new System.EventHandler(this.trkLightPower_Scroll);
+            //
+            // lblLightPower
+            //
+            this.lblLightPower.AutoSize = true;
+            this.lblLightPower.Location = new System.Drawing.Point(125, 25);
+            this.lblLightPower.Name = "lblLightPower";
+            this.lblLightPower.Size = new System.Drawing.Size(44, 15);
+            this.lblLightPower.TabIndex = 2;
+            this.lblLightPower.Text = "Power:";
+            //
+            // lblLightStatus
+            //
+            this.lblLightStatus.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.lblLightStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblLightStatus.Location = new System.Drawing.Point(70, 25);
+            this.lblLightStatus.Name = "lblLightStatus";
+            this.lblLightStatus.Size = new System.Drawing.Size(40, 15);
+            this.lblLightStatus.TabIndex = 1;
+            this.lblLightStatus.Text = "OFF";
+            //
+            // btnLightOnOff
+            //
+            this.btnLightOnOff.Location = new System.Drawing.Point(10, 20);
+            this.btnLightOnOff.Name = "btnLightOnOff";
+            this.btnLightOnOff.Size = new System.Drawing.Size(55, 30);
+            this.btnLightOnOff.TabIndex = 0;
+            this.btnLightOnOff.Text = "ON";
+            this.btnLightOnOff.UseVisualStyleBackColor = true;
+            this.btnLightOnOff.Click += new System.EventHandler(this.btnLightOnOff_Click);
+            //
             // grpResult
-            // 
+            //
             this.grpResult.Controls.Add(this.listResult);
             this.grpResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpResult.Location = new System.Drawing.Point(0, 300);
+            this.grpResult.Location = new System.Drawing.Point(0, 360);
             this.grpResult.Name = "grpResult";
-            this.grpResult.Size = new System.Drawing.Size(350, 270);
-            this.grpResult.TabIndex = 4;
+            this.grpResult.Size = new System.Drawing.Size(350, 210);
+            this.grpResult.TabIndex = 5;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "검사 결과";
             // 
@@ -541,7 +616,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlStatusBar.Location = new System.Drawing.Point(0, 570);
             this.pnlStatusBar.Name = "pnlStatusBar";
             this.pnlStatusBar.Size = new System.Drawing.Size(350, 30);
-            this.pnlStatusBar.TabIndex = 5;
+            this.pnlStatusBar.TabIndex = 6;
             // 
             // lblStatusMessage
             // 
@@ -559,6 +634,7 @@ namespace VisionAlignChamber.Views.Controls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grpResult);
             this.Controls.Add(this.pnlStatusBar);
+            this.Controls.Add(this.grpLight);
             this.Controls.Add(this.grpControl);
             this.Controls.Add(this.pnlRunSetting);
             this.Controls.Add(this.grpMode);
@@ -577,6 +653,9 @@ namespace VisionAlignChamber.Views.Controls
             this.grpRunning.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCount)).EndInit();
             this.grpControl.ResumeLayout(false);
+            this.grpLight.ResumeLayout(false);
+            this.grpLight.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trkLightPower)).EndInit();
             this.grpResult.ResumeLayout(false);
             this.pnlStatusBar.ResumeLayout(false);
             this.pnlStatusBar.PerformLayout();
@@ -631,5 +710,11 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.ColumnHeader colRadius;
         private System.Windows.Forms.Panel pnlStatusBar;
         private System.Windows.Forms.Label lblStatusMessage;
+        private System.Windows.Forms.GroupBox grpLight;
+        private System.Windows.Forms.Button btnLightOnOff;
+        private System.Windows.Forms.Label lblLightStatus;
+        private System.Windows.Forms.Label lblLightPower;
+        private System.Windows.Forms.TrackBar trkLightPower;
+        private System.Windows.Forms.Label lblLightPowerValue;
     }
 }

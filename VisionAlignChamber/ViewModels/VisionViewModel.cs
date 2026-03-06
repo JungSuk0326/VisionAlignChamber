@@ -261,6 +261,31 @@ namespace VisionAlignChamber.ViewModels
 
         #endregion
 
+        #region Light Properties
+
+        private bool _isLightInitialized;
+        public bool IsLightInitialized
+        {
+            get => _isLightInitialized;
+            set => SetProperty(ref _isLightInitialized, value);
+        }
+
+        private bool _isLightOn;
+        public bool IsLightOn
+        {
+            get => _isLightOn;
+            set => SetProperty(ref _isLightOn, value);
+        }
+
+        private int _lightPower = 80;
+        public int LightPower
+        {
+            get => _lightPower;
+            set => SetProperty(ref _lightPower, value);
+        }
+
+        #endregion
+
         #region Commands
 
         public ICommand InitializeCommand { get; private set; }
@@ -280,6 +305,11 @@ namespace VisionAlignChamber.ViewModels
         public ICommand TriggerCommand { get; private set; }
         public ICommand SaveImageCommand { get; private set; }
 
+        // Light Commands
+        public ICommand LightOnCommand { get; private set; }
+        public ICommand LightOffCommand { get; private set; }
+        public ICommand SetLightPowerCommand { get; private set; }
+
         private void InitializeCommands()
         {
             InitializeCommand = new RelayCommand(ExecuteInitialize, () => !IsInitialized);
@@ -298,6 +328,11 @@ namespace VisionAlignChamber.ViewModels
             DeactivateGrabberCommand = new RelayCommand(ExecuteDeactivateGrabber, () => IsGrabberActive);
             TriggerCommand = new RelayCommand(ExecuteTrigger, () => IsCameraOpened && IsGrabberActive);
             SaveImageCommand = new RelayCommand<string>(ExecuteSaveImage, _ => IsCameraOpened);
+
+            // Light Commands
+            LightOnCommand = new RelayCommand(ExecuteLightOn, () => IsLightInitialized && !IsLightOn);
+            LightOffCommand = new RelayCommand(ExecuteLightOff, () => IsLightInitialized && IsLightOn);
+            SetLightPowerCommand = new RelayCommand<int>(ExecuteSetLightPower, _ => IsLightInitialized);
         }
 
         #endregion
@@ -572,6 +607,50 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
+        private void ExecuteLightOn()
+        {
+            try
+            {
+                _vision.SetLightOn();
+                IsLightOn = true;
+                StatusMessage = "조명 ON";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"조명 ON 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteLightOff()
+        {
+            try
+            {
+                _vision.SetLightOff();
+                IsLightOn = false;
+                StatusMessage = "조명 OFF";
+                RaiseCanExecuteChanged();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"조명 OFF 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteSetLightPower(int power)
+        {
+            try
+            {
+                _vision.SetLightPower(power);
+                LightPower = power;
+                StatusMessage = $"조명 Power: {power}%";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"조명 Power 설정 오류: {ex.Message}";
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -604,6 +683,7 @@ namespace VisionAlignChamber.ViewModels
                 IsInitialized = _vision.IsInitialized;
                 ImageCount = _vision.ImageCount;
                 IsInspectionComplete = _vision.IsInspectionComplete;
+                IsLightInitialized = _vision.IsLightInitialized;
             }
         }
 
@@ -616,6 +696,25 @@ namespace VisionAlignChamber.ViewModels
             {
                 SetCount = count;
             }
+        }
+
+        /// <summary>
+        /// 조명 토글
+        /// </summary>
+        public void ToggleLight()
+        {
+            if (IsLightOn)
+                ExecuteLightOff();
+            else
+                ExecuteLightOn();
+        }
+
+        /// <summary>
+        /// 조명 Power 설정
+        /// </summary>
+        public void SetLightPowerValue(int power)
+        {
+            ExecuteSetLightPower(power);
         }
 
         #endregion
@@ -645,6 +744,10 @@ namespace VisionAlignChamber.ViewModels
             ((RelayCommand)ActivateGrabberCommand).RaiseCanExecuteChanged();
             ((RelayCommand)DeactivateGrabberCommand).RaiseCanExecuteChanged();
             ((RelayCommand)TriggerCommand).RaiseCanExecuteChanged();
+
+            // Light Commands
+            ((RelayCommand)LightOnCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)LightOffCommand).RaiseCanExecuteChanged();
         }
 
         #endregion

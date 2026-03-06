@@ -110,6 +110,34 @@ namespace VisionAlignChamber.Views.Controls
 
             // 상태 메시지
             lblStatusMessage.Text = _viewModel.StatusMessage ?? "";
+
+            // Light 상태
+            UpdateLightStatus();
+        }
+
+        private void UpdateLightStatus()
+        {
+            bool isLightInit = _viewModel.IsLightInitialized;
+            bool isLightOn = _viewModel.IsLightOn;
+
+            // 버튼/컨트롤 활성화
+            btnLightOnOff.Enabled = isLightInit;
+            trkLightPower.Enabled = isLightInit;
+
+            // 상태 표시
+            lblLightStatus.Text = isLightOn ? "ON" : "OFF";
+            lblLightStatus.ForeColor = isLightOn ? Color.LimeGreen : Color.Gray;
+
+            // 버튼 텍스트
+            btnLightOnOff.Text = isLightOn ? "OFF" : "ON";
+            btnLightOnOff.BackColor = isLightOn ? Color.LimeGreen : SystemColors.Control;
+
+            // Power 값 동기화
+            if (trkLightPower.Value != _viewModel.LightPower)
+            {
+                trkLightPower.Value = Math.Min(Math.Max(_viewModel.LightPower, 1), 100);
+            }
+            lblLightPowerValue.Text = $"{_viewModel.LightPower}%";
         }
 
         private void UpdateResult()
@@ -300,6 +328,20 @@ namespace VisionAlignChamber.Views.Controls
             if (rdoFlat.Checked && _viewModel != null)
             {
                 _viewModel.IsFlatMode = true;
+            }
+        }
+
+        private void btnLightOnOff_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ToggleLight();
+        }
+
+        private void trkLightPower_Scroll(object sender, EventArgs e)
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.SetLightPowerValue(trkLightPower.Value);
+                lblLightPowerValue.Text = $"{trkLightPower.Value}%";
             }
         }
 

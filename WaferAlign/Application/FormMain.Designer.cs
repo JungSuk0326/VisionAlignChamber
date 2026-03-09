@@ -95,6 +95,9 @@
             this.buttonInitGrid = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonSaveGrid = new System.Windows.Forms.Button();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupRun.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -290,6 +293,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.buttonSave);
             this.groupBox3.Controls.Add(this.buttonOpen);
             this.groupBox3.Controls.Add(this.buttonTrig);
@@ -819,6 +824,31 @@
             this.buttonSaveGrid.UseVisualStyleBackColor = true;
             this.buttonSaveGrid.Click += new System.EventHandler(this.buttonSaveGrid_Click);
             // 
+            // serialPort1
+            // 
+            this.serialPort1.PortName = "COM12";
+            this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(117, 73);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(56, 33);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(165, 64);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(56, 33);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -927,6 +957,9 @@
         private System.Windows.Forms.TextBox textLight;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button buttonLight;
+        private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

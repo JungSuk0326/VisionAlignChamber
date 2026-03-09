@@ -93,7 +93,8 @@ namespace eMotion
             InitGrid(dataGrid, checkFlat.Checked);
 
             //Table.PortOpen(7);
-            //Light.PortOpen(1);
+            Light.PortOpen(12);
+            //serialPort1.Open();
             timer.Start();
 
             textSet.Text = Aligner.Setting.ImageCount.ToString();
@@ -102,6 +103,8 @@ namespace eMotion
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Light.PortClose();
+            //serialPort1.Close();
             timer.Stop();
         }
 
@@ -531,6 +534,47 @@ namespace eMotion
             int value;
             int.TryParse(textLight.Text, out value);
             Light.Power(value);
+            //LightPower(value);
+        }
+
+        private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            byte[] buf = new byte[1024];
+
+            serialPort1.Read(buf, 0, 1024);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            LightOn(true);
+
+            //serialPort1.Write("ABCD");
+        }
+        private void LightOn(bool mode)
+        {
+            byte[] send = new byte[8];
+            send[0] = 0x02;
+            send[1] = (byte)'0';
+            send[2] = mode ? (byte)'o' : (byte)'f';
+            send[3] = 0x03;
+            serialPort1.Write(send,0,4);
+        }
+        private void LightPower(int value)
+        { 
+            byte[] send = new byte[8];
+            send[0] = 0x02;
+            send[1] = (byte)'0';
+            send[2] = (byte)'w';
+            send[3] = (byte)'0'; // ((value / 1000) & 0xff);
+            send[4] = (byte)'5'; // ((value / 100) & 0xff);
+            send[5] = (byte)'0'; // ((value / 10) & 0xff);
+            send[6] = (byte)'0'; // (value & 0xff);
+            send[7] = 0x03;
+            serialPort1.Write(send, 0, 8);
+        }
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            LightOn(false);
         }
 
         private void SaveGrid(string fileName, DataGridView dgv)

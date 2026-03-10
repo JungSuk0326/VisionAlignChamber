@@ -2,6 +2,7 @@ using eMotion;
 using System;
 using System.Drawing;
 using System.IO;
+using System.IO.Ports;
 using VisionAlignChamber.Config;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
@@ -31,11 +32,13 @@ namespace VisionAlignChamber.Vision
         private bool _isInitialized = false;
         private bool _disposed = false;
         private ClassAlign _aligner = null;
-        private LfineLight _light = null;
+        private SerialPort _lightSerial = null;
         private VisionSettings _settings = null;
         private bool _inspectionComplete = false;
         private int _imageCount = 0;
         private bool _isLightInitialized = false;
+        private bool _isLightOn = false;
+        private int _currentLightPower = 80;
 
         #endregion
 
@@ -92,7 +95,6 @@ namespace VisionAlignChamber.Vision
             try
             {
                 _aligner = new ClassAlign();
-                _light = new LfineLight();
 
                 // 기본 설정값 사용 (DLL에서 Setting 프로퍼티 사용)
                 _settings = new VisionSettings
@@ -442,10 +444,11 @@ namespace VisionAlignChamber.Vision
 
         #endregion
 
-        #region 조명 제어
+        #region 조명 제어 (Direct Serial Port)
 
         /// <summary>
         /// 조명 초기화 (Settings.ini에서 ComPort 설정 사용)
+        /// 직접 SerialPort를 사용하여 조명 컨트롤러와 통신
         /// </summary>
         public bool InitializeLight()
         {
@@ -454,9 +457,6 @@ namespace VisionAlignChamber.Vision
 
             try
             {
-                if (_light == null)
-                    _light = new LfineLight();
-
                 int comPort = AppSettings.LightComPort;
                 if (comPort <= 0)
                 {
@@ -464,15 +464,26 @@ namespace VisionAlignChamber.Vision
                     return false;
                 }
 
+                // SerialPort 생성 및 설정
+                _lightSerial = new SerialPort($"COM{comPort}")
+                {
+                    BaudRate = 9600,
+                    DataBits = 8,
+                    Parity = Parity.None,
+                    StopBits = StopBits.One,
+                    ReadTimeout = 1000,
+                    WriteTimeout = 1000
+                };
+
                 // COM 포트 열기
-                _light.PortOpen(comPort);
+                _lightSerial.Open();
 
                 // 초기 Power 설정
-                int power = AppSettings.LightPower;
-                _light.Power(power);
+                _currentLightPower = AppSettings.LightPower;
+                SendLightPower(_currentLightPower);
 
                 _isLightInitialized = true;
-                System.Diagnostics.Debug.WriteLine($"Light initialized: COM{comPort}, Power={power}");
+                System.Diagnostics.Debug.WriteLine($"Light initialized: COM{comPort}, Power={_currentLightPower}");
 
                 // AutoOn 설정 시 조명 켜기
                 if (AppSettings.LightAutoOn)
@@ -486,6 +497,11 @@ namespace VisionAlignChamber.Vision
             {
                 System.Diagnostics.Debug.WriteLine($"InitializeLight Error: {ex.Message}");
                 _isLightInitialized = false;
+                if (_lightSerial != null && _lightSerial.IsOpen)
+                {
+                    _lightSerial.Close();
+                }
+                _lightSerial = null;
                 return false;
             }
         }
@@ -495,11 +511,12 @@ namespace VisionAlignChamber.Vision
         /// </summary>
         public void SetLightOn()
         {
-            if (!_isLightInitialized || _light == null) return;
+            if (!_isLightInitialized || _lightSerial == null || !_lightSerial.IsOpen) return;
 
             try
             {
-                _light.OnOff(true);
+                SendLightOnOff(true);
+                _isLightOn = true;
                 System.Diagnostics.Debug.WriteLine("Light ON");
             }
             catch (Exception ex)
@@ -513,11 +530,12 @@ namespace VisionAlignChamber.Vision
         /// </summary>
         public void SetLightOff()
         {
-            if (!_isLightInitialized || _light == null) return;
+            if (!_isLightInitialized || _lightSerial == null || !_lightSerial.IsOpen) return;
 
             try
             {
-                _light.OnOff(false);
+                SendLightOnOff(false);
+                _isLightOn = false;
                 System.Diagnostics.Debug.WriteLine("Light OFF");
             }
             catch (Exception ex)
@@ -531,13 +549,16 @@ namespace VisionAlignChamber.Vision
         /// </summary>
         public void SetLightPower(int power)
         {
-            if (!_isLightInitialized || _light == null) return;
+            if (!_isLightInitialized || _lightSerial == null || !_lightSerial.IsOpen) return;
 
             try
             {
-                int clampedPower = Math.Min(Math.Max(power, 1), 100);
-                _light.Power(clampedPower);
-                System.Diagnostics.Debug.WriteLine($"Light Power set to {clampedPower}");
+                _currentLightPower = Math.Min(Math.Max(power, 1), 100);
+                if (_isLightOn)
+                {
+                    SendLightPower(_currentLightPower);
+                }
+                System.Diagnostics.Debug.WriteLine($"Light Power set to {_currentLightPower}");
             }
             catch (Exception ex)
             {
@@ -546,17 +567,74 @@ namespace VisionAlignChamber.Vision
         }
 
         /// <summary>
+        /// 조명 On/Off 패킷 전송
+        /// 패킷 형식: [STX][0][o/f][ETX] (4바이트)
+        /// 'o' = On, 'f' = Off
+        /// </summary>
+        private void SendLightOnOff(bool on)
+        {
+            if (_lightSerial == null || !_lightSerial.IsOpen) return;
+
+            int i = 0;
+            byte[] packet = new byte[4];
+            packet[i++] = 0x02;                         // STX
+            packet[i++] = (byte)'0';                    // Channel
+            packet[i++] = on ? (byte)'o' : (byte)'f';   // 'o' = On, 'f' = Off
+            packet[i++] = 0x03;                         // ETX
+
+            _lightSerial.Write(packet, 0, packet.Length);
+        }
+
+        /// <summary>
+        /// 조명 컨트롤러에 Power 값 전송
+        /// 패킷 형식: [STX][0][w][천][백][십][일][ETX] (8바이트)
+        /// </summary>
+        /// <param name="percentValue">Power 값 (1~100%)</param>
+        private void SendLightPower(int percentValue)
+        {
+            if (_lightSerial == null || !_lightSerial.IsOpen) return;
+
+            // UI 값(1~100%)을 하드웨어 값(1~1024)으로 변환
+            int hwValue = (int)(percentValue / 100.0 * 1024);
+            hwValue = Math.Min(Math.Max(hwValue, 1), 1024);
+
+            int i = 0;
+            byte[] packet = new byte[10];
+            packet[i++] = 0x02;                                                     // STX
+            packet[i++] = (byte)'0';                                                // Channel
+            packet[i++] = (byte)'w';                                                // Write command
+            packet[i++] = (byte)Convert.ToChar(((hwValue / 1000) % 10).ToString()); // 천의 자리
+            packet[i++] = (byte)Convert.ToChar(((hwValue / 100) % 10).ToString());  // 백의 자리
+            packet[i++] = (byte)Convert.ToChar(((hwValue / 10) % 10).ToString());   // 십의 자리
+            packet[i++] = (byte)Convert.ToChar((hwValue % 10).ToString());          // 일의 자리
+            packet[i++] = 0x03;                                                     // ETX
+
+            _lightSerial.Write(packet, 0, i);
+        }
+
+        /// <summary>
         /// 조명 종료 (COM 포트 닫기)
         /// </summary>
         public void CloseLight()
         {
-            if (!_isLightInitialized || _light == null) return;
+            if (_lightSerial == null) return;
 
             try
             {
-                SetLightOff();
-                _light.PortClose();
+                if (_isLightInitialized && _lightSerial.IsOpen)
+                {
+                    SetLightOff();
+                }
+
+                if (_lightSerial.IsOpen)
+                {
+                    _lightSerial.Close();
+                }
+
+                _lightSerial.Dispose();
+                _lightSerial = null;
                 _isLightInitialized = false;
+                _isLightOn = false;
                 System.Diagnostics.Debug.WriteLine("Light closed");
             }
             catch (Exception ex)

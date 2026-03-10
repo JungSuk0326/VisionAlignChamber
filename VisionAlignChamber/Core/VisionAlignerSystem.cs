@@ -465,7 +465,7 @@ namespace VisionAlignChamber.Core
         }
 
         #endregion
-
+         
         #region CTC Communication
 
         /// <summary>

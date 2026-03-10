@@ -47,6 +47,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkOpenCV = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonTrig = new System.Windows.Forms.Button();
@@ -65,21 +67,6 @@
             this.checkFlat = new System.Windows.Forms.CheckBox();
             this.numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.buttonConvert = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.buttonMotorFree = new System.Windows.Forms.Button();
-            this.textAccel = new System.Windows.Forms.TextBox();
-            this.button19 = new System.Windows.Forms.Button();
-            this.textVelocity = new System.Windows.Forms.TextBox();
-            this.button18 = new System.Windows.Forms.Button();
-            this.textSpeed = new System.Windows.Forms.TextBox();
-            this.button17 = new System.Windows.Forms.Button();
-            this.textDelay = new System.Windows.Forms.TextBox();
-            this.button16 = new System.Windows.Forms.Button();
-            this.textCount = new System.Windows.Forms.TextBox();
-            this.button15 = new System.Windows.Forms.Button();
-            this.buttonMotorSet = new System.Windows.Forms.Button();
-            this.buttonMotorRun = new System.Windows.Forms.Button();
-            this.buttonMotorStop = new System.Windows.Forms.Button();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -96,14 +83,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonSaveGrid = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.groupRun.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).BeginInit();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -309,6 +293,26 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Control";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(169, 73);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(56, 33);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(117, 73);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(56, 33);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // buttonSave
             // 
             this.buttonSave.Location = new System.Drawing.Point(115, 111);
@@ -507,160 +511,6 @@
             this.buttonConvert.UseVisualStyleBackColor = true;
             this.buttonConvert.Click += new System.EventHandler(this.buttonConvert_Click);
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.buttonMotorFree);
-            this.groupBox2.Controls.Add(this.textAccel);
-            this.groupBox2.Controls.Add(this.button19);
-            this.groupBox2.Controls.Add(this.textVelocity);
-            this.groupBox2.Controls.Add(this.button18);
-            this.groupBox2.Controls.Add(this.textSpeed);
-            this.groupBox2.Controls.Add(this.button17);
-            this.groupBox2.Controls.Add(this.textDelay);
-            this.groupBox2.Controls.Add(this.button16);
-            this.groupBox2.Controls.Add(this.textCount);
-            this.groupBox2.Controls.Add(this.button15);
-            this.groupBox2.Controls.Add(this.buttonMotorSet);
-            this.groupBox2.Controls.Add(this.buttonMotorRun);
-            this.groupBox2.Controls.Add(this.buttonMotorStop);
-            this.groupBox2.Location = new System.Drawing.Point(1291, 239);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(225, 264);
-            this.groupBox2.TabIndex = 22;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Turn Table";
-            // 
-            // buttonMotorFree
-            // 
-            this.buttonMotorFree.Location = new System.Drawing.Point(115, 65);
-            this.buttonMotorFree.Name = "buttonMotorFree";
-            this.buttonMotorFree.Size = new System.Drawing.Size(100, 40);
-            this.buttonMotorFree.TabIndex = 13;
-            this.buttonMotorFree.Tag = "3";
-            this.buttonMotorFree.Text = "Free";
-            this.buttonMotorFree.UseVisualStyleBackColor = true;
-            // 
-            // textAccel
-            // 
-            this.textAccel.Location = new System.Drawing.Point(9, 235);
-            this.textAccel.Name = "textAccel";
-            this.textAccel.Size = new System.Drawing.Size(70, 21);
-            this.textAccel.TabIndex = 12;
-            this.textAccel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // button19
-            // 
-            this.button19.Location = new System.Drawing.Point(85, 235);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(130, 21);
-            this.button19.TabIndex = 11;
-            this.button19.Text = "Accel [1~10]";
-            this.button19.UseVisualStyleBackColor = true;
-            this.button19.Click += new System.EventHandler(this.button19_Click);
-            // 
-            // textVelocity
-            // 
-            this.textVelocity.Location = new System.Drawing.Point(10, 205);
-            this.textVelocity.Name = "textVelocity";
-            this.textVelocity.Size = new System.Drawing.Size(70, 21);
-            this.textVelocity.TabIndex = 10;
-            this.textVelocity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // button18
-            // 
-            this.button18.Location = new System.Drawing.Point(85, 205);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(130, 21);
-            this.button18.TabIndex = 9;
-            this.button18.Text = "Velocity [Unit: deg]";
-            this.button18.UseVisualStyleBackColor = true;
-            this.button18.Click += new System.EventHandler(this.button18_Click);
-            // 
-            // textSpeed
-            // 
-            this.textSpeed.Location = new System.Drawing.Point(10, 175);
-            this.textSpeed.Name = "textSpeed";
-            this.textSpeed.Size = new System.Drawing.Size(70, 21);
-            this.textSpeed.TabIndex = 8;
-            this.textSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // button17
-            // 
-            this.button17.Location = new System.Drawing.Point(85, 175);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(130, 21);
-            this.button17.TabIndex = 7;
-            this.button17.Text = "Speed [RPM - .01]";
-            this.button17.UseVisualStyleBackColor = true;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
-            // 
-            // textDelay
-            // 
-            this.textDelay.Location = new System.Drawing.Point(10, 145);
-            this.textDelay.Name = "textDelay";
-            this.textDelay.Size = new System.Drawing.Size(70, 21);
-            this.textDelay.TabIndex = 6;
-            this.textDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // button16
-            // 
-            this.button16.Location = new System.Drawing.Point(85, 145);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(130, 21);
-            this.button16.TabIndex = 5;
-            this.button16.Text = "Delay [Trig - ms]";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
-            // 
-            // textCount
-            // 
-            this.textCount.Location = new System.Drawing.Point(10, 115);
-            this.textCount.Name = "textCount";
-            this.textCount.Size = new System.Drawing.Size(70, 21);
-            this.textCount.TabIndex = 4;
-            this.textCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // button15
-            // 
-            this.button15.Location = new System.Drawing.Point(85, 115);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(130, 21);
-            this.button15.TabIndex = 3;
-            this.button15.Text = "Count [Trigger]";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
-            // 
-            // buttonMotorSet
-            // 
-            this.buttonMotorSet.Location = new System.Drawing.Point(10, 65);
-            this.buttonMotorSet.Name = "buttonMotorSet";
-            this.buttonMotorSet.Size = new System.Drawing.Size(100, 40);
-            this.buttonMotorSet.TabIndex = 2;
-            this.buttonMotorSet.Tag = "2";
-            this.buttonMotorSet.Text = "Set";
-            this.buttonMotorSet.UseVisualStyleBackColor = true;
-            // 
-            // buttonMotorRun
-            // 
-            this.buttonMotorRun.Location = new System.Drawing.Point(115, 20);
-            this.buttonMotorRun.Name = "buttonMotorRun";
-            this.buttonMotorRun.Size = new System.Drawing.Size(100, 40);
-            this.buttonMotorRun.TabIndex = 1;
-            this.buttonMotorRun.Tag = "1";
-            this.buttonMotorRun.Text = "Run";
-            this.buttonMotorRun.UseVisualStyleBackColor = true;
-            // 
-            // buttonMotorStop
-            // 
-            this.buttonMotorStop.Location = new System.Drawing.Point(10, 20);
-            this.buttonMotorStop.Name = "buttonMotorStop";
-            this.buttonMotorStop.Size = new System.Drawing.Size(100, 40);
-            this.buttonMotorStop.TabIndex = 0;
-            this.buttonMotorStop.Tag = "0";
-            this.buttonMotorStop.Text = "Stop";
-            this.buttonMotorStop.UseVisualStyleBackColor = true;
-            this.buttonMotorStop.Click += new System.EventHandler(this.buttonMotorStop_Click);
-            // 
             // pictureBox
             // 
             this.pictureBox.BackColor = System.Drawing.Color.Black;
@@ -826,28 +676,8 @@
             // 
             // serialPort1
             // 
-            this.serialPort1.PortName = "COM12";
+            this.serialPort1.PortName = "COM4";
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(117, 73);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(56, 33);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(165, 64);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(56, 33);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // FormMain
             // 
@@ -861,7 +691,6 @@
             this.Controls.Add(this.dataGrid);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupRun);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox5);
@@ -878,8 +707,6 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
@@ -907,21 +734,6 @@
         private System.Windows.Forms.TextBox textSet;
         private System.Windows.Forms.Button buttonStopRun;
         private System.Windows.Forms.Button buttonStartRun;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button buttonMotorFree;
-        private System.Windows.Forms.TextBox textAccel;
-        private System.Windows.Forms.Button button19;
-        private System.Windows.Forms.TextBox textVelocity;
-        private System.Windows.Forms.Button button18;
-        private System.Windows.Forms.TextBox textSpeed;
-        private System.Windows.Forms.Button button17;
-        private System.Windows.Forms.TextBox textDelay;
-        private System.Windows.Forms.Button button16;
-        private System.Windows.Forms.TextBox textCount;
-        private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.Button buttonMotorSet;
-        private System.Windows.Forms.Button buttonMotorRun;
-        private System.Windows.Forms.Button buttonMotorStop;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonTrig;

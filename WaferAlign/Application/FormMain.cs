@@ -28,8 +28,8 @@ namespace eMotion
         
         ClassAlign Aligner = null;
         MulticamEx Grabber = null;
-        ClassTable Table = null;
-        LfineLight Light = null;
+        //ClassTable Table = null;
+        //LfineLight Light = null;
 
         int imageX, imageY;
 
@@ -48,8 +48,8 @@ namespace eMotion
             Grabber = new MulticamEx(debug);
             Grabber.OnCallback += OnCallback;
 
-            Table = new ClassTable();
-            Light = new LfineLight();
+            //Table = new ClassTable();
+            //Light = new LfineLight();
             pictureBox.Paint += new PaintEventHandler(pictureBox_Paint);
         }
         
@@ -93,8 +93,8 @@ namespace eMotion
             InitGrid(dataGrid, checkFlat.Checked);
 
             //Table.PortOpen(7);
-            Light.PortOpen(12);
-            //serialPort1.Open();
+            //Light.PortOpen(4);
+            serialPort1.Open();
             timer.Start();
 
             textSet.Text = Aligner.Setting.ImageCount.ToString();
@@ -103,14 +103,14 @@ namespace eMotion
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Light.PortClose();
-            //serialPort1.Close();
+            //Light.PortClose();
+            serialPort1.Close();
             timer.Stop();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Running();
+            //Running();
             textRun.Text = run.count.ToString();
             textRunRep.Text = run.repeat.ToString();
             textRunStep.Text = run.step.ToString();
@@ -266,52 +266,14 @@ namespace eMotion
                 Grabber.SaveImage(dialog.FileName);
             }
         }
+       
+        
         //=====================================================================
-        //step motor
-        private void buttonMotorStop_Click(object sender, EventArgs e)
-        {
-            int mode = Convert.ToInt32(((Button)sender).Tag);
-            Table.Mode((ClassTable.eMotorMode)mode);
-        }
-
-        private void button15_Click(object sender, EventArgs e)
-        {
-            int value;
-            int.TryParse(textCount.Text, out value);
-            Table.Count(value);
-        }
-
-        private void button16_Click(object sender, EventArgs e)
-        {
-            int value;
-            int.TryParse(textDelay.Text, out value);
-            Table.Delay(value);
-        }
-
-        private void button17_Click(object sender, EventArgs e)
-        {
-            int value;
-            int.TryParse(textSpeed.Text, out value);
-            Table.Speed(value);
-        }
-
-        private void button18_Click(object sender, EventArgs e)
-        {
-            int value;
-            int.TryParse(textVelocity.Text, out value);
-            Table.Velocity(value);
-        }
-
-        private void button19_Click(object sender, EventArgs e)
-        {
-            int value;
-            int.TryParse(textAccel.Text, out value);
-            Table.Accel(value);
-        }
-        //=====================================================================
+        /*
         //running
         private void Running()
         {
+            
             switch (run.step)
             {
                 case 0:
@@ -385,7 +347,7 @@ namespace eMotion
                     break;
             }
         }
-
+        */
         private void buttonStartRun_Click(object sender, EventArgs e)
         {
             run.setCount = Aligner.Setting.ImageCount;
@@ -530,11 +492,12 @@ namespace eMotion
 
         private void buttonLight_Click(object sender, EventArgs e)
         {
-            Light.OnOff(true);
+            //Light.OnOff(true);
+            //LightOn(true);
             int value;
             int.TryParse(textLight.Text, out value);
-            Light.Power(value);
-            //LightPower(value);
+            //Light.Power(value);
+            LightPower(value);
         }
 
         private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
@@ -565,10 +528,16 @@ namespace eMotion
             send[0] = 0x02;
             send[1] = (byte)'0';
             send[2] = (byte)'w';
-            send[3] = (byte)'0'; // ((value / 1000) & 0xff);
-            send[4] = (byte)'5'; // ((value / 100) & 0xff);
-            send[5] = (byte)'0'; // ((value / 10) & 0xff);
-            send[6] = (byte)'0'; // (value & 0xff);
+
+            //send[3] = (byte)Convert.ToChar((value / 1000) & 0xff);//'0'; // 
+            //send[4] = (byte)Convert.ToChar((value / 100) & 0xff);// '5'; //
+            //send[5] = (byte)Convert.ToChar((value / 10) & 0xff); //'0'; //
+            //send[6] = (byte)Convert.ToChar(value & 0xff);        //'0'; //
+
+            send[3] = (byte)'0'; // 
+            send[4] = (byte)'9'; //
+            send[5] = (byte)'0'; //
+            send[6] = (byte)'0'; //
             send[7] = 0x03;
             serialPort1.Write(send, 0, 8);
         }

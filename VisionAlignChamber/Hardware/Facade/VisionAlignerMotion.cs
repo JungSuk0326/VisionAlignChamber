@@ -248,6 +248,19 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
+        /// 속도 이동 (Jog)
+        /// </summary>
+        /// <param name="axis">축</param>
+        /// <param name="velocity">속도 (양수: +방향, 음수: -방향)</param>
+        /// <param name="accel">가속도</param>
+        /// <param name="decel">감속도</param>
+        public bool MoveVelocity(VAMotionAxis axis, double velocity, double accel, double decel)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.MoveVelocity(info.AxisNo, velocity, accel, decel);
+        }
+
+        /// <summary>
         /// 현재 위치 읽기 (실제 위치)
         /// </summary>
         public double GetPosition(VAMotionAxis axis)

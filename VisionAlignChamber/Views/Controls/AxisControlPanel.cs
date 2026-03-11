@@ -130,24 +130,46 @@ namespace VisionAlignChamber.Views.Controls
             }
         }
 
-        private void btnJogPlus_Click(object sender, EventArgs e)
+        private void btnJogPlus_MouseDown(object sender, MouseEventArgs e)
         {
             if (_viewModel == null) return;
 
-            if (double.TryParse(txtJogDistance.Text, out double distance))
-            {
-                _viewModel.JogPlusCommand?.Execute(distance);
-            }
+            // Jog 파라미터 업데이트
+            UpdateJogParameters();
+
+            // Jog+ 시작 (속도 제어)
+            _viewModel.JogStartPlusCommand?.Execute(null);
         }
 
-        private void btnJogMinus_Click(object sender, EventArgs e)
+        private void btnJogMinus_MouseDown(object sender, MouseEventArgs e)
         {
             if (_viewModel == null) return;
 
-            if (double.TryParse(txtJogDistance.Text, out double distance))
-            {
-                _viewModel.JogMinusCommand?.Execute(distance);
-            }
+            // Jog 파라미터 업데이트
+            UpdateJogParameters();
+
+            // Jog- 시작 (속도 제어)
+            _viewModel.JogStartMinusCommand?.Execute(null);
+        }
+
+        private void btnJog_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Jog 정지
+            _viewModel?.JogStopCommand?.Execute(null);
+        }
+
+        private void UpdateJogParameters()
+        {
+            if (_viewModel == null) return;
+
+            if (double.TryParse(txtJogVelocity.Text, out double velocity))
+                _viewModel.JogVelocity = velocity;
+
+            if (double.TryParse(txtJogAccel.Text, out double accel))
+                _viewModel.JogAccel = accel;
+
+            if (double.TryParse(txtJogDecel.Text, out double decel))
+                _viewModel.JogDecel = decel;
         }
 
         private void btnStop_Click(object sender, EventArgs e)

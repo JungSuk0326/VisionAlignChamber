@@ -83,6 +83,36 @@ namespace VisionAlignChamber.ViewModels
             set => SetProperty(ref _velocity, value);
         }
 
+        private double _jogVelocity = 10000;
+        /// <summary>
+        /// Jog 속도
+        /// </summary>
+        public double JogVelocity
+        {
+            get => _jogVelocity;
+            set => SetProperty(ref _jogVelocity, value);
+        }
+
+        private double _jogAccel = 50000;
+        /// <summary>
+        /// Jog 가속도
+        /// </summary>
+        public double JogAccel
+        {
+            get => _jogAccel;
+            set => SetProperty(ref _jogAccel, value);
+        }
+
+        private double _jogDecel = 50000;
+        /// <summary>
+        /// Jog 감속도
+        /// </summary>
+        public double JogDecel
+        {
+            get => _jogDecel;
+            set => SetProperty(ref _jogDecel, value);
+        }
+
         #endregion
 
         #region Status Properties
@@ -197,14 +227,29 @@ namespace VisionAlignChamber.ViewModels
         public ICommand MoveRelativeCommand { get; private set; }
 
         /// <summary>
-        /// Jog+ 명령
+        /// Jog+ 명령 (상대 이동)
         /// </summary>
         public ICommand JogPlusCommand { get; private set; }
 
         /// <summary>
-        /// Jog- 명령
+        /// Jog- 명령 (상대 이동)
         /// </summary>
         public ICommand JogMinusCommand { get; private set; }
+
+        /// <summary>
+        /// Jog+ 시작 명령 (속도 제어)
+        /// </summary>
+        public ICommand JogStartPlusCommand { get; private set; }
+
+        /// <summary>
+        /// Jog- 시작 명령 (속도 제어)
+        /// </summary>
+        public ICommand JogStartMinusCommand { get; private set; }
+
+        /// <summary>
+        /// Jog 정지 명령
+        /// </summary>
+        public ICommand JogStopCommand { get; private set; }
 
         /// <summary>
         /// 정지 명령
@@ -243,6 +288,9 @@ namespace VisionAlignChamber.ViewModels
             MoveRelativeCommand = new RelayCommand<double>(ExecuteMoveRelative, _ => CanExecuteMotion());
             JogPlusCommand = new RelayCommand<double>(ExecuteJogPlus, _ => CanExecuteMotion());
             JogMinusCommand = new RelayCommand<double>(ExecuteJogMinus, _ => CanExecuteMotion());
+            JogStartPlusCommand = new RelayCommand(ExecuteJogStartPlus, CanExecuteMotion);
+            JogStartMinusCommand = new RelayCommand(ExecuteJogStartMinus, CanExecuteMotion);
+            JogStopCommand = new RelayCommand(ExecuteJogStop);
             StopCommand = new RelayCommand(ExecuteStop);
             EmergencyStopCommand = new RelayCommand(ExecuteEmergencyStop);
             ServoOnCommand = new RelayCommand(ExecuteServoOn, () => !IsServoOn);
@@ -312,6 +360,47 @@ namespace VisionAlignChamber.ViewModels
         private void ExecuteJogMinus(double jogDistance)
         {
             ExecuteMoveRelative(-Math.Abs(jogDistance));
+        }
+
+        private void ExecuteJogStartPlus()
+        {
+            try
+            {
+                _motion.MoveVelocity(_axis, Math.Abs(JogVelocity), JogAccel, JogDecel);
+                StatusMessage = $"Jog+ 동작 중 (V:{JogVelocity})";
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                StatusMessage = $"Jog 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteJogStartMinus()
+        {
+            try
+            {
+                _motion.MoveVelocity(_axis, -Math.Abs(JogVelocity), JogAccel, JogDecel);
+                StatusMessage = $"Jog- 동작 중 (V:{JogVelocity})";
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                StatusMessage = $"Jog 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteJogStop()
+        {
+            try
+            {
+                _motion.Stop(_axis);
+                StatusMessage = "Jog 정지";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Jog 정지 오류: {ex.Message}";
+            }
         }
 
         private void ExecuteStop()

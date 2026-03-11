@@ -21,12 +21,12 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.lblAxisName = new System.Windows.Forms.Label();
             this.panelStatus = new System.Windows.Forms.Panel();
+            this.lblPlusLimit = new System.Windows.Forms.Label();
+            this.lblMinusLimit = new System.Windows.Forms.Label();
             this.btnServo = new System.Windows.Forms.Button();
             this.btnAlarmClear = new System.Windows.Forms.Button();
             this.lblMovingStatus = new System.Windows.Forms.Label();
             this.chkHomed = new System.Windows.Forms.CheckBox();
-            this.lblPlusLimit = new System.Windows.Forms.Label();
-            this.lblMinusLimit = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
@@ -37,7 +37,13 @@ namespace VisionAlignChamber.Views.Controls
             this.txtTargetPosition = new System.Windows.Forms.TextBox();
             this.btnMove = new System.Windows.Forms.Button();
             this.lblJogLabel = new System.Windows.Forms.Label();
-            this.txtJogDistance = new System.Windows.Forms.TextBox();
+            this.panelJogParams = new System.Windows.Forms.Panel();
+            this.lblVel = new System.Windows.Forms.Label();
+            this.txtJogVelocity = new System.Windows.Forms.TextBox();
+            this.lblAcc = new System.Windows.Forms.Label();
+            this.txtJogAccel = new System.Windows.Forms.TextBox();
+            this.lblDec = new System.Windows.Forms.Label();
+            this.txtJogDecel = new System.Windows.Forms.TextBox();
             this.panelJog = new System.Windows.Forms.Panel();
             this.btnJogPlus = new System.Windows.Forms.Button();
             this.btnJogMinus = new System.Windows.Forms.Button();
@@ -45,6 +51,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayout.SuspendLayout();
             this.panelStatus.SuspendLayout();
             this.panelButtons.SuspendLayout();
+            this.panelJogParams.SuspendLayout();
             this.panelJog.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +63,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpAxis.Location = new System.Drawing.Point(0, 0);
             this.grpAxis.Name = "grpAxis";
             this.grpAxis.Padding = new System.Windows.Forms.Padding(5);
-            this.grpAxis.Size = new System.Drawing.Size(380, 139);
+            this.grpAxis.Size = new System.Drawing.Size(588, 139);
             this.grpAxis.TabIndex = 0;
             this.grpAxis.TabStop = false;
             // 
@@ -77,7 +84,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayout.Controls.Add(this.txtTargetPosition, 1, 2);
             this.tableLayout.Controls.Add(this.btnMove, 3, 2);
             this.tableLayout.Controls.Add(this.lblJogLabel, 0, 3);
-            this.tableLayout.Controls.Add(this.txtJogDistance, 1, 3);
+            this.tableLayout.Controls.Add(this.panelJogParams, 1, 3);
             this.tableLayout.Controls.Add(this.panelJog, 3, 3);
             this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayout.Location = new System.Drawing.Point(5, 21);
@@ -87,7 +94,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tableLayout.Size = new System.Drawing.Size(370, 113);
+            this.tableLayout.Size = new System.Drawing.Size(578, 113);
             this.tableLayout.TabIndex = 0;
             // 
             // lblAxisName
@@ -100,9 +107,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblAxisName.TabIndex = 0;
             this.lblAxisName.Text = "Axis";
             this.lblAxisName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // panelStatus
-            //
+            // 
             this.tableLayout.SetColumnSpan(this.panelStatus, 2);
             this.panelStatus.Controls.Add(this.lblPlusLimit);
             this.panelStatus.Controls.Add(this.lblMinusLimit);
@@ -113,8 +120,34 @@ namespace VisionAlignChamber.Views.Controls
             this.panelStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelStatus.Location = new System.Drawing.Point(83, 3);
             this.panelStatus.Name = "panelStatus";
-            this.panelStatus.Size = new System.Drawing.Size(184, 22);
+            this.panelStatus.Size = new System.Drawing.Size(392, 22);
             this.panelStatus.TabIndex = 1;
+            // 
+            // lblPlusLimit
+            // 
+            this.lblPlusLimit.AutoSize = true;
+            this.lblPlusLimit.BackColor = System.Drawing.Color.DarkGray;
+            this.lblPlusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
+            this.lblPlusLimit.ForeColor = System.Drawing.Color.White;
+            this.lblPlusLimit.Location = new System.Drawing.Point(185, 3);
+            this.lblPlusLimit.Name = "lblPlusLimit";
+            this.lblPlusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.lblPlusLimit.Size = new System.Drawing.Size(21, 14);
+            this.lblPlusLimit.TabIndex = 5;
+            this.lblPlusLimit.Text = "+L";
+            // 
+            // lblMinusLimit
+            // 
+            this.lblMinusLimit.AutoSize = true;
+            this.lblMinusLimit.BackColor = System.Drawing.Color.DarkGray;
+            this.lblMinusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
+            this.lblMinusLimit.ForeColor = System.Drawing.Color.White;
+            this.lblMinusLimit.Location = new System.Drawing.Point(210, 3);
+            this.lblMinusLimit.Name = "lblMinusLimit";
+            this.lblMinusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.lblMinusLimit.Size = new System.Drawing.Size(18, 14);
+            this.lblMinusLimit.TabIndex = 6;
+            this.lblMinusLimit.Text = "-L";
             // 
             // btnServo
             // 
@@ -155,9 +188,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblMovingStatus.Size = new System.Drawing.Size(28, 15);
             this.lblMovingStatus.TabIndex = 0;
             this.lblMovingStatus.Text = "Idle";
-            //
+            // 
             // chkHomed
-            //
+            // 
             this.chkHomed.AutoSize = true;
             this.chkHomed.Enabled = false;
             this.chkHomed.Location = new System.Drawing.Point(50, 2);
@@ -166,39 +199,13 @@ namespace VisionAlignChamber.Views.Controls
             this.chkHomed.TabIndex = 1;
             this.chkHomed.Text = "Homed";
             this.chkHomed.UseVisualStyleBackColor = true;
-            //
-            // lblPlusLimit
-            //
-            this.lblPlusLimit.AutoSize = true;
-            this.lblPlusLimit.BackColor = System.Drawing.Color.DarkGray;
-            this.lblPlusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
-            this.lblPlusLimit.ForeColor = System.Drawing.Color.White;
-            this.lblPlusLimit.Location = new System.Drawing.Point(185, 3);
-            this.lblPlusLimit.Name = "lblPlusLimit";
-            this.lblPlusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.lblPlusLimit.Size = new System.Drawing.Size(22, 14);
-            this.lblPlusLimit.TabIndex = 5;
-            this.lblPlusLimit.Text = "+L";
-            //
-            // lblMinusLimit
-            //
-            this.lblMinusLimit.AutoSize = true;
-            this.lblMinusLimit.BackColor = System.Drawing.Color.DarkGray;
-            this.lblMinusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
-            this.lblMinusLimit.ForeColor = System.Drawing.Color.White;
-            this.lblMinusLimit.Location = new System.Drawing.Point(210, 3);
-            this.lblMinusLimit.Name = "lblMinusLimit";
-            this.lblMinusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.lblMinusLimit.Size = new System.Drawing.Size(20, 14);
-            this.lblMinusLimit.TabIndex = 6;
-            this.lblMinusLimit.Text = "-L";
-            //
+            // 
             // panelButtons
             // 
             this.panelButtons.Controls.Add(this.btnStop);
             this.panelButtons.Controls.Add(this.btnHome);
             this.panelButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelButtons.Location = new System.Drawing.Point(273, 3);
+            this.panelButtons.Location = new System.Drawing.Point(481, 3);
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Size = new System.Drawing.Size(94, 22);
             this.panelButtons.TabIndex = 2;
@@ -246,7 +253,7 @@ namespace VisionAlignChamber.Views.Controls
             this.txtPosition.Location = new System.Drawing.Point(83, 31);
             this.txtPosition.Name = "txtPosition";
             this.txtPosition.ReadOnly = true;
-            this.txtPosition.Size = new System.Drawing.Size(134, 23);
+            this.txtPosition.Size = new System.Drawing.Size(342, 23);
             this.txtPosition.TabIndex = 4;
             this.txtPosition.Text = "0.00";
             this.txtPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -254,7 +261,7 @@ namespace VisionAlignChamber.Views.Controls
             // lblUnit
             // 
             this.lblUnit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblUnit.Location = new System.Drawing.Point(223, 28);
+            this.lblUnit.Location = new System.Drawing.Point(431, 28);
             this.lblUnit.Name = "lblUnit";
             this.lblUnit.Size = new System.Drawing.Size(44, 28);
             this.lblUnit.TabIndex = 5;
@@ -278,7 +285,7 @@ namespace VisionAlignChamber.Views.Controls
             this.txtTargetPosition.Font = new System.Drawing.Font("Consolas", 10F);
             this.txtTargetPosition.Location = new System.Drawing.Point(83, 59);
             this.txtTargetPosition.Name = "txtTargetPosition";
-            this.txtTargetPosition.Size = new System.Drawing.Size(184, 23);
+            this.txtTargetPosition.Size = new System.Drawing.Size(392, 23);
             this.txtTargetPosition.TabIndex = 7;
             this.txtTargetPosition.Text = "0";
             this.txtTargetPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -290,7 +297,7 @@ namespace VisionAlignChamber.Views.Controls
             this.btnMove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMove.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.btnMove.ForeColor = System.Drawing.Color.White;
-            this.btnMove.Location = new System.Drawing.Point(273, 59);
+            this.btnMove.Location = new System.Drawing.Point(481, 59);
             this.btnMove.Name = "btnMove";
             this.btnMove.Size = new System.Drawing.Size(94, 22);
             this.btnMove.TabIndex = 8;
@@ -308,24 +315,87 @@ namespace VisionAlignChamber.Views.Controls
             this.lblJogLabel.Text = "Jog";
             this.lblJogLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // txtJogDistance
+            // panelJogParams
             // 
-            this.tableLayout.SetColumnSpan(this.txtJogDistance, 2);
-            this.txtJogDistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtJogDistance.Font = new System.Drawing.Font("Consolas", 10F);
-            this.txtJogDistance.Location = new System.Drawing.Point(83, 87);
-            this.txtJogDistance.Name = "txtJogDistance";
-            this.txtJogDistance.Size = new System.Drawing.Size(184, 23);
-            this.txtJogDistance.TabIndex = 10;
-            this.txtJogDistance.Text = "1000";
-            this.txtJogDistance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tableLayout.SetColumnSpan(this.panelJogParams, 2);
+            this.panelJogParams.Controls.Add(this.lblVel);
+            this.panelJogParams.Controls.Add(this.txtJogVelocity);
+            this.panelJogParams.Controls.Add(this.lblAcc);
+            this.panelJogParams.Controls.Add(this.txtJogAccel);
+            this.panelJogParams.Controls.Add(this.lblDec);
+            this.panelJogParams.Controls.Add(this.txtJogDecel);
+            this.panelJogParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelJogParams.Location = new System.Drawing.Point(83, 87);
+            this.panelJogParams.Name = "panelJogParams";
+            this.panelJogParams.Size = new System.Drawing.Size(392, 23);
+            this.panelJogParams.TabIndex = 10;
+            // 
+            // lblVel
+            // 
+            this.lblVel.AutoSize = true;
+            this.lblVel.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.lblVel.Location = new System.Drawing.Point(0, 4);
+            this.lblVel.Name = "lblVel";
+            this.lblVel.Size = new System.Drawing.Size(19, 12);
+            this.lblVel.TabIndex = 0;
+            this.lblVel.Text = "Vel:";
+            // 
+            // txtJogVelocity
+            // 
+            this.txtJogVelocity.Font = new System.Drawing.Font("Consolas", 8F);
+            this.txtJogVelocity.Location = new System.Drawing.Point(25, 1);
+            this.txtJogVelocity.Name = "txtJogVelocity";
+            this.txtJogVelocity.Size = new System.Drawing.Size(83, 20);
+            this.txtJogVelocity.TabIndex = 1;
+            this.txtJogVelocity.Text = "10000";
+            this.txtJogVelocity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblAcc
+            // 
+            this.lblAcc.AutoSize = true;
+            this.lblAcc.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.lblAcc.Location = new System.Drawing.Point(114, 4);
+            this.lblAcc.Name = "lblAcc";
+            this.lblAcc.Size = new System.Drawing.Size(23, 12);
+            this.lblAcc.TabIndex = 2;
+            this.lblAcc.Text = "Acc:";
+            // 
+            // txtJogAccel
+            // 
+            this.txtJogAccel.Font = new System.Drawing.Font("Consolas", 8F);
+            this.txtJogAccel.Location = new System.Drawing.Point(142, 1);
+            this.txtJogAccel.Name = "txtJogAccel";
+            this.txtJogAccel.Size = new System.Drawing.Size(86, 20);
+            this.txtJogAccel.TabIndex = 3;
+            this.txtJogAccel.Text = "50000";
+            this.txtJogAccel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblDec
+            // 
+            this.lblDec.AutoSize = true;
+            this.lblDec.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.lblDec.Location = new System.Drawing.Point(239, 4);
+            this.lblDec.Name = "lblDec";
+            this.lblDec.Size = new System.Drawing.Size(14, 12);
+            this.lblDec.TabIndex = 4;
+            this.lblDec.Text = "D:";
+            // 
+            // txtJogDecel
+            // 
+            this.txtJogDecel.Font = new System.Drawing.Font("Consolas", 8F);
+            this.txtJogDecel.Location = new System.Drawing.Point(259, 1);
+            this.txtJogDecel.Name = "txtJogDecel";
+            this.txtJogDecel.Size = new System.Drawing.Size(81, 20);
+            this.txtJogDecel.TabIndex = 5;
+            this.txtJogDecel.Text = "50000";
+            this.txtJogDecel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // panelJog
             // 
             this.panelJog.Controls.Add(this.btnJogPlus);
             this.panelJog.Controls.Add(this.btnJogMinus);
             this.panelJog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelJog.Location = new System.Drawing.Point(273, 87);
+            this.panelJog.Location = new System.Drawing.Point(481, 87);
             this.panelJog.Name = "panelJog";
             this.panelJog.Size = new System.Drawing.Size(94, 23);
             this.panelJog.TabIndex = 11;
@@ -339,7 +409,8 @@ namespace VisionAlignChamber.Views.Controls
             this.btnJogPlus.TabIndex = 1;
             this.btnJogPlus.Text = "+";
             this.btnJogPlus.UseVisualStyleBackColor = true;
-            this.btnJogPlus.Click += new System.EventHandler(this.btnJogPlus_Click);
+            this.btnJogPlus.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnJogPlus_MouseDown);
+            this.btnJogPlus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnJog_MouseUp);
             // 
             // btnJogMinus
             // 
@@ -350,7 +421,8 @@ namespace VisionAlignChamber.Views.Controls
             this.btnJogMinus.TabIndex = 0;
             this.btnJogMinus.Text = "-";
             this.btnJogMinus.UseVisualStyleBackColor = true;
-            this.btnJogMinus.Click += new System.EventHandler(this.btnJogMinus_Click);
+            this.btnJogMinus.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnJogMinus_MouseDown);
+            this.btnJogMinus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnJog_MouseUp);
             // 
             // AxisControlPanel
             // 
@@ -359,13 +431,15 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpAxis);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "AxisControlPanel";
-            this.Size = new System.Drawing.Size(380, 139);
+            this.Size = new System.Drawing.Size(588, 139);
             this.grpAxis.ResumeLayout(false);
             this.tableLayout.ResumeLayout(false);
             this.tableLayout.PerformLayout();
             this.panelStatus.ResumeLayout(false);
             this.panelStatus.PerformLayout();
             this.panelButtons.ResumeLayout(false);
+            this.panelJogParams.ResumeLayout(false);
+            this.panelJogParams.PerformLayout();
             this.panelJog.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -390,7 +464,13 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TextBox txtTargetPosition;
         private System.Windows.Forms.Button btnMove;
         private System.Windows.Forms.Label lblJogLabel;
-        private System.Windows.Forms.TextBox txtJogDistance;
+        private System.Windows.Forms.Panel panelJogParams;
+        private System.Windows.Forms.Label lblVel;
+        private System.Windows.Forms.TextBox txtJogVelocity;
+        private System.Windows.Forms.Label lblAcc;
+        private System.Windows.Forms.TextBox txtJogAccel;
+        private System.Windows.Forms.Label lblDec;
+        private System.Windows.Forms.TextBox txtJogDecel;
         private System.Windows.Forms.Panel panelJog;
         private System.Windows.Forms.Button btnJogMinus;
         private System.Windows.Forms.Button btnJogPlus;

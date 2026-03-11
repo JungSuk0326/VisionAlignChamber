@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Hardware.Facade;
+using VisionAlignChamber.Config;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -36,6 +37,13 @@ namespace VisionAlignChamber.ViewModels
             ChuckAxis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.ChuckRotation);
             CenteringStage1Axis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.CenteringStage_1);
             CenteringStage2Axis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.CenteringStage_2);
+
+            // Parameter.ini에서 Jog 파라미터 로드
+            var param = TeachingParameter.Instance;
+            WedgeAxis.SetJogParameters(param.WedgeUpDown.JogVelocity, param.WedgeUpDown.JogAccel, param.WedgeUpDown.JogDecel);
+            ChuckAxis.SetJogParameters(param.ChuckRotation.JogVelocity, param.ChuckRotation.JogAccel, param.ChuckRotation.JogDecel);
+            CenteringStage1Axis.SetJogParameters(param.CenteringStage1.JogVelocity, param.CenteringStage1.JogAccel, param.CenteringStage1.JogDecel);
+            CenteringStage2Axis.SetJogParameters(param.CenteringStage2.JogVelocity, param.CenteringStage2.JogAccel, param.CenteringStage2.JogDecel);
 
             // 전체 축 리스트 (반복 처리용)
             _allAxes = new List<AxisViewModel>

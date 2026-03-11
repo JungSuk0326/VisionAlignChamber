@@ -129,7 +129,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblPlusLimit.BackColor = System.Drawing.Color.DarkGray;
             this.lblPlusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
             this.lblPlusLimit.ForeColor = System.Drawing.Color.White;
-            this.lblPlusLimit.Location = new System.Drawing.Point(185, 3);
+            this.lblPlusLimit.Location = new System.Drawing.Point(286, 3);
             this.lblPlusLimit.Name = "lblPlusLimit";
             this.lblPlusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.lblPlusLimit.Size = new System.Drawing.Size(21, 14);
@@ -142,7 +142,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblMinusLimit.BackColor = System.Drawing.Color.DarkGray;
             this.lblMinusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
             this.lblMinusLimit.ForeColor = System.Drawing.Color.White;
-            this.lblMinusLimit.Location = new System.Drawing.Point(210, 3);
+            this.lblMinusLimit.Location = new System.Drawing.Point(245, 3);
             this.lblMinusLimit.Name = "lblMinusLimit";
             this.lblMinusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.lblMinusLimit.Size = new System.Drawing.Size(18, 14);
@@ -157,7 +157,7 @@ namespace VisionAlignChamber.Views.Controls
             this.btnServo.ForeColor = System.Drawing.Color.White;
             this.btnServo.Location = new System.Drawing.Point(115, 0);
             this.btnServo.Name = "btnServo";
-            this.btnServo.Size = new System.Drawing.Size(32, 20);
+            this.btnServo.Size = new System.Drawing.Size(41, 20);
             this.btnServo.TabIndex = 2;
             this.btnServo.Text = "OFF";
             this.btnServo.UseVisualStyleBackColor = false;
@@ -170,9 +170,9 @@ namespace VisionAlignChamber.Views.Controls
             this.btnAlarmClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAlarmClear.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
             this.btnAlarmClear.ForeColor = System.Drawing.Color.White;
-            this.btnAlarmClear.Location = new System.Drawing.Point(150, 0);
+            this.btnAlarmClear.Location = new System.Drawing.Point(165, 0);
             this.btnAlarmClear.Name = "btnAlarmClear";
-            this.btnAlarmClear.Size = new System.Drawing.Size(32, 20);
+            this.btnAlarmClear.Size = new System.Drawing.Size(40, 20);
             this.btnAlarmClear.TabIndex = 4;
             this.btnAlarmClear.Text = "CLR";
             this.btnAlarmClear.UseVisualStyleBackColor = false;

@@ -40,6 +40,11 @@ namespace VisionAlignChamber.Views.Controls
             lblAxisName.Text = _viewModel.Name;
             lblUnit.Text = _viewModel.Unit;
 
+            // Jog 파라미터 텍스트박스 초기화
+            txtJogVelocity.Text = _viewModel.JogVelocity.ToString("F0");
+            txtJogAccel.Text = _viewModel.JogAccel.ToString("F0");
+            txtJogDecel.Text = _viewModel.JogDecel.ToString("F0");
+
             // 초기 상태 업데이트
             UpdateDisplay();
         }
@@ -188,5 +193,6 @@ namespace VisionAlignChamber.Views.Controls
         }
 
         #endregion
+
     }
 }

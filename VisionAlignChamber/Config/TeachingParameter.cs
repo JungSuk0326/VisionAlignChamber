@@ -102,6 +102,9 @@ namespace VisionAlignChamber.Config
             public double Velocity { get; set; }
             public double Accel { get; set; }
             public double Decel { get; set; }
+            public double JogVelocity { get; set; }
+            public double JogAccel { get; set; }
+            public double JogDecel { get; set; }
 
             public AxisConfig()
             {
@@ -110,15 +113,22 @@ namespace VisionAlignChamber.Config
                 Velocity = 10000;
                 Accel = 50000;
                 Decel = 50000;
+                JogVelocity = 5000;
+                JogAccel = 30000;
+                JogDecel = 30000;
             }
 
-            public AxisConfig(int axisNo, bool enabled, double velocity, double accel, double decel)
+            public AxisConfig(int axisNo, bool enabled, double velocity, double accel, double decel,
+                double jogVelocity = 5000, double jogAccel = 30000, double jogDecel = 30000)
             {
                 AxisNo = axisNo;
                 Enabled = enabled;
                 Velocity = velocity;
                 Accel = accel;
                 Decel = decel;
+                JogVelocity = jogVelocity;
+                JogAccel = jogAccel;
+                JogDecel = jogDecel;
             }
         }
 
@@ -381,24 +391,36 @@ namespace VisionAlignChamber.Config
             WedgeUpDown.Velocity = GetDouble("Motion_Axis", "WedgeUpDown_Velocity", 10000);
             WedgeUpDown.Accel = GetDouble("Motion_Axis", "WedgeUpDown_Accel", 50000);
             WedgeUpDown.Decel = GetDouble("Motion_Axis", "WedgeUpDown_Decel", 50000);
+            WedgeUpDown.JogVelocity = GetDouble("Motion_Axis", "WedgeUpDown_JogVelocity", 5000);
+            WedgeUpDown.JogAccel = GetDouble("Motion_Axis", "WedgeUpDown_JogAccel", 30000);
+            WedgeUpDown.JogDecel = GetDouble("Motion_Axis", "WedgeUpDown_JogDecel", 30000);
 
             ChuckRotation.AxisNo = GetInt("Motion_Axis", "ChuckRotation", 1);
             ChuckRotation.Enabled = GetBool("Motion_Axis", "ChuckRotation_Enabled", true);
             ChuckRotation.Velocity = GetDouble("Motion_Axis", "ChuckRotation_Velocity", 5000);
             ChuckRotation.Accel = GetDouble("Motion_Axis", "ChuckRotation_Accel", 30000);
             ChuckRotation.Decel = GetDouble("Motion_Axis", "ChuckRotation_Decel", 30000);
+            ChuckRotation.JogVelocity = GetDouble("Motion_Axis", "ChuckRotation_JogVelocity", 3000);
+            ChuckRotation.JogAccel = GetDouble("Motion_Axis", "ChuckRotation_JogAccel", 20000);
+            ChuckRotation.JogDecel = GetDouble("Motion_Axis", "ChuckRotation_JogDecel", 20000);
 
             CenteringStage1.AxisNo = GetInt("Motion_Axis", "CenteringStage_1", 2);
             CenteringStage1.Enabled = GetBool("Motion_Axis", "CenteringStage_1_Enabled", true);
             CenteringStage1.Velocity = GetDouble("Motion_Axis", "CenteringStage_1_Velocity", 8000);
             CenteringStage1.Accel = GetDouble("Motion_Axis", "CenteringStage_1_Accel", 40000);
             CenteringStage1.Decel = GetDouble("Motion_Axis", "CenteringStage_1_Decel", 40000);
+            CenteringStage1.JogVelocity = GetDouble("Motion_Axis", "CenteringStage_1_JogVelocity", 5000);
+            CenteringStage1.JogAccel = GetDouble("Motion_Axis", "CenteringStage_1_JogAccel", 30000);
+            CenteringStage1.JogDecel = GetDouble("Motion_Axis", "CenteringStage_1_JogDecel", 30000);
 
             CenteringStage2.AxisNo = GetInt("Motion_Axis", "CenteringStage_2", 3);
             CenteringStage2.Enabled = GetBool("Motion_Axis", "CenteringStage_2_Enabled", true);
             CenteringStage2.Velocity = GetDouble("Motion_Axis", "CenteringStage_2_Velocity", 8000);
             CenteringStage2.Accel = GetDouble("Motion_Axis", "CenteringStage_2_Accel", 40000);
             CenteringStage2.Decel = GetDouble("Motion_Axis", "CenteringStage_2_Decel", 40000);
+            CenteringStage2.JogVelocity = GetDouble("Motion_Axis", "CenteringStage_2_JogVelocity", 5000);
+            CenteringStage2.JogAccel = GetDouble("Motion_Axis", "CenteringStage_2_JogAccel", 30000);
+            CenteringStage2.JogDecel = GetDouble("Motion_Axis", "CenteringStage_2_JogDecel", 30000);
 
             // Chuck Z
             ChuckZ_Down = GetDouble("ChuckZ", "Down", 0);
@@ -448,24 +470,36 @@ namespace VisionAlignChamber.Config
             WriteValue("Motion_Axis", "WedgeUpDown_Velocity", WedgeUpDown.Velocity.ToString());
             WriteValue("Motion_Axis", "WedgeUpDown_Accel", WedgeUpDown.Accel.ToString());
             WriteValue("Motion_Axis", "WedgeUpDown_Decel", WedgeUpDown.Decel.ToString());
+            WriteValue("Motion_Axis", "WedgeUpDown_JogVelocity", WedgeUpDown.JogVelocity.ToString());
+            WriteValue("Motion_Axis", "WedgeUpDown_JogAccel", WedgeUpDown.JogAccel.ToString());
+            WriteValue("Motion_Axis", "WedgeUpDown_JogDecel", WedgeUpDown.JogDecel.ToString());
 
             WriteValue("Motion_Axis", "ChuckRotation", ChuckRotation.AxisNo.ToString());
             WriteValue("Motion_Axis", "ChuckRotation_Enabled", ChuckRotation.Enabled.ToString().ToLower());
             WriteValue("Motion_Axis", "ChuckRotation_Velocity", ChuckRotation.Velocity.ToString());
             WriteValue("Motion_Axis", "ChuckRotation_Accel", ChuckRotation.Accel.ToString());
             WriteValue("Motion_Axis", "ChuckRotation_Decel", ChuckRotation.Decel.ToString());
+            WriteValue("Motion_Axis", "ChuckRotation_JogVelocity", ChuckRotation.JogVelocity.ToString());
+            WriteValue("Motion_Axis", "ChuckRotation_JogAccel", ChuckRotation.JogAccel.ToString());
+            WriteValue("Motion_Axis", "ChuckRotation_JogDecel", ChuckRotation.JogDecel.ToString());
 
             WriteValue("Motion_Axis", "CenteringStage_1", CenteringStage1.AxisNo.ToString());
             WriteValue("Motion_Axis", "CenteringStage_1_Enabled", CenteringStage1.Enabled.ToString().ToLower());
             WriteValue("Motion_Axis", "CenteringStage_1_Velocity", CenteringStage1.Velocity.ToString());
             WriteValue("Motion_Axis", "CenteringStage_1_Accel", CenteringStage1.Accel.ToString());
             WriteValue("Motion_Axis", "CenteringStage_1_Decel", CenteringStage1.Decel.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_1_JogVelocity", CenteringStage1.JogVelocity.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_1_JogAccel", CenteringStage1.JogAccel.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_1_JogDecel", CenteringStage1.JogDecel.ToString());
 
             WriteValue("Motion_Axis", "CenteringStage_2", CenteringStage2.AxisNo.ToString());
             WriteValue("Motion_Axis", "CenteringStage_2_Enabled", CenteringStage2.Enabled.ToString().ToLower());
             WriteValue("Motion_Axis", "CenteringStage_2_Velocity", CenteringStage2.Velocity.ToString());
             WriteValue("Motion_Axis", "CenteringStage_2_Accel", CenteringStage2.Accel.ToString());
             WriteValue("Motion_Axis", "CenteringStage_2_Decel", CenteringStage2.Decel.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_2_JogVelocity", CenteringStage2.JogVelocity.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_2_JogAccel", CenteringStage2.JogAccel.ToString());
+            WriteValue("Motion_Axis", "CenteringStage_2_JogDecel", CenteringStage2.JogDecel.ToString());
 
             // Chuck Z
             WriteValue("ChuckZ", "Down", ChuckZ_Down.ToString());
@@ -523,6 +557,9 @@ WedgeUpDown_Enabled=true
 WedgeUpDown_Velocity=10000
 WedgeUpDown_Accel=50000
 WedgeUpDown_Decel=50000
+WedgeUpDown_JogVelocity=5000
+WedgeUpDown_JogAccel=30000
+WedgeUpDown_JogDecel=30000
 
 ; Chuck Rotation (DD Motor) - Theta
 ChuckRotation=1
@@ -530,6 +567,9 @@ ChuckRotation_Enabled=true
 ChuckRotation_Velocity=5000
 ChuckRotation_Accel=30000
 ChuckRotation_Decel=30000
+ChuckRotation_JogVelocity=3000
+ChuckRotation_JogAccel=20000
+ChuckRotation_JogDecel=20000
 
 ; Centering Stage 1 (Stepping) - Centering L
 CenteringStage_1=2
@@ -537,6 +577,9 @@ CenteringStage_1_Enabled=true
 CenteringStage_1_Velocity=8000
 CenteringStage_1_Accel=40000
 CenteringStage_1_Decel=40000
+CenteringStage_1_JogVelocity=5000
+CenteringStage_1_JogAccel=30000
+CenteringStage_1_JogDecel=30000
 
 ; Centering Stage 2 (Stepping) - Centering R
 CenteringStage_2=3
@@ -544,6 +587,9 @@ CenteringStage_2_Enabled=true
 CenteringStage_2_Velocity=8000
 CenteringStage_2_Accel=40000
 CenteringStage_2_Decel=40000
+CenteringStage_2_JogVelocity=5000
+CenteringStage_2_JogAccel=30000
+CenteringStage_2_JogDecel=30000
 
 ;=============================================================================
 ; Teaching Positions

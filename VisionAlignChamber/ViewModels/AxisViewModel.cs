@@ -30,6 +30,16 @@ namespace VisionAlignChamber.ViewModels
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Jog 파라미터 설정 (Parameter.ini에서 로드한 값으로 초기화)
+        /// </summary>
+        public void SetJogParameters(double jogVelocity, double jogAccel, double jogDecel)
+        {
+            JogVelocity = jogVelocity;
+            JogAccel = jogAccel;
+            JogDecel = jogDecel;
+        }
+
         #endregion
 
         #region Axis Info Properties

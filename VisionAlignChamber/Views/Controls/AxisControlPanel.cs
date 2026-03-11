@@ -93,6 +93,10 @@ namespace VisionAlignChamber.Views.Controls
                 btnServo.BackColor = Color.Gray;
             }
 
+            // Limit 센서 상태 표시
+            lblPlusLimit.BackColor = _viewModel.IsPlusLimit ? Color.Red : Color.DarkGray;
+            lblMinusLimit.BackColor = _viewModel.IsMinusLimit ? Color.Red : Color.DarkGray;
+
             // 버튼 활성화 상태 (알람 시 비활성화)
             bool canMove = _viewModel.IsEnabled && !_viewModel.IsMoving && _viewModel.IsServoOn && !_viewModel.IsAlarm;
             btnHome.Enabled = canMove;

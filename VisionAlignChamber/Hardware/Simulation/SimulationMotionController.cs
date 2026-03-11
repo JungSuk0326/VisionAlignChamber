@@ -91,6 +91,21 @@ namespace VisionAlignChamber.Hardware.Simulation
 
         #endregion
 
+        #region Limit 센서
+
+        public bool GetLimitStatus(int axisNo, out bool plusLimit, out bool minusLimit)
+        {
+            plusLimit = false;
+            minusLimit = false;
+
+            if (!_isInitialized || !CheckAxisNo(axisNo)) return false;
+
+            // 시뮬레이션: 리밋 센서 항상 OFF (감지 안됨)
+            return true;
+        }
+
+        #endregion
+
         #region 알람
 
         public bool IsAlarm(int axisNo)

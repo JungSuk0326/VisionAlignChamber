@@ -58,6 +58,19 @@ namespace VisionAlignChamber.Interfaces
 
         #endregion
 
+        #region Limit 센서
+
+        /// <summary>
+        /// Limit 센서 상태 읽기
+        /// </summary>
+        /// <param name="axisNo">축 번호</param>
+        /// <param name="plusLimit">+방향 리밋 감지 여부</param>
+        /// <param name="minusLimit">-방향 리밋 감지 여부</param>
+        /// <returns>읽기 성공 여부</returns>
+        bool GetLimitStatus(int axisNo, out bool plusLimit, out bool minusLimit);
+
+        #endregion
+
         #region 알람
 
         /// <summary>

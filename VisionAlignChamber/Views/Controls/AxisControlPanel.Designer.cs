@@ -25,6 +25,8 @@ namespace VisionAlignChamber.Views.Controls
             this.btnAlarmClear = new System.Windows.Forms.Button();
             this.lblMovingStatus = new System.Windows.Forms.Label();
             this.chkHomed = new System.Windows.Forms.CheckBox();
+            this.lblPlusLimit = new System.Windows.Forms.Label();
+            this.lblMinusLimit = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
@@ -98,10 +100,12 @@ namespace VisionAlignChamber.Views.Controls
             this.lblAxisName.TabIndex = 0;
             this.lblAxisName.Text = "Axis";
             this.lblAxisName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
+            //
             // panelStatus
-            // 
+            //
             this.tableLayout.SetColumnSpan(this.panelStatus, 2);
+            this.panelStatus.Controls.Add(this.lblPlusLimit);
+            this.panelStatus.Controls.Add(this.lblMinusLimit);
             this.panelStatus.Controls.Add(this.btnServo);
             this.panelStatus.Controls.Add(this.btnAlarmClear);
             this.panelStatus.Controls.Add(this.lblMovingStatus);
@@ -151,9 +155,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblMovingStatus.Size = new System.Drawing.Size(28, 15);
             this.lblMovingStatus.TabIndex = 0;
             this.lblMovingStatus.Text = "Idle";
-            // 
+            //
             // chkHomed
-            // 
+            //
             this.chkHomed.AutoSize = true;
             this.chkHomed.Enabled = false;
             this.chkHomed.Location = new System.Drawing.Point(50, 2);
@@ -162,7 +166,33 @@ namespace VisionAlignChamber.Views.Controls
             this.chkHomed.TabIndex = 1;
             this.chkHomed.Text = "Homed";
             this.chkHomed.UseVisualStyleBackColor = true;
-            // 
+            //
+            // lblPlusLimit
+            //
+            this.lblPlusLimit.AutoSize = true;
+            this.lblPlusLimit.BackColor = System.Drawing.Color.DarkGray;
+            this.lblPlusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
+            this.lblPlusLimit.ForeColor = System.Drawing.Color.White;
+            this.lblPlusLimit.Location = new System.Drawing.Point(185, 3);
+            this.lblPlusLimit.Name = "lblPlusLimit";
+            this.lblPlusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.lblPlusLimit.Size = new System.Drawing.Size(22, 14);
+            this.lblPlusLimit.TabIndex = 5;
+            this.lblPlusLimit.Text = "+L";
+            //
+            // lblMinusLimit
+            //
+            this.lblMinusLimit.AutoSize = true;
+            this.lblMinusLimit.BackColor = System.Drawing.Color.DarkGray;
+            this.lblMinusLimit.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold);
+            this.lblMinusLimit.ForeColor = System.Drawing.Color.White;
+            this.lblMinusLimit.Location = new System.Drawing.Point(210, 3);
+            this.lblMinusLimit.Name = "lblMinusLimit";
+            this.lblMinusLimit.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.lblMinusLimit.Size = new System.Drawing.Size(20, 14);
+            this.lblMinusLimit.TabIndex = 6;
+            this.lblMinusLimit.Text = "-L";
+            //
             // panelButtons
             // 
             this.panelButtons.Controls.Add(this.btnStop);
@@ -365,5 +395,7 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnJogMinus;
         private System.Windows.Forms.Button btnJogPlus;
         private System.Windows.Forms.Button btnAlarmClear;
+        private System.Windows.Forms.Label lblPlusLimit;
+        private System.Windows.Forms.Label lblMinusLimit;
     }
 }

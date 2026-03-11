@@ -147,6 +147,26 @@ namespace VisionAlignChamber.ViewModels
             set => SetProperty(ref _isAlarm, value);
         }
 
+        private bool _isPlusLimit;
+        /// <summary>
+        /// +방향 리밋 센서 감지 여부
+        /// </summary>
+        public bool IsPlusLimit
+        {
+            get => _isPlusLimit;
+            set => SetProperty(ref _isPlusLimit, value);
+        }
+
+        private bool _isMinusLimit;
+        /// <summary>
+        /// -방향 리밋 센서 감지 여부
+        /// </summary>
+        public bool IsMinusLimit
+        {
+            get => _isMinusLimit;
+            set => SetProperty(ref _isMinusLimit, value);
+        }
+
         private string _statusMessage;
         /// <summary>
         /// 상태 메시지
@@ -403,6 +423,13 @@ namespace VisionAlignChamber.ViewModels
             IsServoOn = _motion.IsServoOn(_axis);
             IsAlarm = _motion.IsAlarm(_axis);
             IsHomed = _motion.IsHomeDone(_axis);
+
+            // Limit 센서 상태 읽기
+            if (_motion.GetLimitStatus(_axis, out bool plusLimit, out bool minusLimit))
+            {
+                IsPlusLimit = plusLimit;
+                IsMinusLimit = minusLimit;
+            }
 
             // 알람 발생 시 HasError 설정
             if (IsAlarm)

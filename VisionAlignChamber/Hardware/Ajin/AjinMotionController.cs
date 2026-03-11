@@ -153,6 +153,35 @@ namespace VisionAlignChamber.Hardware.Ajin
 
         #endregion
 
+        #region Limit 센서
+
+        /// <summary>
+        /// Limit 센서 상태 읽기
+        /// </summary>
+        public bool GetLimitStatus(int axisNo, out bool plusLimit, out bool minusLimit)
+        {
+            plusLimit = false;
+            minusLimit = false;
+
+            if (!CheckInitialized()) return false;
+            if (!CheckAxisNo(axisNo)) return false;
+
+            uint positiveStatus = 0;
+            uint negativeStatus = 0;
+            uint result = CAXM.AxmSignalReadLimit(axisNo, ref positiveStatus, ref negativeStatus);
+
+            if (AjinErrorCode.IsSuccess(result))
+            {
+                plusLimit = positiveStatus != 0;
+                minusLimit = negativeStatus != 0;
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
+
         #region 알람
 
         /// <summary>

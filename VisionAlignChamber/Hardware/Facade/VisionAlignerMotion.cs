@@ -136,6 +136,41 @@ namespace VisionAlignChamber.Hardware.Facade
 
         #endregion
 
+        #region Limit Control
+
+        /// <summary>
+        /// 단일 축 Limit 센서 상태 읽기
+        /// </summary>
+        /// <param name="axis">축</param>
+        /// <param name="plusLimit">+방향 리밋 감지 여부</param>
+        /// <param name="minusLimit">-방향 리밋 감지 여부</param>
+        /// <returns>읽기 성공 여부</returns>
+        public bool GetLimitStatus(VAMotionAxis axis, out bool plusLimit, out bool minusLimit)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.GetLimitStatus(info.AxisNo, out plusLimit, out minusLimit);
+        }
+
+        /// <summary>
+        /// +Limit 센서 상태 확인
+        /// </summary>
+        public bool IsPlusLimit(VAMotionAxis axis)
+        {
+            GetLimitStatus(axis, out bool plusLimit, out _);
+            return plusLimit;
+        }
+
+        /// <summary>
+        /// -Limit 센서 상태 확인
+        /// </summary>
+        public bool IsMinusLimit(VAMotionAxis axis)
+        {
+            GetLimitStatus(axis, out _, out bool minusLimit);
+            return minusLimit;
+        }
+
+        #endregion
+
         #region Alarm Control
 
         /// <summary>

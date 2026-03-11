@@ -420,38 +420,34 @@ namespace VisionAlignChamber.Hardware.Facade
         #region Chuck Rotation (DD Motor)
 
         /// <summary>
-        /// Chuck 회전 (절대 각도)
+        /// Chuck 회전 (절대 위치)
         /// </summary>
-        /// <param name="angle">회전 각도 (degree)</param>
+        /// <param name="position">목표 위치 (AJIN 단위 그대로)</param>
         /// <param name="velocity">회전 속도</param>
-        public bool ChuckRotateAbsolute(double angle, double? velocity = null)
+        public bool ChuckRotateAbsolute(double position, double? velocity = null)
         {
-            // 각도를 pulse로 변환 (설정에 따라 조정 필요)
-            double position = AngleToPulse(angle);
             return MoveAbsolute(VAMotionAxis.ChuckRotation, position, velocity);
         }
 
         /// <summary>
         /// Chuck 상대 회전
         /// </summary>
-        /// <param name="angle">회전 각도 (degree)</param>
-        public bool ChuckRotateRelative(double angle, double? velocity = null)
+        /// <param name="distance">이동 거리 (AJIN 단위 그대로)</param>
+        public bool ChuckRotateRelative(double distance, double? velocity = null)
         {
-            double distance = AngleToPulse(angle);
             return MoveRelative(VAMotionAxis.ChuckRotation, distance, velocity);
         }
 
         /// <summary>
-        /// Chuck 현재 각도
+        /// Chuck 현재 위치 (AJIN ActualPosition 그대로)
         /// </summary>
-        public double GetChuckAngle()
+        public double GetChuckPosition()
         {
-            double position = GetPosition(VAMotionAxis.ChuckRotation);
-            return PulseToAngle(position);
+            return GetPosition(VAMotionAxis.ChuckRotation);
         }
 
         /// <summary>
-        /// Chuck 홈 (0도)
+        /// Chuck 홈
         /// </summary>
         public bool ChuckHome()
         {
@@ -459,58 +455,19 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
-        /// Chuck 90도 위치로 회전
+        /// Chuck 회전 (비동기) - 절대 위치
         /// </summary>
-        public bool ChuckRotateTo90()
+        public async Task<bool> ChuckRotateAbsoluteAsync(double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
         {
-            return ChuckRotateAbsolute(90);
-        }
-
-        /// <summary>
-        /// Chuck 180도 위치로 회전
-        /// </summary>
-        public bool ChuckRotateTo180()
-        {
-            return ChuckRotateAbsolute(180);
-        }
-
-        /// <summary>
-        /// Chuck 270도 위치로 회전
-        /// </summary>
-        public bool ChuckRotateTo270()
-        {
-            return ChuckRotateAbsolute(270);
-        }
-
-        /// <summary>
-        /// Chuck 회전 (비동기) - 절대 각도
-        /// </summary>
-        public async Task<bool> ChuckRotateAbsoluteAsync(double angle, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
-        {
-            double position = AngleToPulse(angle);
             return await MoveAbsoluteAsync(VAMotionAxis.ChuckRotation, position, velocity, timeoutMs, ct);
         }
 
         /// <summary>
         /// Chuck 상대 회전 (비동기)
         /// </summary>
-        public async Task<bool> ChuckRotateRelativeAsync(double angle, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        public async Task<bool> ChuckRotateRelativeAsync(double distance, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
         {
-            double distance = AngleToPulse(angle);
             return await MoveRelativeAsync(VAMotionAxis.ChuckRotation, distance, velocity, timeoutMs, ct);
-        }
-
-        // 각도 <-> 펄스 변환 (DD Motor 스펙에 따라 조정)
-        private const double PULSE_PER_DEGREE = 10000.0; // 예: 1도 = 10000 pulse
-
-        private double AngleToPulse(double angle)
-        {
-            return angle * PULSE_PER_DEGREE;
-        }
-
-        private double PulseToAngle(double pulse)
-        {
-            return pulse / PULSE_PER_DEGREE;
         }
 
         #endregion
@@ -726,7 +683,7 @@ namespace VisionAlignChamber.Hardware.Facade
             {
                 WedgeStagePosition = GetWedgeStagePosition(),
                 WedgeStageMoving = IsMoving(VAMotionAxis.WedgeUpDown),
-                ChuckAngle = GetChuckAngle(),
+                ChuckPosition = GetChuckPosition(),
                 ChuckMoving = IsMoving(VAMotionAxis.ChuckRotation),
                 CenteringStage1Position = GetCenteringStage1Position(),
                 CenteringStage1Moving = IsMoving(VAMotionAxis.CenteringStage_1),
@@ -745,7 +702,7 @@ namespace VisionAlignChamber.Hardware.Facade
     {
         public double WedgeStagePosition { get; set; }
         public bool WedgeStageMoving { get; set; }
-        public double ChuckAngle { get; set; }
+        public double ChuckPosition { get; set; }
         public bool ChuckMoving { get; set; }
         public double CenteringStage1Position { get; set; }
         public bool CenteringStage1Moving { get; set; }

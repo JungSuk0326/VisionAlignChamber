@@ -163,6 +163,12 @@ namespace VisionAlignChamber.Views.Controls
             _viewModel?.JogStopCommand?.Execute(null);
         }
 
+        private void btnJog_MouseLeave(object sender, EventArgs e)
+        {
+            // 마우스가 버튼을 벗어나면 Jog 정지
+            _viewModel?.JogStopCommand?.Execute(null);
+        }
+
         private void UpdateJogParameters()
         {
             if (_viewModel == null) return;

@@ -157,15 +157,27 @@ namespace VisionAlignChamber.Views.Controls
             _viewModel.JogStartMinusCommand?.Execute(null);
         }
 
-        private void btnJog_MouseUp(object sender, MouseEventArgs e)
+        private void btnJogPlus_MouseUp(object sender, MouseEventArgs e)
         {
-            // Jog 정지
+            // Jog+ 정지
             _viewModel?.JogStopCommand?.Execute(null);
         }
 
-        private void btnJog_MouseLeave(object sender, EventArgs e)
+        private void btnJogPlus_MouseLeave(object sender, EventArgs e)
         {
-            // 마우스가 버튼을 벗어나면 Jog 정지
+            // 마우스가 Jog+ 버튼을 벗어나면 정지
+            _viewModel?.JogStopCommand?.Execute(null);
+        }
+
+        private void btnJogMinus_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Jog- 정지
+            _viewModel?.JogStopCommand?.Execute(null);
+        }
+
+        private void btnJogMinus_MouseLeave(object sender, EventArgs e)
+        {
+            // 마우스가 Jog- 버튼을 벗어나면 정지
             _viewModel?.JogStopCommand?.Execute(null);
         }
 

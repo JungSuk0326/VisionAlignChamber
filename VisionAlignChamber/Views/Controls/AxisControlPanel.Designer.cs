@@ -410,8 +410,8 @@ namespace VisionAlignChamber.Views.Controls
             this.btnJogPlus.Text = "+";
             this.btnJogPlus.UseVisualStyleBackColor = true;
             this.btnJogPlus.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnJogPlus_MouseDown);
-            this.btnJogPlus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnJog_MouseUp);
-            this.btnJogPlus.MouseLeave += new System.EventHandler(this.btnJog_MouseLeave);
+            this.btnJogPlus.MouseLeave += new System.EventHandler(this.btnJogPlus_MouseLeave);
+            this.btnJogPlus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnJogPlus_MouseUp);
             // 
             // btnJogMinus
             // 
@@ -423,8 +423,8 @@ namespace VisionAlignChamber.Views.Controls
             this.btnJogMinus.Text = "-";
             this.btnJogMinus.UseVisualStyleBackColor = true;
             this.btnJogMinus.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnJogMinus_MouseDown);
-            this.btnJogMinus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnJog_MouseUp);
-            this.btnJogMinus.MouseLeave += new System.EventHandler(this.btnJog_MouseLeave);
+            this.btnJogMinus.MouseLeave += new System.EventHandler(this.btnJogMinus_MouseLeave);
+            this.btnJogMinus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnJogMinus_MouseUp);
             // 
             // AxisControlPanel
             // 

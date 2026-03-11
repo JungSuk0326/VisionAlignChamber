@@ -565,12 +565,13 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Centering with Radius - Wafer 중심 오프셋 기준 센터링 위치 계산
-                // TODO: Radius 값을 실제 Centering 위치로 변환하는 로직 필요
-                double centerPosition = _param.CenteringStage_ClosePos + (_visionResult.Radius * _param.CenteringStage_MarginUm);
+                // Centering with Radius - MinCtr 위치 + Vision 오프셋으로 센터링 위치 계산
+                // 단위 변환은 .mot 파일의 MOVE_PULSE/MOVE_UNIT 설정으로 자동 처리됨
+                double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset;
+                double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset;
 
                 // Centering (L/R 동시) + Theta Align 동시 시작
-                var centerTask = _motion.CenteringStagesMoveSyncAsync(centerPosition, centerPosition, ct: _cts.Token);
+                var centerTask = _motion.CenteringStagesMoveSyncAsync(centerL, centerR, ct: _cts.Token);
                 var thetaTask = _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, ct: _cts.Token);
 
                 await Task.WhenAll(centerTask, thetaTask);
@@ -581,7 +582,7 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                LogManager.Sequence.Info($"Align 완료 - Center: {centerPosition:F3}, Theta: {_visionResult.AbsAngle:F3}°");
+                LogManager.Sequence.Info($"Align 완료 - CenterL: {centerL:F3}, CenterR: {centerR:F3}, Theta: {_visionResult.AbsAngle:F3}°");
                 return true;
             }
             catch (Exception ex)

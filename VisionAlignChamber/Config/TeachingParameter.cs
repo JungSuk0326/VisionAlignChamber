@@ -205,22 +205,6 @@ namespace VisionAlignChamber.Config
 
         #endregion
 
-        #region Motion Position Settings
-
-        // Wedge Stage 위치
-        public double WedgeStage_UpPos { get; set; }
-        public double WedgeStage_DownPos { get; set; }
-
-        // Chuck 각도 변환
-        public double Chuck_PulsePerDegree { get; set; }
-
-        // Centering Stage 위치
-        public double CenteringStage_OpenPos { get; set; }
-        public double CenteringStage_ClosePos { get; set; }
-        public double CenteringStage_MarginUm { get; set; }
-
-        #endregion
-
         #region Teaching Positions
 
         // Chuck Z 포지션 (Axis 0)
@@ -416,14 +400,6 @@ namespace VisionAlignChamber.Config
             CenteringStage2.Accel = GetDouble("Motion_Axis", "CenteringStage_2_Accel", 40000);
             CenteringStage2.Decel = GetDouble("Motion_Axis", "CenteringStage_2_Decel", 40000);
 
-            // Motion Position Settings
-            WedgeStage_UpPos = GetDouble("Motion_Position", "WedgeStage_UpPos", 100000);
-            WedgeStage_DownPos = GetDouble("Motion_Position", "WedgeStage_DownPos", 0);
-            Chuck_PulsePerDegree = GetDouble("Motion_Position", "Chuck_PulsePerDegree", 10000);
-            CenteringStage_OpenPos = GetDouble("Motion_Position", "CenteringStage_OpenPos", 50000);
-            CenteringStage_ClosePos = GetDouble("Motion_Position", "CenteringStage_ClosePos", 0);
-            CenteringStage_MarginUm = GetDouble("Motion_Position", "CenteringStage_MarginUm", 20);
-
             // Chuck Z
             ChuckZ_Down = GetDouble("ChuckZ", "Down", 0);
             ChuckZ_Vision = GetDouble("ChuckZ", "Vision", 100000);
@@ -490,14 +466,6 @@ namespace VisionAlignChamber.Config
             WriteValue("Motion_Axis", "CenteringStage_2_Velocity", CenteringStage2.Velocity.ToString());
             WriteValue("Motion_Axis", "CenteringStage_2_Accel", CenteringStage2.Accel.ToString());
             WriteValue("Motion_Axis", "CenteringStage_2_Decel", CenteringStage2.Decel.ToString());
-
-            // Motion Position Settings
-            WriteValue("Motion_Position", "WedgeStage_UpPos", WedgeStage_UpPos.ToString());
-            WriteValue("Motion_Position", "WedgeStage_DownPos", WedgeStage_DownPos.ToString());
-            WriteValue("Motion_Position", "Chuck_PulsePerDegree", Chuck_PulsePerDegree.ToString());
-            WriteValue("Motion_Position", "CenteringStage_OpenPos", CenteringStage_OpenPos.ToString());
-            WriteValue("Motion_Position", "CenteringStage_ClosePos", CenteringStage_ClosePos.ToString());
-            WriteValue("Motion_Position", "CenteringStage_MarginUm", CenteringStage_MarginUm.ToString());
 
             // Chuck Z
             WriteValue("ChuckZ", "Down", ChuckZ_Down.ToString());
@@ -602,23 +570,6 @@ MinCtr=50000
 Home=0
 ScanStart=-180
 ScanEnd=180
-
-;=============================================================================
-; Motion Position Settings
-;=============================================================================
-
-[Motion_Position]
-; Wedge Stage 위치 (pulse)
-WedgeStage_UpPos=100000
-WedgeStage_DownPos=0
-
-; Chuck 각도 변환 (pulse per degree)
-Chuck_PulsePerDegree=10000
-
-; Centering Stage 위치 (pulse)
-CenteringStage_OpenPos=50000
-CenteringStage_ClosePos=0
-CenteringStage_MarginUm=20
 
 ;=============================================================================
 ; Default Motion Parameters

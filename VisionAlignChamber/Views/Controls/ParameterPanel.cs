@@ -54,8 +54,6 @@ namespace VisionAlignChamber.Views.Controls
 
                 // Theta
                 numTheta_Home.Value = (decimal)_param.Theta_Home;
-                numTheta_ScanStart.Value = (decimal)_param.Theta_ScanStart;
-                numTheta_ScanEnd.Value = (decimal)_param.Theta_ScanEnd;
 
                 // Motion
                 numVelocity.Value = (decimal)_param.DefaultVelocity;
@@ -98,8 +96,6 @@ namespace VisionAlignChamber.Views.Controls
 
                 // Theta
                 _param.Theta_Home = (double)numTheta_Home.Value;
-                _param.Theta_ScanStart = (double)numTheta_ScanStart.Value;
-                _param.Theta_ScanEnd = (double)numTheta_ScanEnd.Value;
 
                 // Motion
                 _param.DefaultVelocity = (double)numVelocity.Value;
@@ -136,21 +132,17 @@ namespace VisionAlignChamber.Views.Controls
                 // Step 2: PreCtr (FOV)
                 dgvSequence.Rows.Add("2", "PreCtr(FOV)", numChuckZ_Down.Value, numCenterL_MinCtr.Value, numCenterR_MinCtr.Value, numTheta_Home.Value);
                 // Step 3: Ready
-                dgvSequence.Rows.Add("3", "Ready", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_ScanStart.Value);
-                // Step 4: ScanStart
-                dgvSequence.Rows.Add("4", "ScanStart", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_ScanStart.Value);
-                // Step 5: Scan(xN)
-                dgvSequence.Rows.Add("5", "Scan(xN)", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, "+Step");
-                // Step 6: Rewind
-                dgvSequence.Rows.Add("6", "Rewind", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_ScanStart.Value);
-                // Step 7: Center(Radius)
-                dgvSequence.Rows.Add("7", "Center(Radius)", numChuckZ_Down.Value, "Radius", "Radius", numTheta_ScanStart.Value);
-                // Step 8: Eddy
-                dgvSequence.Rows.Add("8", "Eddy", numChuckZ_Eddy.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_ScanStart.Value);
-                // Step 9: ThetaAlign
-                dgvSequence.Rows.Add("9", "ThetaAlign", numChuckZ_Eddy.Value, numCenterL_Open.Value, numCenterR_Open.Value, "AbsAngle");
-                // Step 10: Release
-                dgvSequence.Rows.Add("10", "Release", numChuckZ_Down.Value, numCenterL_Open.Value, numCenterR_Open.Value, "HOLD");
+                dgvSequence.Rows.Add("3", "Ready", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_Home.Value);
+                // Step 4: Scan (0°→360°, AngleStep×ImageCount)
+                dgvSequence.Rows.Add("4", "Scan(xN)", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, "0→360°");
+                // Step 5: Center(Radius)
+                dgvSequence.Rows.Add("5", "Center(Radius)", numChuckZ_Down.Value, "Radius", "Radius", numTheta_Home.Value);
+                // Step 6: Eddy
+                dgvSequence.Rows.Add("6", "Eddy", numChuckZ_Eddy.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_Home.Value);
+                // Step 7: ThetaAlign
+                dgvSequence.Rows.Add("7", "ThetaAlign", numChuckZ_Eddy.Value, numCenterL_Open.Value, numCenterR_Open.Value, "AbsAngle");
+                // Step 8: Release
+                dgvSequence.Rows.Add("8", "Release", numChuckZ_Down.Value, numCenterL_Open.Value, numCenterR_Open.Value, "HOLD");
             }
             catch (Exception ex)
             {

@@ -11,8 +11,9 @@ using VisionAlignChamber.Log;
 namespace VisionAlignChamber.Core
 {
     /// <summary>
-    /// Vision Align Chamber 7-Step 측정 시퀀스
-    /// PreCtr(FOV) -> Ready -> ScanStart -> Scan(xN) -> Rewind -> Align(Center+Theta) -> Eddy
+    /// Vision Align Chamber 측정 시퀀스
+    /// PreCtr(FOV) -> Ready -> Scan(0°→360°, xN) -> Align(Center+Theta) -> Eddy
+    /// ScanStart/Rewind는 무한 회전 구조로 불필요 (주석 처리)
     /// Receive/Release는 CTC 상태 전환(GetReady/TransferReady)으로 처리
     /// </summary>
     public class VisionAlignerSequence
@@ -220,17 +221,17 @@ namespace VisionAlignChamber.Core
                 if (!await ExecuteStepAsync(SequenceStep.Ready, ExecuteReadyAsync))
                     return false;
 
-                // Step 3: ScanStart
-                if (!await ExecuteStepAsync(SequenceStep.ScanStart, ExecuteScanStartAsync))
-                    return false;
+                // Step 3: ScanStart - 무한 회전 구조로 불필요 (0°에서 시작)
+                // if (!await ExecuteStepAsync(SequenceStep.ScanStart, ExecuteScanStartAsync))
+                //     return false;
 
-                // Step 4: Scan
+                // Step 4: Scan (0° → 360°, AngleStep씩 이동 후 촬영)
                 if (!await ExecuteStepAsync(SequenceStep.Scan, ExecuteScanAsync))
                     return false;
 
-                // Step 5: Rewind
-                if (!await ExecuteStepAsync(SequenceStep.Rewind, ExecuteRewindAsync))
-                    return false;
+                // Step 5: Rewind - 무한 회전 구조로 되감기 불필요
+                // if (!await ExecuteStepAsync(SequenceStep.Rewind, ExecuteRewindAsync))
+                //     return false;
 
                 // Step 6: Align (Center + Theta)
                 if (!await ExecuteStepAsync(SequenceStep.Align, ExecuteAlignAsync))
@@ -400,33 +401,29 @@ namespace VisionAlignChamber.Core
             }
         }
 
-        /// <summary>
-        /// Step 3: SCAN_START - 스캔 시작 위치
-        /// Theta=ScanStart
-        /// </summary>
-        private async Task<bool> ExecuteScanStartAsync()
-        {
-            try
-            {
-                // Theta ScanStart (각도 단위로 전달)
-                if (!await _motion.ChuckRotateAbsoluteAsync(_param.Theta_ScanStart, ct: _cts.Token))
-                {
-                    SetError("Theta ScanStart 이동 실패");
-                    return false;
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SetError($"ScanStart 스텝 실패: {ex.Message}");
-                return false;
-            }
-        }
+        // Step 3: SCAN_START - 무한 회전 구조로 불필요 (주석 처리)
+        // private async Task<bool> ExecuteScanStartAsync()
+        // {
+        //     try
+        //     {
+        //         if (!await _motion.ChuckRotateAbsoluteAsync(_param.Theta_Home, ct: _cts.Token))
+        //         {
+        //             SetError("Theta ScanStart 이동 실패");
+        //             return false;
+        //         }
+        //         return true;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         SetError($"ScanStart 스텝 실패: {ex.Message}");
+        //         return false;
+        //     }
+        // }
 
         /// <summary>
         /// Step 4: SCAN - Vision 스캔 (xN)
-        /// Theta를 StepAngle씩 회전하며 이미지 촬영
+        /// 0°부터 AngleStep씩 이동 후 촬영, ImageCount회 반복하여 360° 회전
+        /// 무한 회전 구조 - ScanStart/Rewind 불필요
         /// </summary>
         private async Task<bool> ExecuteScanAsync()
         {
@@ -469,27 +466,30 @@ namespace VisionAlignChamber.Core
                 }
                 else
                 {
-                    // 실제 하드웨어 모드: 각 각도에서 이미지 촬영
+                    // 실제 하드웨어 모드: (AngleStep 이동 → 촬영) × ImageCount
+                    // 0° → 15° → 30° → ... → 345° → 360° (총 24회)
                     for (int i = 0; i < imageCount; i++)
                     {
                         _cts.Token.ThrowIfCancellationRequested();
 
-                        // TODO: 카메라에서 버퍼 획득 후 추가
+                        // AngleStep 만큼 이동
+                        double targetAngle = stepAngle * (i + 1);
+
+                        if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, ct: _cts.Token))
+                        {
+                            SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
+                            return false;
+                        }
+
+                        // TODO: 카메라 Trigger + 이미지 획득
                         // _vision.AddImage(width, height, buffer);
 
-                        // 다음 각도로 이동 (마지막 제외)
-                        if (i < imageCount - 1)
-                        {
-                            double targetAngle = _param.Theta_ScanStart + (stepAngle * (i + 1));
-
-                            if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, ct: _cts.Token))
-                            {
-                                SetError($"Scan 이동 실패 (Image {i + 1})");
-                                return false;
-                            }
-                        }
+                        LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
                     }
                 }
+
+                // Vision Light OFF (스캔 완료 후 조명 끄기)
+                _vision?.SetLightOff();
 
                 // Vision 분석 수행
                 if (!_vision.ExecuteInspection(_isFlat))
@@ -517,32 +517,26 @@ namespace VisionAlignChamber.Core
             }
         }
 
-        /// <summary>
-        /// Step 5: REWIND - Theta 와이어 풀림
-        /// Theta를 역방향으로 회전
-        /// </summary>
-        private async Task<bool> ExecuteRewindAsync()
-        {
-            try
-            {
-                // Theta Rewind (ScanStart 위치로 복귀)
-                if (!await _motion.ChuckRotateAbsoluteAsync(_param.Theta_ScanStart, ct: _cts.Token))
-                {
-                    SetError("Theta Rewind 이동 실패");
-                    return false;
-                }
-
-                // Vision Light OFF (LfineLight 조명 제어)
-                _vision?.SetLightOff();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                SetError($"Rewind 스텝 실패: {ex.Message}");
-                return false;
-            }
-        }
+        // Step 5: REWIND - 무한 회전 구조로 불필요 (주석 처리)
+        // Light OFF는 ExecuteScanAsync 완료 후 처리
+        // private async Task<bool> ExecuteRewindAsync()
+        // {
+        //     try
+        //     {
+        //         if (!await _motion.ChuckRotateAbsoluteAsync(_param.Theta_Home, ct: _cts.Token))
+        //         {
+        //             SetError("Theta Rewind 이동 실패");
+        //             return false;
+        //         }
+        //         _vision?.SetLightOff();
+        //         return true;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         SetError($"Rewind 스텝 실패: {ex.Message}");
+        //         return false;
+        //     }
+        // }
 
         /// <summary>
         /// Step 6: ALIGN - 센터링 + Theta 정렬

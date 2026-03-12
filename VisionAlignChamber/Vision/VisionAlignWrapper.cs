@@ -488,7 +488,7 @@ namespace VisionAlignChamber.Vision
                 // AutoOn 설정 시 조명 켜기
                 if (AppSettings.LightAutoOn)
                 {
-                    SetLightOn();
+                    //SetLightOn();
                 }
 
                 return true;

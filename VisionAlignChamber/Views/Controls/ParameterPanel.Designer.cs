@@ -34,10 +34,6 @@ namespace VisionAlignChamber.Views.Controls
             this.lblVelocity = new System.Windows.Forms.Label();
             this.numVelocity = new System.Windows.Forms.NumericUpDown();
             this.grpTheta = new System.Windows.Forms.GroupBox();
-            this.lblTheta_ScanEnd = new System.Windows.Forms.Label();
-            this.numTheta_ScanEnd = new System.Windows.Forms.NumericUpDown();
-            this.lblTheta_ScanStart = new System.Windows.Forms.Label();
-            this.numTheta_ScanStart = new System.Windows.Forms.NumericUpDown();
             this.lblTheta_Home = new System.Windows.Forms.Label();
             this.numTheta_Home = new System.Windows.Forms.NumericUpDown();
             this.grpCenterR = new System.Windows.Forms.GroupBox();
@@ -83,8 +79,6 @@ namespace VisionAlignChamber.Views.Controls
             ((System.ComponentModel.ISupportInitialize)(this.numAccel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVelocity)).BeginInit();
             this.grpTheta.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numTheta_ScanEnd)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTheta_ScanStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTheta_Home)).BeginInit();
             this.grpCenterR.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCenterR_MinCtr)).BeginInit();
@@ -349,10 +343,6 @@ namespace VisionAlignChamber.Views.Controls
             //
             // grpTheta
             //
-            this.grpTheta.Controls.Add(this.lblTheta_ScanEnd);
-            this.grpTheta.Controls.Add(this.numTheta_ScanEnd);
-            this.grpTheta.Controls.Add(this.lblTheta_ScanStart);
-            this.grpTheta.Controls.Add(this.numTheta_ScanStart);
             this.grpTheta.Controls.Add(this.lblTheta_Home);
             this.grpTheta.Controls.Add(this.numTheta_Home);
             this.grpTheta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(182)))), ((int)(((byte)(193)))));
@@ -386,54 +376,6 @@ namespace VisionAlignChamber.Views.Controls
             this.numTheta_Home.TabIndex = 1;
             this.numTheta_Home.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numTheta_Home.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
-            //
-            // lblTheta_ScanStart
-            //
-            this.lblTheta_ScanStart.AutoSize = true;
-            this.lblTheta_ScanStart.ForeColor = System.Drawing.Color.White;
-            this.lblTheta_ScanStart.Location = new System.Drawing.Point(115, 25);
-            this.lblTheta_ScanStart.Name = "lblTheta_ScanStart";
-            this.lblTheta_ScanStart.Size = new System.Drawing.Size(61, 15);
-            this.lblTheta_ScanStart.TabIndex = 2;
-            this.lblTheta_ScanStart.Text = "ScanStart";
-            //
-            // numTheta_ScanStart
-            //
-            this.numTheta_ScanStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numTheta_ScanStart.DecimalPlaces = 2;
-            this.numTheta_ScanStart.ForeColor = System.Drawing.Color.White;
-            this.numTheta_ScanStart.Location = new System.Drawing.Point(115, 45);
-            this.numTheta_ScanStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numTheta_ScanStart.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numTheta_ScanStart.Name = "numTheta_ScanStart";
-            this.numTheta_ScanStart.Size = new System.Drawing.Size(90, 23);
-            this.numTheta_ScanStart.TabIndex = 3;
-            this.numTheta_ScanStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numTheta_ScanStart.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
-            //
-            // lblTheta_ScanEnd
-            //
-            this.lblTheta_ScanEnd.AutoSize = true;
-            this.lblTheta_ScanEnd.ForeColor = System.Drawing.Color.White;
-            this.lblTheta_ScanEnd.Location = new System.Drawing.Point(220, 25);
-            this.lblTheta_ScanEnd.Name = "lblTheta_ScanEnd";
-            this.lblTheta_ScanEnd.Size = new System.Drawing.Size(54, 15);
-            this.lblTheta_ScanEnd.TabIndex = 4;
-            this.lblTheta_ScanEnd.Text = "ScanEnd";
-            //
-            // numTheta_ScanEnd
-            //
-            this.numTheta_ScanEnd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numTheta_ScanEnd.DecimalPlaces = 2;
-            this.numTheta_ScanEnd.ForeColor = System.Drawing.Color.White;
-            this.numTheta_ScanEnd.Location = new System.Drawing.Point(220, 45);
-            this.numTheta_ScanEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numTheta_ScanEnd.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numTheta_ScanEnd.Name = "numTheta_ScanEnd";
-            this.numTheta_ScanEnd.Size = new System.Drawing.Size(90, 23);
-            this.numTheta_ScanEnd.TabIndex = 5;
-            this.numTheta_ScanEnd.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numTheta_ScanEnd.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
             //
             // grpMotion
             //
@@ -761,8 +703,6 @@ namespace VisionAlignChamber.Views.Controls
             ((System.ComponentModel.ISupportInitialize)(this.numVelocity)).EndInit();
             this.grpTheta.ResumeLayout(false);
             this.grpTheta.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numTheta_ScanEnd)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTheta_ScanStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTheta_Home)).EndInit();
             this.grpCenterR.ResumeLayout(false);
             this.grpCenterR.PerformLayout();
@@ -823,10 +763,6 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.GroupBox grpTheta;
         private System.Windows.Forms.Label lblTheta_Home;
         private System.Windows.Forms.NumericUpDown numTheta_Home;
-        private System.Windows.Forms.Label lblTheta_ScanStart;
-        private System.Windows.Forms.NumericUpDown numTheta_ScanStart;
-        private System.Windows.Forms.Label lblTheta_ScanEnd;
-        private System.Windows.Forms.NumericUpDown numTheta_ScanEnd;
 
         // Motion
         private System.Windows.Forms.GroupBox grpMotion;

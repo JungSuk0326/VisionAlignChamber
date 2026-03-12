@@ -232,8 +232,6 @@ namespace VisionAlignChamber.Config
 
         // Theta 포지션 (Axis 3)
         public double Theta_Home { get; set; }
-        public double Theta_ScanStart { get; set; }
-        public double Theta_ScanEnd { get; set; }  // 스캔 종료 위치 (= ScanStart + 360)
 
         // Velocity/Accel/Decel Settings
         public double DefaultVelocity { get; set; }
@@ -297,7 +295,7 @@ namespace VisionAlignChamber.Config
                     ChuckZ = new AxisPosition(ChuckZ_Vision, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_ScanStart, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
                 };
             }
         }
@@ -315,7 +313,7 @@ namespace VisionAlignChamber.Config
                     ChuckZ = new AxisPosition(ChuckZ_Vision, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_ScanStart, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
                 };
             }
         }
@@ -334,7 +332,7 @@ namespace VisionAlignChamber.Config
                     // CenteringL/R은 Vision 결과 Radius 값으로 동적 설정
                     CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_ScanStart, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
                 };
             }
         }
@@ -352,7 +350,7 @@ namespace VisionAlignChamber.Config
                     ChuckZ = new AxisPosition(ChuckZ_Eddy, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_ScanStart, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
                 };
             }
         }
@@ -371,7 +369,7 @@ namespace VisionAlignChamber.Config
                     CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
                     CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
                     // Theta는 최종 정렬 각도 유지 (HOLD)
-                    Theta = new AxisPosition(Theta_ScanStart, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
                 };
             }
         }
@@ -437,8 +435,6 @@ namespace VisionAlignChamber.Config
 
             // Theta
             Theta_Home = GetDouble("Theta", "Home", 0);
-            Theta_ScanStart = GetDouble("Theta", "ScanStart", -180);
-            Theta_ScanEnd = GetDouble("Theta", "ScanEnd", 180);
 
             // Motion Parameters
             DefaultVelocity = GetDouble("Motion", "DefaultVelocity", 10000);
@@ -516,8 +512,6 @@ namespace VisionAlignChamber.Config
 
             // Theta
             WriteValue("Theta", "Home", Theta_Home.ToString());
-            WriteValue("Theta", "ScanStart", Theta_ScanStart.ToString());
-            WriteValue("Theta", "ScanEnd", Theta_ScanEnd.ToString());
 
             // Motion Parameters
             WriteValue("Motion", "DefaultVelocity", DefaultVelocity.ToString());
@@ -544,7 +538,7 @@ namespace VisionAlignChamber.Config
 
             string defaultContent = @"; Vision Align Chamber Teaching Parameters
 ; 4-Axis Teaching Position Configuration
-; 9-Step Sequence: Receive -> PreCtr(FOV) -> Ready -> ScanStart -> Scan(xN) -> Rewind -> Align(Center+Theta) -> Eddy -> Release
+; Sequence: Receive -> PreCtr(FOV) -> Ready -> Scan(0->360, xN) -> Align(Center+Theta) -> Eddy -> Release
 
 ;=============================================================================
 ; Motion Axis Configuration
@@ -614,8 +608,6 @@ MinCtr=50000
 [Theta]
 ; Theta Axis (Axis 3) Positions [pulse or degree]
 Home=0
-ScanStart=-180
-ScanEnd=180
 
 ;=============================================================================
 ; Default Motion Parameters

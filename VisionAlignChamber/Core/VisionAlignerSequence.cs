@@ -294,6 +294,55 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
+        /// Scan만 실행 (Light ON → 이동+촬영×N → Light OFF → Vision 분석)
+        /// VisionPanel Start 버튼용 - PreCenter/Ready/Align/Eddy 스킵
+        /// </summary>
+        /// <param name="isFlat">Flat 타입 웨이퍼 여부</param>
+        public async Task<bool> RunScanOnlyAsync(bool isFlat = false)
+        {
+            if (IsRunning)
+            {
+                LastError = "시퀀스가 이미 실행 중입니다.";
+                return false;
+            }
+
+            _cts = new CancellationTokenSource();
+            State = SequenceState.Running;
+            _visionResult = WaferVisionResult.Empty;
+            _isFlat = isFlat;
+
+            try
+            {
+                LogManager.Sequence.Info($"Scan Only 시작 (Type: {(isFlat ? "Flat" : "Notch")})");
+
+                // Light ON
+                _vision?.SetLightOn();
+
+                // Scan 실행
+                if (!await ExecuteStepAsync(SequenceStep.Scan, ExecuteScanAsync))
+                    return false;
+
+                // 완료
+                CurrentStep = SequenceStep.Complete;
+                State = SequenceState.Completed;
+                LogManager.Sequence.Info("Scan Only 완료");
+
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                State = SequenceState.Aborted;
+                LogManager.Sequence.Warn("Scan Only 중단됨");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                SetError($"Scan Only 예외: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 시퀀스 중지
         /// </summary>
         public void Stop()
@@ -482,7 +531,7 @@ namespace VisionAlignChamber.Core
                         }
 
                         // TODO: 카메라 Trigger + 이미지 획득
-                        // _vision.AddImage(width, height, buffer);
+                        //_vision.AddImage(width, height, buffer);
 
                         LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
                     }

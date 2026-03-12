@@ -34,6 +34,7 @@ namespace VisionAlignChamber.Vision
         private ClassAlign _aligner = null;
         private SerialPort _lightSerial = null;
         private VisionSettings _settings = null;
+        private MulticamEx _grabber = null;
         private bool _inspectionComplete = false;
         private int _imageCount = 0;
         private bool _isLightInitialized = false;
@@ -95,7 +96,6 @@ namespace VisionAlignChamber.Vision
             try
             {
                 _aligner = new ClassAlign();
-
                 // 기본 설정값 사용 (DLL에서 Setting 프로퍼티 사용)
                 _settings = new VisionSettings
                 {

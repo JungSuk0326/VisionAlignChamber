@@ -16,14 +16,16 @@ namespace VisionAlignChamber.ViewModels
         #region Fields
 
         private readonly VisionAlignWrapper _vision;
+        private readonly VisionAlignerSequence _sequence;
 
         #endregion
 
         #region Constructor
 
-        public VisionViewModel(VisionAlignWrapper vision)
+        public VisionViewModel(VisionAlignWrapper vision, VisionAlignerSequence sequence = null)
         {
             _vision = vision ?? throw new ArgumentNullException(nameof(vision));
+            _sequence = sequence;
             InitializeCommands();
             SubscribeEvents();
         }
@@ -33,6 +35,43 @@ namespace VisionAlignChamber.ViewModels
             // EventManager 구독
             EventManager.Subscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Subscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+
+            // Sequence 이벤트 구독
+            if (_sequence != null)
+            {
+                _sequence.StepChanged += OnSequenceStepChanged;
+                _sequence.StateChanged += OnSequenceStateChanged;
+            }
+        }
+
+        private void OnSequenceStepChanged(object sender, VisionAlignerSequence.SequenceStep step)
+        {
+            RunStep = (int)step;
+        }
+
+        private void OnSequenceStateChanged(object sender, VisionAlignerSequence.SequenceState state)
+        {
+            switch (state)
+            {
+                case VisionAlignerSequence.SequenceState.Completed:
+                    RunCount++;
+                    IsRunning = false;
+                    StatusMessage = $"시퀀스 완료 (RunCount: {RunCount})";
+                    RaiseCanExecuteChanged();
+                    break;
+
+                case VisionAlignerSequence.SequenceState.Error:
+                    IsRunning = false;
+                    StatusMessage = $"시퀀스 에러: {_sequence.LastError}";
+                    RaiseCanExecuteChanged();
+                    break;
+
+                case VisionAlignerSequence.SequenceState.Aborted:
+                    IsRunning = false;
+                    StatusMessage = "시퀀스 중단됨";
+                    RaiseCanExecuteChanged();
+                    break;
+            }
         }
 
         private void OnControlAuthorityChanged(object data)
@@ -461,28 +500,57 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
-        private void ExecuteStartRun()
+        private async void ExecuteStartRun()
         {
+            if (_sequence == null)
+            {
+                StatusMessage = "시퀀스 모듈이 없습니다.";
+                return;
+            }
+
             try
             {
                 IsRunning = true;
                 RunCount = 0;
-                RunStep = 1;
-                StatusMessage = $"Running 시작 (Count: {SetCount}, Deg: {DegPerStep:F2})";
+                RunStep = 0;
+                StatusMessage = $"시퀀스 시작 (Count: {SetCount}, Deg: {DegPerStep:F2})";
                 RaiseCanExecuteChanged();
+
+                bool isFlat = IsFlatMode;
+                bool result = await _sequence.RunScanOnlyAsync(isFlat);
+
+                if (!result && _sequence.State != VisionAlignerSequence.SequenceState.Aborted)
+                {
+                    StatusMessage = $"시퀀스 실패: {_sequence.LastError}";
+                }
+
+                // 결과 반영
+                if (result)
+                {
+                    AlignResult = _sequence.VisionResult;
+                    ResultImage = _vision.GetResultImage(isFlat);
+                    WaferImage = _vision.GetWaferImage(isFlat);
+                    ImageCount = _vision.ImageCount;
+                }
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Running 시작 오류: {ex.Message}";
+                StatusMessage = $"시퀀스 오류: {ex.Message}";
+            }
+            finally
+            {
                 IsRunning = false;
+                RunStep = 0;
+                RaiseCanExecuteChanged();
             }
         }
 
         private void ExecuteStopRun()
         {
+            _sequence?.Stop();
             IsRunning = false;
             RunStep = 0;
-            StatusMessage = "Running 정지";
+            StatusMessage = "시퀀스 정지";
             RaiseCanExecuteChanged();
         }
 
@@ -759,6 +827,13 @@ namespace VisionAlignChamber.ViewModels
             // EventManager 구독 해제
             EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Unsubscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+
+            // Sequence 이벤트 해제
+            if (_sequence != null)
+            {
+                _sequence.StepChanged -= OnSequenceStepChanged;
+                _sequence.StateChanged -= OnSequenceStateChanged;
+            }
 
             ResultImage?.Dispose();
             WaferImage?.Dispose();

@@ -275,7 +275,7 @@ namespace VisionAlignChamber.ViewModels
 
             if (_system.HasVision)
             {
-                Vision = new VisionViewModel(_system.Vision);
+                Vision = new VisionViewModel(_system.Vision, _system.Sequence);
             }
 
             if (_system.HasEddy)

@@ -55,11 +55,6 @@ namespace VisionAlignChamber.Views.Controls
                 // Theta
                 numTheta_Home.Value = (decimal)_param.Theta_Home;
 
-                // Motion
-                numVelocity.Value = (decimal)_param.DefaultVelocity;
-                numAccel.Value = (decimal)_param.DefaultAccel;
-                numDecel.Value = (decimal)_param.DefaultDecel;
-
                 // Vision Scan
                 numScanStepAngle.Value = (decimal)_param.ScanStepAngle;
                 numScanImageCount.Value = _param.ScanImageCount;
@@ -96,11 +91,6 @@ namespace VisionAlignChamber.Views.Controls
 
                 // Theta
                 _param.Theta_Home = (double)numTheta_Home.Value;
-
-                // Motion
-                _param.DefaultVelocity = (double)numVelocity.Value;
-                _param.DefaultAccel = (double)numAccel.Value;
-                _param.DefaultDecel = (double)numDecel.Value;
 
                 // Vision Scan
                 _param.ScanStepAngle = (double)numScanStepAngle.Value;

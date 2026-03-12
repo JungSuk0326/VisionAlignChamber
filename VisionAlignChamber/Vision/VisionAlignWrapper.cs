@@ -156,6 +156,24 @@ namespace VisionAlignChamber.Vision
                 // 조명 초기화 (실패해도 비전은 사용 가능)
                 InitializeLight();
 
+                // 카메라 자동 오픈 (Settings.ini에서 CamFile 경로 + AutoOpen 설정)
+                if (AppSettings.CameraAutoOpen)
+                {
+                    string camFile = AppSettings.CamFilePath;
+                    if (!string.IsNullOrEmpty(camFile) && File.Exists(camFile))
+                    {
+                        if (OpenCamera(camFile))
+                        {
+                            ActivateGrabber();
+                            System.Diagnostics.Debug.WriteLine($"Camera auto-opened: {camFile}");
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Camera auto-open skipped: CamFile not found ({camFile})");
+                    }
+                }
+
                 return true;
             }
             catch (Exception ex)

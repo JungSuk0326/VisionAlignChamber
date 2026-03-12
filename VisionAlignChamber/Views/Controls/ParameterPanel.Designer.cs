@@ -26,13 +26,6 @@ namespace VisionAlignChamber.Views.Controls
             this.numScanImageCount = new System.Windows.Forms.NumericUpDown();
             this.lblScanStepAngle = new System.Windows.Forms.Label();
             this.numScanStepAngle = new System.Windows.Forms.NumericUpDown();
-            this.grpMotion = new System.Windows.Forms.GroupBox();
-            this.lblDecel = new System.Windows.Forms.Label();
-            this.numDecel = new System.Windows.Forms.NumericUpDown();
-            this.lblAccel = new System.Windows.Forms.Label();
-            this.numAccel = new System.Windows.Forms.NumericUpDown();
-            this.lblVelocity = new System.Windows.Forms.Label();
-            this.numVelocity = new System.Windows.Forms.NumericUpDown();
             this.grpTheta = new System.Windows.Forms.GroupBox();
             this.lblTheta_Home = new System.Windows.Forms.Label();
             this.numTheta_Home = new System.Windows.Forms.NumericUpDown();
@@ -74,10 +67,6 @@ namespace VisionAlignChamber.Views.Controls
             this.grpVisionScan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numScanImageCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numScanStepAngle)).BeginInit();
-            this.grpMotion.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numDecel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAccel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numVelocity)).BeginInit();
             this.grpTheta.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTheta_Home)).BeginInit();
             this.grpCenterR.SuspendLayout();
@@ -118,7 +107,6 @@ namespace VisionAlignChamber.Views.Controls
             //
             this.panelLeft.AutoScroll = true;
             this.panelLeft.Controls.Add(this.grpVisionScan);
-            this.panelLeft.Controls.Add(this.grpMotion);
             this.panelLeft.Controls.Add(this.grpTheta);
             this.panelLeft.Controls.Add(this.grpCenterR);
             this.panelLeft.Controls.Add(this.grpCenterL);
@@ -379,85 +367,6 @@ namespace VisionAlignChamber.Views.Controls
             //
             // grpMotion
             //
-            this.grpMotion.Controls.Add(this.lblDecel);
-            this.grpMotion.Controls.Add(this.numDecel);
-            this.grpMotion.Controls.Add(this.lblAccel);
-            this.grpMotion.Controls.Add(this.numAccel);
-            this.grpMotion.Controls.Add(this.lblVelocity);
-            this.grpMotion.Controls.Add(this.numVelocity);
-            this.grpMotion.ForeColor = System.Drawing.Color.Silver;
-            this.grpMotion.Location = new System.Drawing.Point(10, 340);
-            this.grpMotion.Name = "grpMotion";
-            this.grpMotion.Size = new System.Drawing.Size(320, 85);
-            this.grpMotion.TabIndex = 4;
-            this.grpMotion.TabStop = false;
-            this.grpMotion.Text = "Motion Parameters";
-            //
-            // lblVelocity
-            //
-            this.lblVelocity.AutoSize = true;
-            this.lblVelocity.ForeColor = System.Drawing.Color.White;
-            this.lblVelocity.Location = new System.Drawing.Point(10, 25);
-            this.lblVelocity.Name = "lblVelocity";
-            this.lblVelocity.Size = new System.Drawing.Size(49, 15);
-            this.lblVelocity.TabIndex = 0;
-            this.lblVelocity.Text = "Velocity";
-            //
-            // numVelocity
-            //
-            this.numVelocity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numVelocity.DecimalPlaces = 1;
-            this.numVelocity.ForeColor = System.Drawing.Color.White;
-            this.numVelocity.Location = new System.Drawing.Point(10, 45);
-            this.numVelocity.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numVelocity.Name = "numVelocity";
-            this.numVelocity.Size = new System.Drawing.Size(90, 23);
-            this.numVelocity.TabIndex = 1;
-            this.numVelocity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            //
-            // lblAccel
-            //
-            this.lblAccel.AutoSize = true;
-            this.lblAccel.ForeColor = System.Drawing.Color.White;
-            this.lblAccel.Location = new System.Drawing.Point(115, 25);
-            this.lblAccel.Name = "lblAccel";
-            this.lblAccel.Size = new System.Drawing.Size(36, 15);
-            this.lblAccel.TabIndex = 2;
-            this.lblAccel.Text = "Accel";
-            //
-            // numAccel
-            //
-            this.numAccel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numAccel.DecimalPlaces = 1;
-            this.numAccel.ForeColor = System.Drawing.Color.White;
-            this.numAccel.Location = new System.Drawing.Point(115, 45);
-            this.numAccel.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numAccel.Name = "numAccel";
-            this.numAccel.Size = new System.Drawing.Size(90, 23);
-            this.numAccel.TabIndex = 3;
-            this.numAccel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            //
-            // lblDecel
-            //
-            this.lblDecel.AutoSize = true;
-            this.lblDecel.ForeColor = System.Drawing.Color.White;
-            this.lblDecel.Location = new System.Drawing.Point(220, 25);
-            this.lblDecel.Name = "lblDecel";
-            this.lblDecel.Size = new System.Drawing.Size(36, 15);
-            this.lblDecel.TabIndex = 4;
-            this.lblDecel.Text = "Decel";
-            //
-            // numDecel
-            //
-            this.numDecel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numDecel.DecimalPlaces = 1;
-            this.numDecel.ForeColor = System.Drawing.Color.White;
-            this.numDecel.Location = new System.Drawing.Point(220, 45);
-            this.numDecel.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numDecel.Name = "numDecel";
-            this.numDecel.Size = new System.Drawing.Size(90, 23);
-            this.numDecel.TabIndex = 5;
-            this.numDecel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             //
             // grpVisionScan
             //
@@ -466,7 +375,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpVisionScan.Controls.Add(this.lblScanStepAngle);
             this.grpVisionScan.Controls.Add(this.numScanStepAngle);
             this.grpVisionScan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(165)))), ((int)(((byte)(0)))));
-            this.grpVisionScan.Location = new System.Drawing.Point(10, 430);
+            this.grpVisionScan.Location = new System.Drawing.Point(10, 340);
             this.grpVisionScan.Name = "grpVisionScan";
             this.grpVisionScan.Size = new System.Drawing.Size(320, 70);
             this.grpVisionScan.TabIndex = 5;
@@ -696,11 +605,6 @@ namespace VisionAlignChamber.Views.Controls
             this.grpVisionScan.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numScanImageCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numScanStepAngle)).EndInit();
-            this.grpMotion.ResumeLayout(false);
-            this.grpMotion.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numDecel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAccel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numVelocity)).EndInit();
             this.grpTheta.ResumeLayout(false);
             this.grpTheta.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTheta_Home)).EndInit();
@@ -765,13 +669,6 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.NumericUpDown numTheta_Home;
 
         // Motion
-        private System.Windows.Forms.GroupBox grpMotion;
-        private System.Windows.Forms.Label lblVelocity;
-        private System.Windows.Forms.NumericUpDown numVelocity;
-        private System.Windows.Forms.Label lblAccel;
-        private System.Windows.Forms.NumericUpDown numAccel;
-        private System.Windows.Forms.Label lblDecel;
-        private System.Windows.Forms.NumericUpDown numDecel;
 
         // Vision Scan
         private System.Windows.Forms.GroupBox grpVisionScan;

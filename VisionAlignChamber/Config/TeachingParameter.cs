@@ -233,11 +233,6 @@ namespace VisionAlignChamber.Config
         // Theta 포지션 (Axis 3)
         public double Theta_Home { get; set; }
 
-        // Velocity/Accel/Decel Settings
-        public double DefaultVelocity { get; set; }
-        public double DefaultAccel { get; set; }
-        public double DefaultDecel { get; set; }
-
         // Vision Scan Parameters
         public double ScanStepAngle { get; set; }  // 스캔 시 스텝 각도
         public int ScanImageCount { get; set; }    // 스캔 이미지 수
@@ -256,10 +251,10 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("WAFER_RECEIVE")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Down, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    ChuckZ = new AxisPosition(ChuckZ_Down, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -274,10 +269,10 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("PRE_CENTER")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Down, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringL = new AxisPosition(CenterL_MinCtr, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_MinCtr, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    ChuckZ = new AxisPosition(ChuckZ_Down, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    CenteringL = new AxisPosition(CenterL_MinCtr, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_MinCtr, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -292,10 +287,10 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("READY")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Vision, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    ChuckZ = new AxisPosition(ChuckZ_Vision, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -310,10 +305,10 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("SCAN_START")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Vision, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    ChuckZ = new AxisPosition(ChuckZ_Vision, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -328,11 +323,11 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("CENTER_RADIUS")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Down, DefaultVelocity, DefaultAccel, DefaultDecel),
+                    ChuckZ = new AxisPosition(ChuckZ_Down, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
                     // CenteringL/R은 Vision 결과 Radius 값으로 동적 설정
-                    CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -347,10 +342,10 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("EDDY")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Eddy, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    ChuckZ = new AxisPosition(ChuckZ_Eddy, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -365,11 +360,11 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("WAFER_RELEASE")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Down, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringL = new AxisPosition(CenterL_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
-                    CenteringR = new AxisPosition(CenterR_Open, DefaultVelocity, DefaultAccel, DefaultDecel),
+                    ChuckZ = new AxisPosition(ChuckZ_Down, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
+                    CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
                     // Theta는 최종 정렬 각도 유지 (HOLD)
-                    Theta = new AxisPosition(Theta_Home, DefaultVelocity, DefaultAccel, DefaultDecel)
+                    Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
                 };
             }
         }
@@ -395,30 +390,30 @@ namespace VisionAlignChamber.Config
 
             ChuckRotation.AxisNo = GetInt("Motion_Axis", "ChuckRotation", 1);
             ChuckRotation.Enabled = GetBool("Motion_Axis", "ChuckRotation_Enabled", true);
-            ChuckRotation.Velocity = GetDouble("Motion_Axis", "ChuckRotation_Velocity", 5000);
-            ChuckRotation.Accel = GetDouble("Motion_Axis", "ChuckRotation_Accel", 30000);
-            ChuckRotation.Decel = GetDouble("Motion_Axis", "ChuckRotation_Decel", 30000);
-            ChuckRotation.JogVelocity = GetDouble("Motion_Axis", "ChuckRotation_JogVelocity", 3000);
-            ChuckRotation.JogAccel = GetDouble("Motion_Axis", "ChuckRotation_JogAccel", 20000);
-            ChuckRotation.JogDecel = GetDouble("Motion_Axis", "ChuckRotation_JogDecel", 20000);
+            ChuckRotation.Velocity = GetDouble("Motion_Axis", "ChuckRotation_Velocity", 10);
+            ChuckRotation.Accel = GetDouble("Motion_Axis", "ChuckRotation_Accel", 20);
+            ChuckRotation.Decel = GetDouble("Motion_Axis", "ChuckRotation_Decel", 20);
+            ChuckRotation.JogVelocity = GetDouble("Motion_Axis", "ChuckRotation_JogVelocity", 5);
+            ChuckRotation.JogAccel = GetDouble("Motion_Axis", "ChuckRotation_JogAccel", 10);
+            ChuckRotation.JogDecel = GetDouble("Motion_Axis", "ChuckRotation_JogDecel", 10);
 
             CenteringStage1.AxisNo = GetInt("Motion_Axis", "CenteringStage_1", 2);
             CenteringStage1.Enabled = GetBool("Motion_Axis", "CenteringStage_1_Enabled", true);
-            CenteringStage1.Velocity = GetDouble("Motion_Axis", "CenteringStage_1_Velocity", 8000);
-            CenteringStage1.Accel = GetDouble("Motion_Axis", "CenteringStage_1_Accel", 40000);
-            CenteringStage1.Decel = GetDouble("Motion_Axis", "CenteringStage_1_Decel", 40000);
-            CenteringStage1.JogVelocity = GetDouble("Motion_Axis", "CenteringStage_1_JogVelocity", 5000);
-            CenteringStage1.JogAccel = GetDouble("Motion_Axis", "CenteringStage_1_JogAccel", 30000);
-            CenteringStage1.JogDecel = GetDouble("Motion_Axis", "CenteringStage_1_JogDecel", 30000);
+            CenteringStage1.Velocity = GetDouble("Motion_Axis", "CenteringStage_1_Velocity", 4);
+            CenteringStage1.Accel = GetDouble("Motion_Axis", "CenteringStage_1_Accel", 8);
+            CenteringStage1.Decel = GetDouble("Motion_Axis", "CenteringStage_1_Decel", 8);
+            CenteringStage1.JogVelocity = GetDouble("Motion_Axis", "CenteringStage_1_JogVelocity", 2);
+            CenteringStage1.JogAccel = GetDouble("Motion_Axis", "CenteringStage_1_JogAccel", 4);
+            CenteringStage1.JogDecel = GetDouble("Motion_Axis", "CenteringStage_1_JogDecel", 4);
 
             CenteringStage2.AxisNo = GetInt("Motion_Axis", "CenteringStage_2", 3);
             CenteringStage2.Enabled = GetBool("Motion_Axis", "CenteringStage_2_Enabled", true);
-            CenteringStage2.Velocity = GetDouble("Motion_Axis", "CenteringStage_2_Velocity", 8000);
-            CenteringStage2.Accel = GetDouble("Motion_Axis", "CenteringStage_2_Accel", 40000);
-            CenteringStage2.Decel = GetDouble("Motion_Axis", "CenteringStage_2_Decel", 40000);
-            CenteringStage2.JogVelocity = GetDouble("Motion_Axis", "CenteringStage_2_JogVelocity", 5000);
-            CenteringStage2.JogAccel = GetDouble("Motion_Axis", "CenteringStage_2_JogAccel", 30000);
-            CenteringStage2.JogDecel = GetDouble("Motion_Axis", "CenteringStage_2_JogDecel", 30000);
+            CenteringStage2.Velocity = GetDouble("Motion_Axis", "CenteringStage_2_Velocity", 4);
+            CenteringStage2.Accel = GetDouble("Motion_Axis", "CenteringStage_2_Accel", 8);
+            CenteringStage2.Decel = GetDouble("Motion_Axis", "CenteringStage_2_Decel", 8);
+            CenteringStage2.JogVelocity = GetDouble("Motion_Axis", "CenteringStage_2_JogVelocity", 2);
+            CenteringStage2.JogAccel = GetDouble("Motion_Axis", "CenteringStage_2_JogAccel", 4);
+            CenteringStage2.JogDecel = GetDouble("Motion_Axis", "CenteringStage_2_JogDecel", 4);
 
             // Chuck Z
             ChuckZ_Down = GetDouble("ChuckZ", "Down", 0);
@@ -435,11 +430,6 @@ namespace VisionAlignChamber.Config
 
             // Theta
             Theta_Home = GetDouble("Theta", "Home", 0);
-
-            // Motion Parameters
-            DefaultVelocity = GetDouble("Motion", "DefaultVelocity", 10000);
-            DefaultAccel = GetDouble("Motion", "DefaultAccel", 50000);
-            DefaultDecel = GetDouble("Motion", "DefaultDecel", 50000);
 
             // Vision Scan Parameters
             ScanStepAngle = GetDouble("VisionScan", "StepAngle", 15);
@@ -513,11 +503,6 @@ namespace VisionAlignChamber.Config
             // Theta
             WriteValue("Theta", "Home", Theta_Home.ToString());
 
-            // Motion Parameters
-            WriteValue("Motion", "DefaultVelocity", DefaultVelocity.ToString());
-            WriteValue("Motion", "DefaultAccel", DefaultAccel.ToString());
-            WriteValue("Motion", "DefaultDecel", DefaultDecel.ToString());
-
             // Vision Scan Parameters
             WriteValue("VisionScan", "StepAngle", ScanStepAngle.ToString());
             WriteValue("VisionScan", "ImageCount", ScanImageCount.ToString());
@@ -558,32 +543,32 @@ WedgeUpDown_JogDecel=30000
 ; Chuck Rotation (DD Motor) - Theta
 ChuckRotation=1
 ChuckRotation_Enabled=true
-ChuckRotation_Velocity=5000
-ChuckRotation_Accel=30000
-ChuckRotation_Decel=30000
-ChuckRotation_JogVelocity=3000
-ChuckRotation_JogAccel=20000
-ChuckRotation_JogDecel=20000
+ChuckRotation_Velocity=10
+ChuckRotation_Accel=20
+ChuckRotation_Decel=20
+ChuckRotation_JogVelocity=5
+ChuckRotation_JogAccel=10
+ChuckRotation_JogDecel=10
 
 ; Centering Stage 1 (Stepping) - Centering L
 CenteringStage_1=2
 CenteringStage_1_Enabled=true
-CenteringStage_1_Velocity=8000
-CenteringStage_1_Accel=40000
-CenteringStage_1_Decel=40000
-CenteringStage_1_JogVelocity=5000
-CenteringStage_1_JogAccel=30000
-CenteringStage_1_JogDecel=30000
+CenteringStage_1_Velocity=4
+CenteringStage_1_Accel=8
+CenteringStage_1_Decel=8
+CenteringStage_1_JogVelocity=2
+CenteringStage_1_JogAccel=4
+CenteringStage_1_JogDecel=4
 
 ; Centering Stage 2 (Stepping) - Centering R
 CenteringStage_2=3
 CenteringStage_2_Enabled=true
-CenteringStage_2_Velocity=8000
-CenteringStage_2_Accel=40000
-CenteringStage_2_Decel=40000
-CenteringStage_2_JogVelocity=5000
-CenteringStage_2_JogAccel=30000
-CenteringStage_2_JogDecel=30000
+CenteringStage_2_Velocity=4
+CenteringStage_2_Accel=8
+CenteringStage_2_Decel=8
+CenteringStage_2_JogVelocity=2
+CenteringStage_2_JogAccel=4
+CenteringStage_2_JogDecel=4
 
 ;=============================================================================
 ; Teaching Positions
@@ -596,27 +581,18 @@ Vision=100000
 Eddy=50000
 
 [CenteringL]
-; Centering L Axis (Axis 1) Positions [pulse]
+; Centering L Axis (Axis 2) Positions [pulse]
 Open=0
 MinCtr=50000
 
 [CenteringR]
-; Centering R Axis (Axis 2) Positions [pulse]
+; Centering R Axis (Axis 3) Positions [pulse]
 Open=0
 MinCtr=50000
 
 [Theta]
-; Theta Axis (Axis 3) Positions [pulse or degree]
+; Theta Axis (Axis 1) Positions [pulse or degree]
 Home=0
-
-;=============================================================================
-; Default Motion Parameters
-;=============================================================================
-
-[Motion]
-DefaultVelocity=10000
-DefaultAccel=50000
-DefaultDecel=50000
 
 ;=============================================================================
 ; Vision Scan Parameters

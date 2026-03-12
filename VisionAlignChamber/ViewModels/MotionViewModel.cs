@@ -38,8 +38,13 @@ namespace VisionAlignChamber.ViewModels
             CenteringStage1Axis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.CenteringStage_1);
             CenteringStage2Axis.IsEnabled = motion.IsAxisEnabled(VAMotionAxis.CenteringStage_2);
 
-            // Parameter.ini에서 Jog 파라미터 로드
+            // Parameter.ini에서 Move/Jog 파라미터 로드
             var param = TeachingParameter.Instance;
+            WedgeAxis.Velocity = param.WedgeUpDown.Velocity;
+            ChuckAxis.Velocity = param.ChuckRotation.Velocity;
+            CenteringStage1Axis.Velocity = param.CenteringStage1.Velocity;
+            CenteringStage2Axis.Velocity = param.CenteringStage2.Velocity;
+
             WedgeAxis.SetJogParameters(param.WedgeUpDown.JogVelocity, param.WedgeUpDown.JogAccel, param.WedgeUpDown.JogDecel);
             ChuckAxis.SetJogParameters(param.ChuckRotation.JogVelocity, param.ChuckRotation.JogAccel, param.ChuckRotation.JogDecel);
             CenteringStage1Axis.SetJogParameters(param.CenteringStage1.JogVelocity, param.CenteringStage1.JogAccel, param.CenteringStage1.JogDecel);

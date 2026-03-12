@@ -131,7 +131,7 @@ namespace VisionAlignChamber.Config
             set => WriteValue("Motion", "MotParamFile", value);
         }
 
-        // NOTE: DefaultVelocity, DefaultAccel, DefaultDecel은 Parameter.ini (TeachingParameter)로 이동됨
+        // NOTE: 축별 Velocity/Accel/Decel은 Parameter.ini의 [Motion_Axis] 섹션에서 축마다 개별 설정
 
         #endregion
 
@@ -206,6 +206,24 @@ namespace VisionAlignChamber.Config
         {
             get => GetDouble("Camera", "AngleStep", 15.0);
             set => WriteValue("Camera", "AngleStep", value.ToString());
+        }
+
+        /// <summary>
+        /// Grabber CAM 파일 경로
+        /// </summary>
+        public static string CamFilePath
+        {
+            get => ReadValue("Camera", "CamFile", "");
+            set => WriteValue("Camera", "CamFile", value);
+        }
+
+        /// <summary>
+        /// 초기화 시 카메라 자동 오픈 여부
+        /// </summary>
+        public static bool CameraAutoOpen
+        {
+            get => GetBool("Camera", "AutoOpen", false);
+            set => WriteValue("Camera", "AutoOpen", value ? "true" : "false");
         }
 
         #endregion
@@ -493,6 +511,10 @@ ImageWidth=5120
 ImageHeight=5120
 ImageCount=24
 AngleStep=15.0
+; Grabber CAM 파일 경로
+CamFile=
+; 초기화 시 카메라 자동 오픈
+AutoOpen=false
 
 [Communication]
 ; CTC 통신 포트 (VisionAlignChamber가 서버)

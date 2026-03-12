@@ -212,9 +212,11 @@ namespace VisionAlignChamber.Hardware.Facade
                 string key = axis.ToString();
                 int axisNo = ReadInt(_axisConfigFilePath, "Motion_Axis", key, 0);
 
-                double velocity = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Velocity", 10000);
-                double accel = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Accel", 50000);
-                double decel = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Decel", 50000);
+                // 축별 안전한 기본값 (ini 읽기 실패 시 fallback)
+                GetAxisDefaults(axis, out double defVel, out double defAccel, out double defDecel);
+                double velocity = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Velocity", defVel);
+                double accel = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Accel", defAccel);
+                double decel = ReadDouble(_axisConfigFilePath, "Motion_Axis", $"{key}_Decel", defDecel);
                 bool enabled = ReadBool(_axisConfigFilePath, "Motion_Axis", $"{key}_Enabled", true);
 
                 _axisMapping[axis] = new AxisInfo(axisNo, key)
@@ -224,6 +226,26 @@ namespace VisionAlignChamber.Hardware.Facade
                     DefaultDecel = decel,
                     Enabled = enabled
                 };
+            }
+        }
+
+        private void GetAxisDefaults(VAMotionAxis axis, out double velocity, out double accel, out double decel)
+        {
+            switch (axis)
+            {
+                case VAMotionAxis.WedgeUpDown:
+                    velocity = 10000; accel = 50000; decel = 50000;
+                    break;
+                case VAMotionAxis.ChuckRotation:
+                    velocity = 10; accel = 20; decel = 20;
+                    break;
+                case VAMotionAxis.CenteringStage_1:
+                case VAMotionAxis.CenteringStage_2:
+                    velocity = 4; accel = 8; decel = 8;
+                    break;
+                default:
+                    velocity = 1; accel = 1; decel = 1;
+                    break;
             }
         }
 
@@ -246,11 +268,17 @@ namespace VisionAlignChamber.Hardware.Facade
 
         private void SetDefaultAxisMapping()
         {
-            // Axis 기본값
+            // Axis 기본값 (축별 안전한 속도 적용)
             int axisNo = 0;
             foreach (VAMotionAxis axis in Enum.GetValues(typeof(VAMotionAxis)))
             {
-                _axisMapping[axis] = new AxisInfo(axisNo++, axis.ToString());
+                GetAxisDefaults(axis, out double defVel, out double defAccel, out double defDecel);
+                _axisMapping[axis] = new AxisInfo(axisNo++, axis.ToString())
+                {
+                    DefaultVelocity = defVel,
+                    DefaultAccel = defAccel,
+                    DefaultDecel = defDecel
+                };
             }
         }
 

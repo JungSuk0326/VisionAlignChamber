@@ -3,6 +3,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.IO.Ports;
+using System.Threading;
+using System.Threading.Tasks;
 using VisionAlignChamber.Config;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
@@ -35,6 +37,9 @@ namespace VisionAlignChamber.Vision
         private SerialPort _lightSerial = null;
         private VisionSettings _settings = null;
         private MulticamEx _grabber = null;
+        private bool _isCameraOpened = false;
+        private int _imageWidth = 0;
+        private int _imageHeight = 0;
         private bool _inspectionComplete = false;
         private int _imageCount = 0;
         private bool _isLightInitialized = false;
@@ -75,6 +80,26 @@ namespace VisionAlignChamber.Vision
         public bool IsInspectionComplete => _inspectionComplete;
 
         public VisionSettings Settings => _settings;
+
+        /// <summary>
+        /// 카메라(Grabber) 오픈 여부
+        /// </summary>
+        public bool IsCameraOpened => _isCameraOpened;
+
+        /// <summary>
+        /// Grabber Acquisition 활성화 여부
+        /// </summary>
+        public bool IsGrabberActive => _grabber != null && _grabber.Actived;
+
+        /// <summary>
+        /// 이미지 가로 크기 (Grabber에서 획득)
+        /// </summary>
+        public int ImageWidth => _imageWidth;
+
+        /// <summary>
+        /// 이미지 세로 크기 (Grabber에서 획득)
+        /// </summary>
+        public int ImageHeight => _imageHeight;
 
         /// <summary>
         /// 조명 초기화 여부
@@ -118,6 +143,14 @@ namespace VisionAlignChamber.Vision
                     // Setting 프로퍼티 접근 실패 시 기본값 사용
                 }
 
+                // Grabber 생성 (카메라 오픈은 별도)
+                bool debug = false;
+#if DEBUG
+                debug = true;
+#endif
+                _grabber = new MulticamEx(debug);
+                _grabber.OnCallback += OnGrabberCallback;
+
                 _isInitialized = true;
 
                 // 조명 초기화 (실패해도 비전은 사용 가능)
@@ -143,7 +176,13 @@ namespace VisionAlignChamber.Vision
             try
             {
                 ClearImages();
+                CloseCamera();
                 CloseLight();
+                if (_grabber != null)
+                {
+                    _grabber.OnCallback -= OnGrabberCallback;
+                    _grabber = null;
+                }
                 _aligner = null;
             }
             catch (Exception ex)
@@ -154,6 +193,262 @@ namespace VisionAlignChamber.Vision
             {
                 _isInitialized = false;
             }
+        }
+
+        #endregion
+
+        #region 카메라/Grabber 제어
+
+        /// <summary>
+        /// Grabber 이미지 콜백 이벤트
+        /// UI에서 라이브 이미지 표시에 사용
+        /// </summary>
+        public event Action<Bitmap> ImageCaptured;
+
+        /// <summary>
+        /// Grabber 콜백 (이미지 수신 시 호출)
+        /// </summary>
+        private void OnGrabberCallback()
+        {
+            try
+            {
+                var image = _grabber?.GetImage();
+                if (image != null)
+                {
+                    ImageCaptured?.Invoke(image);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"OnGrabberCallback Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 카메라 오픈 (Grabber Board 초기화)
+        /// </summary>
+        /// <param name="camFilePath">cam 파일 경로</param>
+        /// <param name="boardIndex">보드 번호 (기본 0)</param>
+        /// <param name="connector">커넥터 ("M")</param>
+        /// <param name="topology">토폴로지 ("MONO_DECA")</param>
+        public bool OpenCamera(string camFilePath, uint boardIndex = 0, string connector = "M", string topology = "MONO_DECA")
+        {
+            if (_grabber == null || _isCameraOpened) return false;
+
+            try
+            {
+                _grabber.OpenBoard(boardIndex, connector, topology, camFilePath);
+
+                _grabber.GetWidth(out _imageWidth);
+                _grabber.GetHeight(out _imageHeight);
+
+                _isCameraOpened = true;
+                System.Diagnostics.Debug.WriteLine($"Camera opened: {camFilePath} ({_imageWidth}x{_imageHeight})");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"OpenCamera Error: {ex.Message}");
+                _isCameraOpened = false;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 카메라 닫기 (Grabber Board 종료)
+        /// </summary>
+        public void CloseCamera()
+        {
+            if (_grabber == null || !_isCameraOpened) return;
+
+            try
+            {
+                if (_grabber.Actived)
+                    _grabber.SetAcquisition(0);
+
+                _grabber.CloseBoard();
+
+                _isCameraOpened = false;
+                _imageWidth = 0;
+                _imageHeight = 0;
+                System.Diagnostics.Debug.WriteLine("Camera closed");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CloseCamera Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Grabber Acquisition 활성화
+        /// </summary>
+        public bool ActivateGrabber()
+        {
+            if (_grabber == null || !_isCameraOpened) return false;
+
+            try
+            {
+                _grabber.SetAcquisition(MulticamEx.eState.ACTIVE);
+                System.Diagnostics.Debug.WriteLine("Grabber activated");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ActivateGrabber Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Grabber Acquisition 비활성화
+        /// </summary>
+        public bool DeactivateGrabber()
+        {
+            if (_grabber == null || !_isCameraOpened) return false;
+
+            try
+            {
+                _grabber.SetAcquisition(MulticamEx.eState.IDLE);
+                System.Diagnostics.Debug.WriteLine("Grabber deactivated");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DeactivateGrabber Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 수동 Trigger 실행 (단발 촬영)
+        /// </summary>
+        public bool Trigger()
+        {
+            if (_grabber == null || !_isCameraOpened) return false;
+
+            try
+            {
+                _grabber.OnTrigger();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Trigger Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Trigger → GrabDone 대기 → AddItem (async)
+        /// 시퀀스 스캔에서 사용: 촬영 후 Aligner에 이미지 추가
+        /// </summary>
+        /// <param name="ct">취소 토큰</param>
+        /// <param name="timeoutMs">GrabDone 대기 타임아웃 (ms)</param>
+        public async Task<bool> TriggerAndCaptureAsync(CancellationToken ct, int timeoutMs = 5000)
+        {
+            if (_grabber == null || !_isCameraOpened || !_grabber.Actived)
+                return false;
+
+            try
+            {
+                // Trigger 발사
+                _grabber.OnTrigger();
+
+                // GrabDone 대기 (polling)
+                int elapsed = 0;
+                const int pollInterval = 10;
+                while (!_grabber.GrabDone)
+                {
+                    ct.ThrowIfCancellationRequested();
+                    await Task.Delay(pollInterval, ct);
+                    elapsed += pollInterval;
+                    if (elapsed >= timeoutMs)
+                    {
+                        System.Diagnostics.Debug.WriteLine("TriggerAndCapture: GrabDone timeout");
+                        return false;
+                    }
+                }
+
+                // Aligner에 이미지 추가
+                _aligner.AddItem(_imageWidth, _imageHeight, _grabber.GetImagePointer());
+                _imageCount++;
+                _inspectionComplete = false;
+
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"TriggerAndCapture Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Grabber 이미지 저장
+        /// </summary>
+        public bool SaveGrabberImage(string filePath)
+        {
+            if (_grabber == null || !_isCameraOpened) return false;
+
+            try
+            {
+                _grabber.SaveImage(filePath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SaveGrabberImage Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Grabber 현재 이미지 가져오기
+        /// </summary>
+        public Bitmap GetGrabberImage()
+        {
+            if (_grabber == null || !_isCameraOpened) return null;
+
+            try
+            {
+                return _grabber.GetImage();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetGrabberImage Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Exposure Time 설정
+        /// </summary>
+        public void SetExposureTime(int value)
+        {
+            if (_grabber == null || !_isCameraOpened) return;
+
+            try
+            {
+                _grabber.SetExposureTime(value);
+                System.Diagnostics.Debug.WriteLine($"Exposure time set to {value}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetExposureTime Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// TrigLive 모드 설정
+        /// </summary>
+        public void SetTrigLive(bool enable)
+        {
+            if (_grabber == null) return;
+            _grabber.TrigLive = enable;
         }
 
         #endregion

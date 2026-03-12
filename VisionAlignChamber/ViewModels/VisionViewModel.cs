@@ -564,11 +564,18 @@ namespace VisionAlignChamber.ViewModels
                     return;
                 }
 
-                // TODO: 실제 Grabber 연동 시 여기에 OpenBoard 호출
-                // _grabber.OpenBoard(0, "M", "MONO_DECA", camFilePath);
-                CamFilePath = camFilePath;
-                IsCameraOpened = true;
-                StatusMessage = $"카메라 오픈: {System.IO.Path.GetFileName(camFilePath)}";
+                bool success = _vision.OpenCamera(camFilePath);
+                if (success)
+                {
+                    CamFilePath = camFilePath;
+                    IsCameraOpened = true;
+                    StatusMessage = $"카메라 오픈: {System.IO.Path.GetFileName(camFilePath)} ({_vision.ImageWidth}x{_vision.ImageHeight})";
+                }
+                else
+                {
+                    StatusMessage = "카메라 오픈 실패";
+                    IsCameraOpened = false;
+                }
                 RaiseCanExecuteChanged();
             }
             catch (Exception ex)
@@ -582,13 +589,9 @@ namespace VisionAlignChamber.ViewModels
         {
             try
             {
-                // TODO: 실제 Grabber 연동 시 여기에 CloseBoard 호출
-                // _grabber.CloseBoard();
-                if (IsGrabberActive)
-                {
-                    ExecuteDeactivateGrabber();
-                }
+                _vision.CloseCamera();
                 IsCameraOpened = false;
+                IsGrabberActive = false;
                 CamFilePath = null;
                 StatusMessage = "카메라 닫힘";
                 RaiseCanExecuteChanged();
@@ -603,10 +606,9 @@ namespace VisionAlignChamber.ViewModels
         {
             try
             {
-                // TODO: 실제 Grabber 연동 시 여기에 SetAcquisition(ACTIVE) 호출
-                // _grabber.SetAcquisition(eState.ACTIVE);
-                IsGrabberActive = true;
-                StatusMessage = "Grabber 활성화";
+                bool success = _vision.ActivateGrabber();
+                IsGrabberActive = success;
+                StatusMessage = success ? "Grabber 활성화" : "Grabber 활성화 실패";
                 RaiseCanExecuteChanged();
             }
             catch (Exception ex)
@@ -620,8 +622,7 @@ namespace VisionAlignChamber.ViewModels
         {
             try
             {
-                // TODO: 실제 Grabber 연동 시 여기에 SetAcquisition(IDLE) 호출
-                // _grabber.SetAcquisition(eState.IDLE);
+                _vision.DeactivateGrabber();
                 IsGrabberActive = false;
                 StatusMessage = "Grabber 비활성화";
                 RaiseCanExecuteChanged();
@@ -636,9 +637,8 @@ namespace VisionAlignChamber.ViewModels
         {
             try
             {
-                // TODO: 실제 Grabber 연동 시 여기에 OnTrigger 호출
-                // _grabber.OnTrigger();
-                StatusMessage = "Trigger 실행";
+                bool success = _vision.Trigger();
+                StatusMessage = success ? "Trigger 실행" : "Trigger 실패";
             }
             catch (Exception ex)
             {
@@ -656,10 +656,15 @@ namespace VisionAlignChamber.ViewModels
                     return;
                 }
 
-                // TODO: 실제 Grabber 연동 시 여기에 SaveImage 호출
-                // _grabber.SaveImage(filePath);
-                // 현재는 CurrentImage가 있으면 저장
-                if (CurrentImage != null)
+                // Grabber 이미지 저장 우선, 없으면 CurrentImage 저장
+                if (_vision.IsCameraOpened)
+                {
+                    bool success = _vision.SaveGrabberImage(filePath);
+                    StatusMessage = success
+                        ? $"이미지 저장: {System.IO.Path.GetFileName(filePath)}"
+                        : "Grabber 이미지 저장 실패";
+                }
+                else if (CurrentImage != null)
                 {
                     CurrentImage.Save(filePath);
                     StatusMessage = $"이미지 저장: {System.IO.Path.GetFileName(filePath)}";

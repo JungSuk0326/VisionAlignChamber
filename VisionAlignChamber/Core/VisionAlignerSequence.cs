@@ -515,8 +515,12 @@ namespace VisionAlignChamber.Core
                 }
                 else
                 {
-                    // 실제 하드웨어 모드: (AngleStep 이동 → 촬영) × ImageCount
+                    // 실제 하드웨어 모드: (AngleStep 이동 → Trigger+Capture) × ImageCount
                     // 0° → 15° → 30° → ... → 345° → 360° (총 24회)
+
+                    // 스캔 전 TrigLive 비활성화 (수동 Trigger 모드)
+                    _vision.SetTrigLive(false);
+
                     for (int i = 0; i < imageCount; i++)
                     {
                         _cts.Token.ThrowIfCancellationRequested();
@@ -530,8 +534,15 @@ namespace VisionAlignChamber.Core
                             return false;
                         }
 
-                        // TODO: 카메라 Trigger + 이미지 획득
-                        //_vision.AddImage(width, height, buffer);
+                        // 모터 안정화 대기
+                        await Task.Delay(100, _cts.Token);
+
+                        // 카메라 Trigger + GrabDone 대기 + Aligner에 이미지 추가
+                        if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
+                        {
+                            SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
+                            return false;
+                        }
 
                         LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
                     }

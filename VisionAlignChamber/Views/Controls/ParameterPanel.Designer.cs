@@ -23,29 +23,29 @@ namespace VisionAlignChamber.Views.Controls
             this.panelLeft = new System.Windows.Forms.Panel();
             this.grpVisionScan = new System.Windows.Forms.GroupBox();
             this.lblScanImageCount = new System.Windows.Forms.Label();
-            this.numScanImageCount = new System.Windows.Forms.NumericUpDown();
+            this.txtScanImageCount = new System.Windows.Forms.TextBox();
             this.lblScanStepAngle = new System.Windows.Forms.Label();
-            this.numScanStepAngle = new System.Windows.Forms.NumericUpDown();
+            this.txtScanStepAngle = new System.Windows.Forms.TextBox();
             this.grpTheta = new System.Windows.Forms.GroupBox();
             this.lblTheta_Home = new System.Windows.Forms.Label();
-            this.numTheta_Home = new System.Windows.Forms.NumericUpDown();
+            this.txtTheta_Home = new System.Windows.Forms.TextBox();
             this.grpCenterR = new System.Windows.Forms.GroupBox();
             this.lblCenterR_MinCtr = new System.Windows.Forms.Label();
-            this.numCenterR_MinCtr = new System.Windows.Forms.NumericUpDown();
+            this.txtCenterR_MinCtr = new System.Windows.Forms.TextBox();
             this.lblCenterR_Open = new System.Windows.Forms.Label();
-            this.numCenterR_Open = new System.Windows.Forms.NumericUpDown();
+            this.txtCenterR_Open = new System.Windows.Forms.TextBox();
             this.grpCenterL = new System.Windows.Forms.GroupBox();
             this.lblCenterL_MinCtr = new System.Windows.Forms.Label();
-            this.numCenterL_MinCtr = new System.Windows.Forms.NumericUpDown();
+            this.txtCenterL_MinCtr = new System.Windows.Forms.TextBox();
             this.lblCenterL_Open = new System.Windows.Forms.Label();
-            this.numCenterL_Open = new System.Windows.Forms.NumericUpDown();
+            this.txtCenterL_Open = new System.Windows.Forms.TextBox();
             this.grpChuckZ = new System.Windows.Forms.GroupBox();
             this.lblChuckZ_Eddy = new System.Windows.Forms.Label();
-            this.numChuckZ_Eddy = new System.Windows.Forms.NumericUpDown();
+            this.txtChuckZ_Eddy = new System.Windows.Forms.TextBox();
             this.lblChuckZ_Vision = new System.Windows.Forms.Label();
-            this.numChuckZ_Vision = new System.Windows.Forms.NumericUpDown();
+            this.txtChuckZ_Vision = new System.Windows.Forms.TextBox();
             this.lblChuckZ_Down = new System.Windows.Forms.Label();
-            this.numChuckZ_Down = new System.Windows.Forms.NumericUpDown();
+            this.txtChuckZ_Down = new System.Windows.Forms.TextBox();
             this.panelRight = new System.Windows.Forms.Panel();
             this.grpSequence = new System.Windows.Forms.GroupBox();
             this.dgvSequence = new System.Windows.Forms.DataGridView();
@@ -65,20 +65,10 @@ namespace VisionAlignChamber.Views.Controls
             this.splitMain.SuspendLayout();
             this.panelLeft.SuspendLayout();
             this.grpVisionScan.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numScanImageCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numScanStepAngle)).BeginInit();
             this.grpTheta.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numTheta_Home)).BeginInit();
             this.grpCenterR.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterR_MinCtr)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterR_Open)).BeginInit();
             this.grpCenterL.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterL_MinCtr)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterL_Open)).BeginInit();
             this.grpChuckZ.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numChuckZ_Eddy)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numChuckZ_Vision)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numChuckZ_Down)).BeginInit();
             this.panelRight.SuspendLayout();
             this.grpSequence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSequence)).BeginInit();
@@ -120,11 +110,11 @@ namespace VisionAlignChamber.Views.Controls
             // grpChuckZ
             //
             this.grpChuckZ.Controls.Add(this.lblChuckZ_Eddy);
-            this.grpChuckZ.Controls.Add(this.numChuckZ_Eddy);
+            this.grpChuckZ.Controls.Add(this.txtChuckZ_Eddy);
             this.grpChuckZ.Controls.Add(this.lblChuckZ_Vision);
-            this.grpChuckZ.Controls.Add(this.numChuckZ_Vision);
+            this.grpChuckZ.Controls.Add(this.txtChuckZ_Vision);
             this.grpChuckZ.Controls.Add(this.lblChuckZ_Down);
-            this.grpChuckZ.Controls.Add(this.numChuckZ_Down);
+            this.grpChuckZ.Controls.Add(this.txtChuckZ_Down);
             this.grpChuckZ.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(149)))), ((int)(((byte)(237)))));
             this.grpChuckZ.Location = new System.Drawing.Point(10, 10);
             this.grpChuckZ.Name = "grpChuckZ";
@@ -143,19 +133,17 @@ namespace VisionAlignChamber.Views.Controls
             this.lblChuckZ_Down.TabIndex = 0;
             this.lblChuckZ_Down.Text = "Down";
             //
-            // numChuckZ_Down
+            // txtChuckZ_Down
             //
-            this.numChuckZ_Down.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numChuckZ_Down.DecimalPlaces = 1;
-            this.numChuckZ_Down.ForeColor = System.Drawing.Color.White;
-            this.numChuckZ_Down.Location = new System.Drawing.Point(10, 45);
-            this.numChuckZ_Down.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numChuckZ_Down.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numChuckZ_Down.Name = "numChuckZ_Down";
-            this.numChuckZ_Down.Size = new System.Drawing.Size(90, 23);
-            this.numChuckZ_Down.TabIndex = 1;
-            this.numChuckZ_Down.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numChuckZ_Down.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtChuckZ_Down.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtChuckZ_Down.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtChuckZ_Down.ForeColor = System.Drawing.Color.White;
+            this.txtChuckZ_Down.Location = new System.Drawing.Point(10, 45);
+            this.txtChuckZ_Down.Name = "txtChuckZ_Down";
+            this.txtChuckZ_Down.Size = new System.Drawing.Size(90, 22);
+            this.txtChuckZ_Down.TabIndex = 1;
+            this.txtChuckZ_Down.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtChuckZ_Down.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // lblChuckZ_Vision
             //
@@ -167,19 +155,17 @@ namespace VisionAlignChamber.Views.Controls
             this.lblChuckZ_Vision.TabIndex = 2;
             this.lblChuckZ_Vision.Text = "Vision";
             //
-            // numChuckZ_Vision
+            // txtChuckZ_Vision
             //
-            this.numChuckZ_Vision.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numChuckZ_Vision.DecimalPlaces = 1;
-            this.numChuckZ_Vision.ForeColor = System.Drawing.Color.White;
-            this.numChuckZ_Vision.Location = new System.Drawing.Point(115, 45);
-            this.numChuckZ_Vision.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numChuckZ_Vision.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numChuckZ_Vision.Name = "numChuckZ_Vision";
-            this.numChuckZ_Vision.Size = new System.Drawing.Size(90, 23);
-            this.numChuckZ_Vision.TabIndex = 3;
-            this.numChuckZ_Vision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numChuckZ_Vision.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtChuckZ_Vision.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtChuckZ_Vision.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtChuckZ_Vision.ForeColor = System.Drawing.Color.White;
+            this.txtChuckZ_Vision.Location = new System.Drawing.Point(115, 45);
+            this.txtChuckZ_Vision.Name = "txtChuckZ_Vision";
+            this.txtChuckZ_Vision.Size = new System.Drawing.Size(90, 22);
+            this.txtChuckZ_Vision.TabIndex = 3;
+            this.txtChuckZ_Vision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtChuckZ_Vision.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // lblChuckZ_Eddy
             //
@@ -191,33 +177,31 @@ namespace VisionAlignChamber.Views.Controls
             this.lblChuckZ_Eddy.TabIndex = 4;
             this.lblChuckZ_Eddy.Text = "Eddy";
             //
-            // numChuckZ_Eddy
+            // txtChuckZ_Eddy
             //
-            this.numChuckZ_Eddy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numChuckZ_Eddy.DecimalPlaces = 1;
-            this.numChuckZ_Eddy.ForeColor = System.Drawing.Color.White;
-            this.numChuckZ_Eddy.Location = new System.Drawing.Point(220, 45);
-            this.numChuckZ_Eddy.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numChuckZ_Eddy.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numChuckZ_Eddy.Name = "numChuckZ_Eddy";
-            this.numChuckZ_Eddy.Size = new System.Drawing.Size(90, 23);
-            this.numChuckZ_Eddy.TabIndex = 5;
-            this.numChuckZ_Eddy.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numChuckZ_Eddy.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtChuckZ_Eddy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtChuckZ_Eddy.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtChuckZ_Eddy.ForeColor = System.Drawing.Color.White;
+            this.txtChuckZ_Eddy.Location = new System.Drawing.Point(220, 45);
+            this.txtChuckZ_Eddy.Name = "txtChuckZ_Eddy";
+            this.txtChuckZ_Eddy.Size = new System.Drawing.Size(90, 22);
+            this.txtChuckZ_Eddy.TabIndex = 5;
+            this.txtChuckZ_Eddy.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtChuckZ_Eddy.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // grpCenterL
             //
             this.grpCenterL.Controls.Add(this.lblCenterL_MinCtr);
-            this.grpCenterL.Controls.Add(this.numCenterL_MinCtr);
+            this.grpCenterL.Controls.Add(this.txtCenterL_MinCtr);
             this.grpCenterL.Controls.Add(this.lblCenterL_Open);
-            this.grpCenterL.Controls.Add(this.numCenterL_Open);
+            this.grpCenterL.Controls.Add(this.txtCenterL_Open);
             this.grpCenterL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(144)))), ((int)(((byte)(238)))), ((int)(((byte)(144)))));
             this.grpCenterL.Location = new System.Drawing.Point(10, 100);
             this.grpCenterL.Name = "grpCenterL";
             this.grpCenterL.Size = new System.Drawing.Size(320, 70);
             this.grpCenterL.TabIndex = 1;
             this.grpCenterL.TabStop = false;
-            this.grpCenterL.Text = "Centering L (Axis 1)";
+            this.grpCenterL.Text = "Centering L (Axis 2)";
             //
             // lblCenterL_Open
             //
@@ -229,19 +213,17 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCenterL_Open.TabIndex = 0;
             this.lblCenterL_Open.Text = "Open";
             //
-            // numCenterL_Open
+            // txtCenterL_Open
             //
-            this.numCenterL_Open.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numCenterL_Open.DecimalPlaces = 1;
-            this.numCenterL_Open.ForeColor = System.Drawing.Color.White;
-            this.numCenterL_Open.Location = new System.Drawing.Point(10, 40);
-            this.numCenterL_Open.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numCenterL_Open.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numCenterL_Open.Name = "numCenterL_Open";
-            this.numCenterL_Open.Size = new System.Drawing.Size(90, 23);
-            this.numCenterL_Open.TabIndex = 1;
-            this.numCenterL_Open.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numCenterL_Open.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtCenterL_Open.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtCenterL_Open.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtCenterL_Open.ForeColor = System.Drawing.Color.White;
+            this.txtCenterL_Open.Location = new System.Drawing.Point(10, 40);
+            this.txtCenterL_Open.Name = "txtCenterL_Open";
+            this.txtCenterL_Open.Size = new System.Drawing.Size(90, 22);
+            this.txtCenterL_Open.TabIndex = 1;
+            this.txtCenterL_Open.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCenterL_Open.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // lblCenterL_MinCtr
             //
@@ -253,33 +235,31 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCenterL_MinCtr.TabIndex = 2;
             this.lblCenterL_MinCtr.Text = "MIN_CTR";
             //
-            // numCenterL_MinCtr
+            // txtCenterL_MinCtr
             //
-            this.numCenterL_MinCtr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numCenterL_MinCtr.DecimalPlaces = 1;
-            this.numCenterL_MinCtr.ForeColor = System.Drawing.Color.White;
-            this.numCenterL_MinCtr.Location = new System.Drawing.Point(115, 40);
-            this.numCenterL_MinCtr.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numCenterL_MinCtr.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numCenterL_MinCtr.Name = "numCenterL_MinCtr";
-            this.numCenterL_MinCtr.Size = new System.Drawing.Size(90, 23);
-            this.numCenterL_MinCtr.TabIndex = 3;
-            this.numCenterL_MinCtr.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numCenterL_MinCtr.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtCenterL_MinCtr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtCenterL_MinCtr.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtCenterL_MinCtr.ForeColor = System.Drawing.Color.White;
+            this.txtCenterL_MinCtr.Location = new System.Drawing.Point(115, 40);
+            this.txtCenterL_MinCtr.Name = "txtCenterL_MinCtr";
+            this.txtCenterL_MinCtr.Size = new System.Drawing.Size(90, 22);
+            this.txtCenterL_MinCtr.TabIndex = 3;
+            this.txtCenterL_MinCtr.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCenterL_MinCtr.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // grpCenterR
             //
             this.grpCenterR.Controls.Add(this.lblCenterR_MinCtr);
-            this.grpCenterR.Controls.Add(this.numCenterR_MinCtr);
+            this.grpCenterR.Controls.Add(this.txtCenterR_MinCtr);
             this.grpCenterR.Controls.Add(this.lblCenterR_Open);
-            this.grpCenterR.Controls.Add(this.numCenterR_Open);
+            this.grpCenterR.Controls.Add(this.txtCenterR_Open);
             this.grpCenterR.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(200)))), ((int)(((byte)(100)))));
             this.grpCenterR.Location = new System.Drawing.Point(10, 175);
             this.grpCenterR.Name = "grpCenterR";
             this.grpCenterR.Size = new System.Drawing.Size(320, 70);
             this.grpCenterR.TabIndex = 2;
             this.grpCenterR.TabStop = false;
-            this.grpCenterR.Text = "Centering R (Axis 2)";
+            this.grpCenterR.Text = "Centering R (Axis 3)";
             //
             // lblCenterR_Open
             //
@@ -291,19 +271,17 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCenterR_Open.TabIndex = 0;
             this.lblCenterR_Open.Text = "Open";
             //
-            // numCenterR_Open
+            // txtCenterR_Open
             //
-            this.numCenterR_Open.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numCenterR_Open.DecimalPlaces = 1;
-            this.numCenterR_Open.ForeColor = System.Drawing.Color.White;
-            this.numCenterR_Open.Location = new System.Drawing.Point(10, 40);
-            this.numCenterR_Open.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numCenterR_Open.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numCenterR_Open.Name = "numCenterR_Open";
-            this.numCenterR_Open.Size = new System.Drawing.Size(90, 23);
-            this.numCenterR_Open.TabIndex = 1;
-            this.numCenterR_Open.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numCenterR_Open.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtCenterR_Open.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtCenterR_Open.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtCenterR_Open.ForeColor = System.Drawing.Color.White;
+            this.txtCenterR_Open.Location = new System.Drawing.Point(10, 40);
+            this.txtCenterR_Open.Name = "txtCenterR_Open";
+            this.txtCenterR_Open.Size = new System.Drawing.Size(90, 22);
+            this.txtCenterR_Open.TabIndex = 1;
+            this.txtCenterR_Open.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCenterR_Open.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // lblCenterR_MinCtr
             //
@@ -315,31 +293,29 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCenterR_MinCtr.TabIndex = 2;
             this.lblCenterR_MinCtr.Text = "MIN_CTR";
             //
-            // numCenterR_MinCtr
+            // txtCenterR_MinCtr
             //
-            this.numCenterR_MinCtr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numCenterR_MinCtr.DecimalPlaces = 1;
-            this.numCenterR_MinCtr.ForeColor = System.Drawing.Color.White;
-            this.numCenterR_MinCtr.Location = new System.Drawing.Point(115, 40);
-            this.numCenterR_MinCtr.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numCenterR_MinCtr.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numCenterR_MinCtr.Name = "numCenterR_MinCtr";
-            this.numCenterR_MinCtr.Size = new System.Drawing.Size(90, 23);
-            this.numCenterR_MinCtr.TabIndex = 3;
-            this.numCenterR_MinCtr.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numCenterR_MinCtr.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
+            this.txtCenterR_MinCtr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtCenterR_MinCtr.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtCenterR_MinCtr.ForeColor = System.Drawing.Color.White;
+            this.txtCenterR_MinCtr.Location = new System.Drawing.Point(115, 40);
+            this.txtCenterR_MinCtr.Name = "txtCenterR_MinCtr";
+            this.txtCenterR_MinCtr.Size = new System.Drawing.Size(90, 22);
+            this.txtCenterR_MinCtr.TabIndex = 3;
+            this.txtCenterR_MinCtr.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCenterR_MinCtr.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // grpTheta
             //
             this.grpTheta.Controls.Add(this.lblTheta_Home);
-            this.grpTheta.Controls.Add(this.numTheta_Home);
+            this.grpTheta.Controls.Add(this.txtTheta_Home);
             this.grpTheta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(182)))), ((int)(((byte)(193)))));
             this.grpTheta.Location = new System.Drawing.Point(10, 250);
             this.grpTheta.Name = "grpTheta";
             this.grpTheta.Size = new System.Drawing.Size(320, 85);
             this.grpTheta.TabIndex = 3;
             this.grpTheta.TabStop = false;
-            this.grpTheta.Text = "Theta (Axis 3)";
+            this.grpTheta.Text = "Theta (Axis 1)";
             //
             // lblTheta_Home
             //
@@ -351,29 +327,24 @@ namespace VisionAlignChamber.Views.Controls
             this.lblTheta_Home.TabIndex = 0;
             this.lblTheta_Home.Text = "Home";
             //
-            // numTheta_Home
+            // txtTheta_Home
             //
-            this.numTheta_Home.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numTheta_Home.DecimalPlaces = 2;
-            this.numTheta_Home.ForeColor = System.Drawing.Color.White;
-            this.numTheta_Home.Location = new System.Drawing.Point(10, 45);
-            this.numTheta_Home.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            this.numTheta_Home.Minimum = new decimal(new int[] { 10000000, 0, 0, -2147483648 });
-            this.numTheta_Home.Name = "numTheta_Home";
-            this.numTheta_Home.Size = new System.Drawing.Size(90, 23);
-            this.numTheta_Home.TabIndex = 1;
-            this.numTheta_Home.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numTheta_Home.ValueChanged += new System.EventHandler(this.NumericUpDown_ValueChanged);
-            //
-            // grpMotion
-            //
+            this.txtTheta_Home.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtTheta_Home.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtTheta_Home.ForeColor = System.Drawing.Color.White;
+            this.txtTheta_Home.Location = new System.Drawing.Point(10, 45);
+            this.txtTheta_Home.Name = "txtTheta_Home";
+            this.txtTheta_Home.Size = new System.Drawing.Size(90, 22);
+            this.txtTheta_Home.TabIndex = 1;
+            this.txtTheta_Home.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTheta_Home.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // grpVisionScan
             //
             this.grpVisionScan.Controls.Add(this.lblScanImageCount);
-            this.grpVisionScan.Controls.Add(this.numScanImageCount);
+            this.grpVisionScan.Controls.Add(this.txtScanImageCount);
             this.grpVisionScan.Controls.Add(this.lblScanStepAngle);
-            this.grpVisionScan.Controls.Add(this.numScanStepAngle);
+            this.grpVisionScan.Controls.Add(this.txtScanStepAngle);
             this.grpVisionScan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(165)))), ((int)(((byte)(0)))));
             this.grpVisionScan.Location = new System.Drawing.Point(10, 340);
             this.grpVisionScan.Name = "grpVisionScan";
@@ -392,19 +363,17 @@ namespace VisionAlignChamber.Views.Controls
             this.lblScanStepAngle.TabIndex = 0;
             this.lblScanStepAngle.Text = "Step Angle";
             //
-            // numScanStepAngle
+            // txtScanStepAngle
             //
-            this.numScanStepAngle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numScanStepAngle.DecimalPlaces = 1;
-            this.numScanStepAngle.ForeColor = System.Drawing.Color.White;
-            this.numScanStepAngle.Location = new System.Drawing.Point(10, 40);
-            this.numScanStepAngle.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
-            this.numScanStepAngle.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            this.numScanStepAngle.Name = "numScanStepAngle";
-            this.numScanStepAngle.Size = new System.Drawing.Size(90, 23);
-            this.numScanStepAngle.TabIndex = 1;
-            this.numScanStepAngle.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numScanStepAngle.Value = new decimal(new int[] { 15, 0, 0, 0 });
+            this.txtScanStepAngle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtScanStepAngle.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtScanStepAngle.ForeColor = System.Drawing.Color.White;
+            this.txtScanStepAngle.Location = new System.Drawing.Point(10, 40);
+            this.txtScanStepAngle.Name = "txtScanStepAngle";
+            this.txtScanStepAngle.Size = new System.Drawing.Size(90, 22);
+            this.txtScanStepAngle.TabIndex = 1;
+            this.txtScanStepAngle.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtScanStepAngle.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // lblScanImageCount
             //
@@ -416,18 +385,17 @@ namespace VisionAlignChamber.Views.Controls
             this.lblScanImageCount.TabIndex = 2;
             this.lblScanImageCount.Text = "Image Count";
             //
-            // numScanImageCount
+            // txtScanImageCount
             //
-            this.numScanImageCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.numScanImageCount.ForeColor = System.Drawing.Color.White;
-            this.numScanImageCount.Location = new System.Drawing.Point(115, 40);
-            this.numScanImageCount.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
-            this.numScanImageCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            this.numScanImageCount.Name = "numScanImageCount";
-            this.numScanImageCount.Size = new System.Drawing.Size(90, 23);
-            this.numScanImageCount.TabIndex = 3;
-            this.numScanImageCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numScanImageCount.Value = new decimal(new int[] { 24, 0, 0, 0 });
+            this.txtScanImageCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtScanImageCount.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtScanImageCount.ForeColor = System.Drawing.Color.White;
+            this.txtScanImageCount.Location = new System.Drawing.Point(115, 40);
+            this.txtScanImageCount.Name = "txtScanImageCount";
+            this.txtScanImageCount.Size = new System.Drawing.Size(90, 22);
+            this.txtScanImageCount.TabIndex = 3;
+            this.txtScanImageCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtScanImageCount.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // panelRight
             //
@@ -603,24 +571,14 @@ namespace VisionAlignChamber.Views.Controls
             this.panelLeft.ResumeLayout(false);
             this.grpVisionScan.ResumeLayout(false);
             this.grpVisionScan.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numScanImageCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numScanStepAngle)).EndInit();
             this.grpTheta.ResumeLayout(false);
             this.grpTheta.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numTheta_Home)).EndInit();
             this.grpCenterR.ResumeLayout(false);
             this.grpCenterR.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterR_MinCtr)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterR_Open)).EndInit();
             this.grpCenterL.ResumeLayout(false);
             this.grpCenterL.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterL_MinCtr)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numCenterL_Open)).EndInit();
             this.grpChuckZ.ResumeLayout(false);
             this.grpChuckZ.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numChuckZ_Eddy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numChuckZ_Vision)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numChuckZ_Down)).EndInit();
             this.panelRight.ResumeLayout(false);
             this.grpSequence.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSequence)).EndInit();
@@ -643,39 +601,37 @@ namespace VisionAlignChamber.Views.Controls
         // Chuck Z
         private System.Windows.Forms.GroupBox grpChuckZ;
         private System.Windows.Forms.Label lblChuckZ_Down;
-        private System.Windows.Forms.NumericUpDown numChuckZ_Down;
+        private System.Windows.Forms.TextBox txtChuckZ_Down;
         private System.Windows.Forms.Label lblChuckZ_Vision;
-        private System.Windows.Forms.NumericUpDown numChuckZ_Vision;
+        private System.Windows.Forms.TextBox txtChuckZ_Vision;
         private System.Windows.Forms.Label lblChuckZ_Eddy;
-        private System.Windows.Forms.NumericUpDown numChuckZ_Eddy;
+        private System.Windows.Forms.TextBox txtChuckZ_Eddy;
 
         // Centering L
         private System.Windows.Forms.GroupBox grpCenterL;
         private System.Windows.Forms.Label lblCenterL_Open;
-        private System.Windows.Forms.NumericUpDown numCenterL_Open;
+        private System.Windows.Forms.TextBox txtCenterL_Open;
         private System.Windows.Forms.Label lblCenterL_MinCtr;
-        private System.Windows.Forms.NumericUpDown numCenterL_MinCtr;
+        private System.Windows.Forms.TextBox txtCenterL_MinCtr;
 
         // Centering R
         private System.Windows.Forms.GroupBox grpCenterR;
         private System.Windows.Forms.Label lblCenterR_Open;
-        private System.Windows.Forms.NumericUpDown numCenterR_Open;
+        private System.Windows.Forms.TextBox txtCenterR_Open;
         private System.Windows.Forms.Label lblCenterR_MinCtr;
-        private System.Windows.Forms.NumericUpDown numCenterR_MinCtr;
+        private System.Windows.Forms.TextBox txtCenterR_MinCtr;
 
         // Theta
         private System.Windows.Forms.GroupBox grpTheta;
         private System.Windows.Forms.Label lblTheta_Home;
-        private System.Windows.Forms.NumericUpDown numTheta_Home;
-
-        // Motion
+        private System.Windows.Forms.TextBox txtTheta_Home;
 
         // Vision Scan
         private System.Windows.Forms.GroupBox grpVisionScan;
         private System.Windows.Forms.Label lblScanStepAngle;
-        private System.Windows.Forms.NumericUpDown numScanStepAngle;
+        private System.Windows.Forms.TextBox txtScanStepAngle;
         private System.Windows.Forms.Label lblScanImageCount;
-        private System.Windows.Forms.NumericUpDown numScanImageCount;
+        private System.Windows.Forms.TextBox txtScanImageCount;
 
         // Sequence Preview
         private System.Windows.Forms.GroupBox grpSequence;

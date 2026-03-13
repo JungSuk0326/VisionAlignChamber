@@ -40,26 +40,24 @@ namespace VisionAlignChamber.Views.Controls
             try
             {
                 // Chuck Z
-                numChuckZ_Down.Value = (decimal)_param.ChuckZ_Down;
-                numChuckZ_Vision.Value = (decimal)_param.ChuckZ_Vision;
-                numChuckZ_Eddy.Value = (decimal)_param.ChuckZ_Eddy;
+                txtChuckZ_Down.Text = _param.ChuckZ_Down.ToString();
+                txtChuckZ_Vision.Text = _param.ChuckZ_Vision.ToString();
+                txtChuckZ_Eddy.Text = _param.ChuckZ_Eddy.ToString();
 
                 // Centering L
-                numCenterL_Open.Value = (decimal)_param.CenterL_Open;
-                numCenterL_MinCtr.Value = (decimal)_param.CenterL_MinCtr;
+                txtCenterL_Open.Text = _param.CenterL_Open.ToString();
+                txtCenterL_MinCtr.Text = _param.CenterL_MinCtr.ToString();
 
                 // Centering R
-                numCenterR_Open.Value = (decimal)_param.CenterR_Open;
-                numCenterR_MinCtr.Value = (decimal)_param.CenterR_MinCtr;
+                txtCenterR_Open.Text = _param.CenterR_Open.ToString();
+                txtCenterR_MinCtr.Text = _param.CenterR_MinCtr.ToString();
 
                 // Theta
-                numTheta_Home.Value = (decimal)_param.Theta_Home;
+                txtTheta_Home.Text = _param.Theta_Home.ToString();
 
                 // Vision Scan
-                numScanStepAngle.Value = (decimal)_param.ScanStepAngle;
-                numScanImageCount.Value = _param.ScanImageCount;
-
-                UpdateSequencePreview();
+                txtScanStepAngle.Text = _param.ScanStepAngle.ToString();
+                txtScanImageCount.Text = _param.ScanImageCount.ToString();
             }
             catch (Exception ex)
             {
@@ -67,6 +65,7 @@ namespace VisionAlignChamber.Views.Controls
             }
 
             _isLoading = false;
+            UpdateSequencePreview();
         }
 
         /// <summary>
@@ -77,24 +76,60 @@ namespace VisionAlignChamber.Views.Controls
             try
             {
                 // Chuck Z
-                _param.ChuckZ_Down = (double)numChuckZ_Down.Value;
-                _param.ChuckZ_Vision = (double)numChuckZ_Vision.Value;
-                _param.ChuckZ_Eddy = (double)numChuckZ_Eddy.Value;
+                if (!double.TryParse(txtChuckZ_Down.Text, out double chuckZDown) ||
+                    !double.TryParse(txtChuckZ_Vision.Text, out double chuckZVision) ||
+                    !double.TryParse(txtChuckZ_Eddy.Text, out double chuckZEddy))
+                {
+                    MessageBox.Show("Chuck Z 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 // Centering L
-                _param.CenterL_Open = (double)numCenterL_Open.Value;
-                _param.CenterL_MinCtr = (double)numCenterL_MinCtr.Value;
+                if (!double.TryParse(txtCenterL_Open.Text, out double centerLOpen) ||
+                    !double.TryParse(txtCenterL_MinCtr.Text, out double centerLMinCtr))
+                {
+                    MessageBox.Show("Centering L 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 // Centering R
-                _param.CenterR_Open = (double)numCenterR_Open.Value;
-                _param.CenterR_MinCtr = (double)numCenterR_MinCtr.Value;
+                if (!double.TryParse(txtCenterR_Open.Text, out double centerROpen) ||
+                    !double.TryParse(txtCenterR_MinCtr.Text, out double centerRMinCtr))
+                {
+                    MessageBox.Show("Centering R 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 // Theta
-                _param.Theta_Home = (double)numTheta_Home.Value;
+                if (!double.TryParse(txtTheta_Home.Text, out double thetaHome))
+                {
+                    MessageBox.Show("Theta 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 // Vision Scan
-                _param.ScanStepAngle = (double)numScanStepAngle.Value;
-                _param.ScanImageCount = (int)numScanImageCount.Value;
+                if (!double.TryParse(txtScanStepAngle.Text, out double scanStepAngle) ||
+                    !int.TryParse(txtScanImageCount.Text, out int scanImageCount))
+                {
+                    MessageBox.Show("Vision Scan 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // 검증 통과 후 파라미터에 반영
+                _param.ChuckZ_Down = chuckZDown;
+                _param.ChuckZ_Vision = chuckZVision;
+                _param.ChuckZ_Eddy = chuckZEddy;
+
+                _param.CenterL_Open = centerLOpen;
+                _param.CenterL_MinCtr = centerLMinCtr;
+
+                _param.CenterR_Open = centerROpen;
+                _param.CenterR_MinCtr = centerRMinCtr;
+
+                _param.Theta_Home = thetaHome;
+
+                _param.ScanStepAngle = scanStepAngle;
+                _param.ScanImageCount = scanImageCount;
 
                 _param.Save();
                 MessageBox.Show("Parameters saved successfully.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -114,30 +149,46 @@ namespace VisionAlignChamber.Views.Controls
 
             try
             {
-                // 시퀀스 테이블 업데이트
+                if (!TryParseText(txtChuckZ_Down, out double chuckZDown) ||
+                    !TryParseText(txtChuckZ_Vision, out double chuckZVision) ||
+                    !TryParseText(txtChuckZ_Eddy, out double chuckZEddy) ||
+                    !TryParseText(txtCenterL_Open, out double centerLOpen) ||
+                    !TryParseText(txtCenterL_MinCtr, out double centerLMinCtr) ||
+                    !TryParseText(txtCenterR_Open, out double centerROpen) ||
+                    !TryParseText(txtCenterR_MinCtr, out double centerRMinCtr) ||
+                    !TryParseText(txtTheta_Home, out double thetaHome))
+                {
+                    return;
+                }
+
                 dgvSequence.Rows.Clear();
 
                 // Step 1: Receive
-                dgvSequence.Rows.Add("1", "Receive", numChuckZ_Down.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_Home.Value);
+                dgvSequence.Rows.Add("1", "Receive", chuckZDown, centerLOpen, centerROpen, thetaHome);
                 // Step 2: PreCtr (FOV)
-                dgvSequence.Rows.Add("2", "PreCtr(FOV)", numChuckZ_Down.Value, numCenterL_MinCtr.Value, numCenterR_MinCtr.Value, numTheta_Home.Value);
+                dgvSequence.Rows.Add("2", "PreCtr(FOV)", chuckZDown, centerLMinCtr, centerRMinCtr, thetaHome);
                 // Step 3: Ready
-                dgvSequence.Rows.Add("3", "Ready", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_Home.Value);
-                // Step 4: Scan (0°→360°, AngleStep×ImageCount)
-                dgvSequence.Rows.Add("4", "Scan(xN)", numChuckZ_Vision.Value, numCenterL_Open.Value, numCenterR_Open.Value, "0→360°");
+                dgvSequence.Rows.Add("3", "Ready", chuckZVision, centerLOpen, centerROpen, thetaHome);
+                // Step 4: Scan (0->360, AngleStep x ImageCount)
+                dgvSequence.Rows.Add("4", "Scan(xN)", chuckZVision, centerLOpen, centerROpen, "0->360");
                 // Step 5: Center(Radius)
-                dgvSequence.Rows.Add("5", "Center(Radius)", numChuckZ_Down.Value, "Radius", "Radius", numTheta_Home.Value);
+                dgvSequence.Rows.Add("5", "Center(Radius)", chuckZDown, "Radius", "Radius", thetaHome);
                 // Step 6: Eddy
-                dgvSequence.Rows.Add("6", "Eddy", numChuckZ_Eddy.Value, numCenterL_Open.Value, numCenterR_Open.Value, numTheta_Home.Value);
+                dgvSequence.Rows.Add("6", "Eddy", chuckZEddy, centerLOpen, centerROpen, thetaHome);
                 // Step 7: ThetaAlign
-                dgvSequence.Rows.Add("7", "ThetaAlign", numChuckZ_Eddy.Value, numCenterL_Open.Value, numCenterR_Open.Value, "AbsAngle");
+                dgvSequence.Rows.Add("7", "ThetaAlign", chuckZEddy, centerLOpen, centerROpen, "AbsAngle");
                 // Step 8: Release
-                dgvSequence.Rows.Add("8", "Release", numChuckZ_Down.Value, numCenterL_Open.Value, numCenterR_Open.Value, "HOLD");
+                dgvSequence.Rows.Add("8", "Release", chuckZDown, centerLOpen, centerROpen, "HOLD");
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"UpdateSequencePreview Error: {ex.Message}");
             }
+        }
+
+        private bool TryParseText(TextBox textBox, out double value)
+        {
+            return double.TryParse(textBox.Text, out value);
         }
 
         #endregion
@@ -156,7 +207,7 @@ namespace VisionAlignChamber.Views.Controls
             MessageBox.Show("Parameters loaded successfully.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void NumericUpDown_ValueChanged(object sender, EventArgs e)
+        private void TextBox_TextChanged(object sender, EventArgs e)
         {
             UpdateSequencePreview();
         }

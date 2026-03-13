@@ -238,6 +238,15 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
+        /// 절대 위치 이동 (속도/가속도/감속도 지정)
+        /// </summary>
+        public bool MoveAbsolute(VAMotionAxis axis, double position, double velocity, double accel, double decel)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.MoveAbs(info.AxisNo, position, velocity, accel, decel);
+        }
+
+        /// <summary>
         /// 상대 위치 이동
         /// </summary>
         public bool MoveRelative(VAMotionAxis axis, double distance, double? velocity = null)

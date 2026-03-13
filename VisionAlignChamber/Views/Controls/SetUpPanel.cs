@@ -1,0 +1,167 @@
+using System;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using VisionAlignChamber.Config;
+using VisionAlignChamber.Hardware;
+using VisionAlignChamber.Hardware.Facade;
+
+namespace VisionAlignChamber.Views.Controls
+{
+    /// <summary>
+    /// SetUp 탭 패널 - 개별 동작 테스트
+    /// </summary>
+    public partial class SetUpPanel : UserControl
+    {
+        #region Fields
+
+        private VisionAlignerMotion _motion;
+        private TeachingParameter _param;
+        private CancellationTokenSource _cts;
+        private bool _isRunning = false;
+
+        #endregion
+
+        #region Constructor
+
+        public SetUpPanel()
+        {
+            InitializeComponent();
+            _param = TeachingParameter.Instance;
+            LoadDefaultValues();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Motion 파사드 설정
+        /// </summary>
+        public void SetMotion(VisionAlignerMotion motion)
+        {
+            _motion = motion;
+        }
+
+        #endregion
+
+        #region PreCenter Test
+
+        private void LoadDefaultValues()
+        {
+            // TeachingParameter에서 기본값 로드
+            txtCenterL_Pos.Text = _param.CenterL_MinCtr.ToString();
+            txtCenterR_Pos.Text = _param.CenterR_MinCtr.ToString();
+            txtVelocity.Text = _param.CenteringStage1.Velocity.ToString();
+            txtAccel.Text = _param.CenteringStage1.Accel.ToString();
+            txtDecel.Text = _param.CenteringStage1.Decel.ToString();
+        }
+
+        private async void btnPreCenterExecute_Click(object sender, EventArgs e)
+        {
+            if (_motion == null)
+            {
+                MessageBox.Show("Motion이 초기화되지 않았습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_isRunning)
+            {
+                MessageBox.Show("이미 동작 중입니다.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 입력값 파싱
+            if (!double.TryParse(txtCenterL_Pos.Text, out double centerLPos) ||
+                !double.TryParse(txtCenterR_Pos.Text, out double centerRPos) ||
+                !double.TryParse(txtVelocity.Text, out double velocity) ||
+                !double.TryParse(txtAccel.Text, out double accel) ||
+                !double.TryParse(txtDecel.Text, out double decel))
+            {
+                MessageBox.Show("입력값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (velocity <= 0 || accel <= 0 || decel <= 0)
+            {
+                MessageBox.Show("속도/가속도/감속도는 0보다 커야 합니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _isRunning = true;
+            _cts = new CancellationTokenSource();
+            SetPreCenterStatus("Running...", Color.Yellow);
+            btnPreCenterExecute.Enabled = false;
+
+            try
+            {
+                // CenteringStage L 이동
+                bool start1 = _motion.MoveAbsolute(VAMotionAxis.CenteringStage_1, centerLPos, velocity, accel, decel);
+                // CenteringStage R 이동
+                bool start2 = _motion.MoveAbsolute(VAMotionAxis.CenteringStage_2, centerRPos, velocity, accel, decel);
+
+                if (!start1 || !start2)
+                {
+                    SetPreCenterStatus("Move Start Failed", Color.Red);
+                    return;
+                }
+
+                // 완료 대기
+                var wait1 = _motion.WaitForDoneAsync(VAMotionAxis.CenteringStage_1, 30000, _cts.Token);
+                var wait2 = _motion.WaitForDoneAsync(VAMotionAxis.CenteringStage_2, 30000, _cts.Token);
+                await Task.WhenAll(wait1, wait2);
+
+                if (wait1.Result && wait2.Result)
+                {
+                    SetPreCenterStatus("Completed", Color.Lime);
+                }
+                else
+                {
+                    SetPreCenterStatus("Timeout / Cancelled", Color.Orange);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                SetPreCenterStatus("Stopped", Color.Orange);
+            }
+            catch (Exception ex)
+            {
+                SetPreCenterStatus($"Error: {ex.Message}", Color.Red);
+            }
+            finally
+            {
+                _isRunning = false;
+                btnPreCenterExecute.Enabled = true;
+                _cts?.Dispose();
+                _cts = null;
+            }
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            if (_motion != null)
+            {
+                _motion.Stop(VAMotionAxis.CenteringStage_1);
+                _motion.Stop(VAMotionAxis.CenteringStage_2);
+            }
+
+            _cts?.Cancel();
+            SetPreCenterStatus("Stopped", Color.Orange);
+        }
+
+        private void SetPreCenterStatus(string text, Color color)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => SetPreCenterStatus(text, color)));
+                return;
+            }
+
+            lblPreCenterStatus.Text = text;
+            lblPreCenterStatus.ForeColor = color;
+        }
+
+        #endregion
+    }
+}

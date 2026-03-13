@@ -368,6 +368,12 @@ namespace VisionAlignChamber.Views
                 commPanel.BindController(_ctcController);
             }
 
+            // SetUp 탭 바인딩 (Motion 파사드)
+            if (_vaMotion != null)
+            {
+                setupPanel.SetMotion(_vaMotion);
+            }
+
             // 초기 로그 메시지
             LogManager.System.Info("VisionAlignChamber 시작");
         }

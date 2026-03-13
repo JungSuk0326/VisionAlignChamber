@@ -264,6 +264,12 @@
     <Compile Include="Views\Controls\ParameterPanel.Designer.cs">
       <DependentUpon>ParameterPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\SetUpPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\SetUpPanel.Designer.cs">
+      <DependentUpon>SetUpPanel.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

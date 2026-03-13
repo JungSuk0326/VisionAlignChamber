@@ -47,6 +47,8 @@ namespace VisionAlignChamber.Views
             this.commPanel = new VisionAlignChamber.Views.Controls.CommPanel();
             this.tabParameter = new System.Windows.Forms.TabPage();
             this.parameterPanel = new VisionAlignChamber.Views.Controls.ParameterPanel();
+            this.tabSetUp = new System.Windows.Forms.TabPage();
+            this.setupPanel = new VisionAlignChamber.Views.Controls.SetUpPanel();
             this.panelTop = new System.Windows.Forms.Panel();
             this.lblAlarmIndicator = new System.Windows.Forms.Label();
             this.lblWaferLabel = new System.Windows.Forms.Label();
@@ -289,6 +291,7 @@ namespace VisionAlignChamber.Views
             this.tabControlMaint.Controls.Add(this.tabMotion);
             this.tabControlMaint.Controls.Add(this.tabComm);
             this.tabControlMaint.Controls.Add(this.tabParameter);
+            this.tabControlMaint.Controls.Add(this.tabSetUp);
             this.tabControlMaint.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMaint.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.tabControlMaint.Location = new System.Drawing.Point(0, 0);
@@ -418,9 +421,30 @@ namespace VisionAlignChamber.Views
             this.parameterPanel.Name = "parameterPanel";
             this.parameterPanel.Size = new System.Drawing.Size(774, 631);
             this.parameterPanel.TabIndex = 0;
-            // 
+            //
+            // tabSetUp
+            //
+            this.tabSetUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.tabSetUp.Controls.Add(this.setupPanel);
+            this.tabSetUp.Location = new System.Drawing.Point(4, 26);
+            this.tabSetUp.Name = "tabSetUp";
+            this.tabSetUp.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSetUp.Size = new System.Drawing.Size(780, 637);
+            this.tabSetUp.TabIndex = 7;
+            this.tabSetUp.Text = "SetUp";
+            //
+            // setupPanel
+            //
+            this.setupPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.setupPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.setupPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.setupPanel.Location = new System.Drawing.Point(3, 3);
+            this.setupPanel.Name = "setupPanel";
+            this.setupPanel.Size = new System.Drawing.Size(774, 631);
+            this.setupPanel.TabIndex = 0;
+            //
             // panelTop
-            // 
+            //
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.panelTop.Controls.Add(this.lblAlarmIndicator);
             this.panelTop.Controls.Add(this.lblWaferLabel);
@@ -781,6 +805,8 @@ namespace VisionAlignChamber.Views
         private Controls.EddyPanel eddyPanel;
         private Controls.CommPanel commPanel;
         private Controls.ParameterPanel parameterPanel;
+        private System.Windows.Forms.TabPage tabSetUp;
+        private Controls.SetUpPanel setupPanel;
         private System.Windows.Forms.GroupBox grpControlMode;
         private System.Windows.Forms.RadioButton rbLocal;
         private System.Windows.Forms.RadioButton rbRemote;

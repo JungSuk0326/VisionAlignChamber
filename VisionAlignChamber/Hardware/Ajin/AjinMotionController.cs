@@ -312,27 +312,37 @@ namespace VisionAlignChamber.Hardware.Ajin
         #region 정지
 
         /// <summary>
-        /// 감속 정지
+        /// 감속 정지 (안전: 가드 없이 항상 실행)
         /// </summary>
         public bool Stop(int axisNo)
         {
-            if (!CheckInitialized()) return false;
-            if (!CheckAxisNo(axisNo)) return false;
-
-            uint result = CAXM.AxmMoveSStop(axisNo);
-            return AjinErrorCode.IsSuccess(result);
+            try
+            {
+                uint result = CAXM.AxmMoveSStop(axisNo);
+                return AjinErrorCode.IsSuccess(result);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Stop({axisNo}) failed: {ex.Message}");
+                return false;
+            }
         }
 
         /// <summary>
-        /// 비상 정지 (즉시 정지)
+        /// 비상 정지 (안전: 가드 없이 항상 실행)
         /// </summary>
         public bool EmergencyStop(int axisNo)
         {
-            if (!CheckInitialized()) return false;
-            if (!CheckAxisNo(axisNo)) return false;
-
-            uint result = CAXM.AxmMoveEStop(axisNo);
-            return AjinErrorCode.IsSuccess(result);
+            try
+            {
+                uint result = CAXM.AxmMoveEStop(axisNo);
+                return AjinErrorCode.IsSuccess(result);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"EmergencyStop({axisNo}) failed: {ex.Message}");
+                return false;
+            }
         }
 
         /// <summary>
@@ -406,12 +416,10 @@ namespace VisionAlignChamber.Hardware.Ajin
         }
 
         /// <summary>
-        /// 모든 축 비상 정지
+        /// 모든 축 비상 정지 (안전: 가드 없이 항상 실행)
         /// </summary>
         public bool EmergencyStopAll()
         {
-            if (!CheckInitialized()) return false;
-
             bool success = true;
             for (int i = 0; i < _axisCount; i++)
             {

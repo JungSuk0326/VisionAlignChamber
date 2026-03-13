@@ -16,7 +16,7 @@ namespace VisionAlignChamber.ViewModels
         #region Fields
 
         private readonly VisionAlignWrapper _vision;
-        private readonly VisionAlignerSequence _sequence;
+        private VisionAlignerSequence _sequence;
 
         #endregion
 
@@ -744,6 +744,28 @@ namespace VisionAlignChamber.ViewModels
             IsFlatMode = isFlat;
             ExecuteInspection();
             return AlignResult;
+        }
+
+        /// <summary>
+        /// Sequence 설정 (Initialize 완료 후 호출)
+        /// </summary>
+        public void SetSequence(VisionAlignerSequence sequence)
+        {
+            // 기존 구독 해제
+            if (_sequence != null)
+            {
+                _sequence.StepChanged -= OnSequenceStepChanged;
+                _sequence.StateChanged -= OnSequenceStateChanged;
+            }
+
+            _sequence = sequence;
+
+            // 새 구독
+            if (_sequence != null)
+            {
+                _sequence.StepChanged += OnSequenceStepChanged;
+                _sequence.StateChanged += OnSequenceStateChanged;
+            }
         }
 
         /// <summary>

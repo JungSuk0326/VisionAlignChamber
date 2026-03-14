@@ -571,13 +571,30 @@ namespace VisionAlignChamber.Views
             var interlockAlarm = data as Interlock.AlarmInfo;
             if (interlockAlarm != null)
             {
-                // 알람 발생 시 UI 업데이트
-                lblSystemStatus.Text = "Alarm";
-                lblSystemStatus.ForeColor = Color.Red;
-                UpdateStatusMessage($"알람 발생: [{interlockAlarm.Definition?.Code}] {interlockAlarm.Definition?.Name}");
+                var severity = interlockAlarm.Definition?.Severity ?? Interlock.AlarmSeverity.Info;
 
-                // 알람 표시등 활성화 및 깜빡임 시작
-                UpdateAlarmIndicator();
+                switch (severity)
+                {
+                    case Interlock.AlarmSeverity.Critical:
+                    case Interlock.AlarmSeverity.Error:
+                        // Critical/Error: 시스템 상태 Alarm 표시 + 깜빡임
+                        lblSystemStatus.Text = "Alarm";
+                        lblSystemStatus.ForeColor = Color.Red;
+                        UpdateStatusMessage($"[{severity}] 시스템 정지 - [{interlockAlarm.Definition?.Code}] {interlockAlarm.Definition?.Name}");
+                        UpdateAlarmIndicator();
+                        break;
+
+                    case Interlock.AlarmSeverity.Warning:
+                        // Warning: 상태바에 10초간 경고 표시 (시스템 상태는 변경하지 않음)
+                        ShowWarningNotification(
+                            $"[Warning] [{interlockAlarm.Definition?.Code}] {interlockAlarm.Definition?.Name}");
+                        break;
+
+                    case Interlock.AlarmSeverity.Info:
+                        // Info: 상태 메시지만 업데이트
+                        UpdateStatusMessage($"[Info] [{interlockAlarm.Definition?.Code}] {interlockAlarm.Definition?.Name}");
+                        break;
+                }
                 return;
             }
 
@@ -588,10 +605,40 @@ namespace VisionAlignChamber.Views
                 lblSystemStatus.Text = "Alarm";
                 lblSystemStatus.ForeColor = Color.Red;
                 UpdateStatusMessage($"알람 발생: [{alarm.Code}] {alarm.Message}");
-
-                // 알람 표시등 활성화 및 깜빡임 시작
                 UpdateAlarmIndicator();
             }
+        }
+
+        private System.Windows.Forms.Timer _warningTimer;
+
+        /// <summary>
+        /// Warning 알림 표시 (10초 후 자동 소멸)
+        /// </summary>
+        private void ShowWarningNotification(string message)
+        {
+            // 상태 메시지를 Warning 색상으로 표시
+            lblStatusMessage.Text = message;
+            lblStatusMessage.ForeColor = Color.Yellow;
+
+            // 기존 타이머 정리
+            if (_warningTimer != null)
+            {
+                _warningTimer.Stop();
+                _warningTimer.Dispose();
+            }
+
+            // 10초 후 원래 색상으로 복원
+            _warningTimer = new System.Windows.Forms.Timer();
+            _warningTimer.Interval = 10000;
+            _warningTimer.Tick += (s, e) =>
+            {
+                _warningTimer.Stop();
+                lblStatusMessage.ForeColor = Color.White;
+                lblStatusMessage.Text = "Ready";
+                _warningTimer.Dispose();
+                _warningTimer = null;
+            };
+            _warningTimer.Start();
         }
 
         private void OnAlarmCleared(object data)
@@ -775,6 +822,10 @@ namespace VisionAlignChamber.Views
         {
             // 알람 깜빡임 타이머 정지
             timerAlarmBlink?.Stop();
+
+            // Warning 타이머 정지
+            _warningTimer?.Stop();
+            _warningTimer?.Dispose();
 
             _updateTimer?.Stop();
             _updateTimer?.Dispose();

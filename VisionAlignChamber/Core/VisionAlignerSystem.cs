@@ -7,6 +7,7 @@ using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Communication.Interfaces;
 using VisionAlignChamber.Database;
 using VisionAlignChamber.Interlock;
+using VisionAlignChamber.Log;
 using VisionAlignChamber.Models;
 
 namespace VisionAlignChamber.Core
@@ -723,25 +724,74 @@ namespace VisionAlignChamber.Core
         }
 
         /// <summary>
-        /// 알람 발생 핸들러 - CTC로 알람 전달
+        /// 알람 발생 핸들러 - Severity에 따른 시스템 동작 분기
+        /// Critical/Error: 모션 정지 + IO OFF + 시퀀스 중단 + CTC 통보
+        /// Warning: 로그 + UI 알림(10초) + 자동 Clear
+        /// Info: 로그만
         /// </summary>
         private void OnAlarmOccurred(object data)
         {
-            if (_ctcComm == null) return;
+            if (!(data is Interlock.AlarmInfo alarm) || alarm.Definition == null)
+                return;
 
-            if (data is Interlock.AlarmInfo alarm && alarm.Definition != null)
+            var severity = alarm.Definition.Severity;
+
+            switch (severity)
             {
-                try
-                {
-                    _ctcComm.SendAlarm(
-                        alarm.Definition.Id,
-                        alarm.Definition.Name,
-                        alarm.AdditionalMessage ?? alarm.Definition.Description);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[VisionAlignerSystem] SendAlarm failed: {ex.Message}");
-                }
+                case Interlock.AlarmSeverity.Critical:
+                case Interlock.AlarmSeverity.Error:
+                    // 비상 정지: 모션 전축 정지 + Output IO 전체 OFF
+                    EmergencyStop();
+
+                    // 시퀀스 중단
+                    if (_sequence != null && _sequence.State == VisionAlignerSequence.SequenceState.Running)
+                    {
+                        _sequence.Stop();
+                    }
+
+                    LogManager.System.Error(
+                        $"[{severity}] 시스템 정지 - [{alarm.Definition.Code}] {alarm.Definition.Name}: " +
+                        $"{alarm.AdditionalMessage ?? alarm.Definition.Description}");
+                    break;
+
+                case Interlock.AlarmSeverity.Warning:
+                    LogManager.System.Warn(
+                        $"[Warning] [{alarm.Definition.Code}] {alarm.Definition.Name}: " +
+                        $"{alarm.AdditionalMessage ?? alarm.Definition.Description}");
+
+                    // 10초 후 자동 Clear
+                    var warningAlarmId = alarm.Definition.Id;
+                    System.Threading.Tasks.Task.Delay(10000).ContinueWith(_ =>
+                    {
+                        try
+                        {
+                            Interlock.InterlockManager.Instance.ClearAlarm(warningAlarmId);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[VisionAlignerSystem] Warning auto-clear failed: {ex.Message}");
+                        }
+                    });
+                    break;
+
+                case Interlock.AlarmSeverity.Info:
+                    LogManager.System.Info(
+                        $"[Info] [{alarm.Definition.Code}] {alarm.Definition.Name}: " +
+                        $"{alarm.AdditionalMessage ?? alarm.Definition.Description}");
+                    break;
+            }
+
+            // CTC로 알람 전달 (모든 Severity)
+            try
+            {
+                _ctcComm?.SendAlarm(
+                    alarm.Definition.Id,
+                    alarm.Definition.Name,
+                    alarm.AdditionalMessage ?? alarm.Definition.Description);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[VisionAlignerSystem] SendAlarm failed: {ex.Message}");
             }
         }
 

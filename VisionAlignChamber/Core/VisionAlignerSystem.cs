@@ -640,6 +640,7 @@ namespace VisionAlignChamber.Core
         #region AppState Events
 
         private Action<object> _appStateChangedHandler;
+        private Action<object> _alarmOccurredHandler;
 
         /// <summary>
         /// AppState 변경 이벤트 구독
@@ -648,6 +649,10 @@ namespace VisionAlignChamber.Core
         {
             _appStateChangedHandler = OnAppStateChanged;
             EventManager.Subscribe(EventManager.SystemStateChanged, _appStateChangedHandler);
+
+            // 알람 발생 이벤트 구독 (CTC 전달용)
+            _alarmOccurredHandler = OnAlarmOccurred;
+            EventManager.Subscribe(EventManager.AlarmOccurred, _alarmOccurredHandler);
         }
 
         /// <summary>
@@ -659,6 +664,35 @@ namespace VisionAlignChamber.Core
             {
                 EventManager.Unsubscribe(EventManager.SystemStateChanged, _appStateChangedHandler);
                 _appStateChangedHandler = null;
+            }
+
+            if (_alarmOccurredHandler != null)
+            {
+                EventManager.Unsubscribe(EventManager.AlarmOccurred, _alarmOccurredHandler);
+                _alarmOccurredHandler = null;
+            }
+        }
+
+        /// <summary>
+        /// 알람 발생 핸들러 - CTC로 알람 전달
+        /// </summary>
+        private void OnAlarmOccurred(object data)
+        {
+            if (_ctcComm == null) return;
+
+            if (data is Interlock.AlarmInfo alarm && alarm.Definition != null)
+            {
+                try
+                {
+                    _ctcComm.SendAlarm(
+                        alarm.Definition.Id,
+                        alarm.Definition.Name,
+                        alarm.AdditionalMessage ?? alarm.Definition.Description);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[VisionAlignerSystem] SendAlarm failed: {ex.Message}");
+                }
             }
         }
 

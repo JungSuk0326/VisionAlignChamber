@@ -195,6 +195,7 @@
     <Compile Include="ViewModels\VisionViewModel.cs" />
     <Compile Include="ViewModels\EddyViewModel.cs" />
     <Compile Include="ViewModels\ResultHistoryViewModel.cs" />
+    <Compile Include="ViewModels\AlarmHistoryViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <!-- Views -->
     <Compile Include="Views\MainForm.cs">
@@ -245,6 +246,12 @@
     </Compile>
     <Compile Include="Views\Controls\ResultHistoryPanel.Designer.cs">
       <DependentUpon>ResultHistoryPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\AlarmHistoryPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\AlarmHistoryPanel.Designer.cs">
+      <DependentUpon>AlarmHistoryPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\LogPanel.cs">
       <SubType>UserControl</SubType>

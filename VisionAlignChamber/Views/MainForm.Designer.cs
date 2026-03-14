@@ -31,6 +31,7 @@ namespace VisionAlignChamber.Views
             this.tabResult = new System.Windows.Forms.TabPage();
             this.resultHistoryPanel = new VisionAlignChamber.Views.Controls.ResultHistoryPanel();
             this.tabAlarm = new System.Windows.Forms.TabPage();
+            this.alarmHistoryPanel = new VisionAlignChamber.Views.Controls.AlarmHistoryPanel();
             this.tabLog = new System.Windows.Forms.TabPage();
             this.logPanel = new VisionAlignChamber.Views.Controls.LogPanel();
             this.tabMaint = new System.Windows.Forms.TabPage();
@@ -92,6 +93,7 @@ namespace VisionAlignChamber.Views
             this.tabMotion.SuspendLayout();
             this.tabComm.SuspendLayout();
             this.tabParameter.SuspendLayout();
+            this.tabSetUp.SuspendLayout();
             this.panelTop.SuspendLayout();
             this.grpControlMode.SuspendLayout();
             this.panelBottom.SuspendLayout();
@@ -242,14 +244,24 @@ namespace VisionAlignChamber.Views
             this.resultHistoryPanel.TabIndex = 0;
             // 
             // tabAlarm
-            // 
+            //
             this.tabAlarm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.tabAlarm.Controls.Add(this.alarmHistoryPanel);
             this.tabAlarm.Location = new System.Drawing.Point(4, 26);
             this.tabAlarm.Name = "tabAlarm";
             this.tabAlarm.Padding = new System.Windows.Forms.Padding(3);
             this.tabAlarm.Size = new System.Drawing.Size(780, 637);
             this.tabAlarm.TabIndex = 1;
             this.tabAlarm.Text = "Alarm";
+            //
+            // alarmHistoryPanel
+            //
+            this.alarmHistoryPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.alarmHistoryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.alarmHistoryPanel.Location = new System.Drawing.Point(3, 3);
+            this.alarmHistoryPanel.Name = "alarmHistoryPanel";
+            this.alarmHistoryPanel.Size = new System.Drawing.Size(774, 631);
+            this.alarmHistoryPanel.TabIndex = 0;
             // 
             // tabLog
             // 
@@ -339,7 +351,7 @@ namespace VisionAlignChamber.Views
             this.eddyPanel.Name = "eddyPanel";
             this.eddyPanel.Size = new System.Drawing.Size(774, 631);
             this.eddyPanel.TabIndex = 0;
-            //
+            // 
             // tabIO
             // 
             this.tabIO.Controls.Add(this.ioPanel);
@@ -421,9 +433,9 @@ namespace VisionAlignChamber.Views
             this.parameterPanel.Name = "parameterPanel";
             this.parameterPanel.Size = new System.Drawing.Size(774, 631);
             this.parameterPanel.TabIndex = 0;
-            //
+            // 
             // tabSetUp
-            //
+            // 
             this.tabSetUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabSetUp.Controls.Add(this.setupPanel);
             this.tabSetUp.Location = new System.Drawing.Point(4, 26);
@@ -432,9 +444,9 @@ namespace VisionAlignChamber.Views
             this.tabSetUp.Size = new System.Drawing.Size(780, 637);
             this.tabSetUp.TabIndex = 7;
             this.tabSetUp.Text = "SetUp";
-            //
+            // 
             // setupPanel
-            //
+            // 
             this.setupPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.setupPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.setupPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -442,9 +454,9 @@ namespace VisionAlignChamber.Views
             this.setupPanel.Name = "setupPanel";
             this.setupPanel.Size = new System.Drawing.Size(774, 631);
             this.setupPanel.TabIndex = 0;
-            //
+            // 
             // panelTop
-            //
+            // 
             this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.panelTop.Controls.Add(this.lblAlarmIndicator);
             this.panelTop.Controls.Add(this.lblWaferLabel);
@@ -751,6 +763,7 @@ namespace VisionAlignChamber.Views
             this.tabMotion.ResumeLayout(false);
             this.tabComm.ResumeLayout(false);
             this.tabParameter.ResumeLayout(false);
+            this.tabSetUp.ResumeLayout(false);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.grpControlMode.ResumeLayout(false);
@@ -779,6 +792,7 @@ namespace VisionAlignChamber.Views
         private System.Windows.Forms.TabPage tabResult;
         private Controls.ResultHistoryPanel resultHistoryPanel;
         private System.Windows.Forms.TabPage tabAlarm;
+        private Controls.AlarmHistoryPanel alarmHistoryPanel;
         // 하위 탭 (Maint)
         private System.Windows.Forms.TabControl tabControlMaint;
         private System.Windows.Forms.TabPage tabMotion;

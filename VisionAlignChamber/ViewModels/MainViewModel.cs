@@ -36,6 +36,7 @@ namespace VisionAlignChamber.ViewModels
         public VisionViewModel Vision { get; private set; }
         public EddyViewModel Eddy { get; private set; }
         public ResultHistoryViewModel ResultHistory { get; private set; }
+        public AlarmHistoryViewModel AlarmHistory { get; private set; }
 
         #endregion
 
@@ -242,6 +243,9 @@ namespace VisionAlignChamber.ViewModels
 
             // ResultHistory ViewModel 생성
             ResultHistory = new ResultHistoryViewModel();
+
+            // AlarmHistory ViewModel 생성
+            AlarmHistory = new AlarmHistoryViewModel();
 
             InitializeCommands();
 
@@ -723,6 +727,7 @@ namespace VisionAlignChamber.ViewModels
             Vision?.Dispose();
             Eddy?.Dispose();
             ResultHistory?.Dispose();
+            AlarmHistory?.Dispose();
 
             // VisionAlignerSystem은 MainForm에서 관리 (여기서 Dispose하지 않음)
             base.OnDisposing();

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using VisionAlignChamber.Config;
 using VisionAlignChamber.Hardware;
 using VisionAlignChamber.Hardware.Facade;
+using VisionAlignChamber.Interlock;
 
 namespace VisionAlignChamber.Views.Controls
 {
@@ -56,6 +57,9 @@ namespace VisionAlignChamber.Views.Controls
             txtVelocity.Text = _param.CenteringStage1.Velocity.ToString();
             txtAccel.Text = _param.CenteringStage1.Accel.ToString();
             txtDecel.Text = _param.CenteringStage1.Decel.ToString();
+
+            // 알람 목록 로드
+            LoadAlarmList();
         }
 
         private async void btnPreCenterExecute_Click(object sender, EventArgs e)
@@ -160,6 +164,76 @@ namespace VisionAlignChamber.Views.Controls
 
             lblPreCenterStatus.Text = text;
             lblPreCenterStatus.ForeColor = color;
+        }
+
+        #endregion
+
+        #region Alarm Test
+
+        private void LoadAlarmList()
+        {
+            cboAlarmList.Items.Clear();
+            var definitions = InterlockManager.Instance.GetAllDefinitions();
+            foreach (var def in definitions)
+            {
+                cboAlarmList.Items.Add(new AlarmComboItem(def));
+            }
+            if (cboAlarmList.Items.Count > 0)
+                cboAlarmList.SelectedIndex = 0;
+        }
+
+        private void btnAlarmRaise_Click(object sender, EventArgs e)
+        {
+            if (cboAlarmList.SelectedItem is AlarmComboItem item)
+            {
+                var result = InterlockManager.Instance.RaiseAlarm(item.Definition.Id, "SetUpPanel", "수동 테스트 알람");
+                if (result != null)
+                {
+                    lblAlarmTestStatus.Text = $"Raised: [{item.Definition.Code}] {item.Definition.Name}";
+                    lblAlarmTestStatus.ForeColor = Color.Red;
+                }
+                else
+                {
+                    lblAlarmTestStatus.Text = "Already active";
+                    lblAlarmTestStatus.ForeColor = Color.Orange;
+                }
+            }
+        }
+
+        private void btnAlarmClear_Click(object sender, EventArgs e)
+        {
+            if (cboAlarmList.SelectedItem is AlarmComboItem item)
+            {
+                bool cleared = InterlockManager.Instance.ClearAlarm(item.Definition.Id);
+                if (cleared)
+                {
+                    lblAlarmTestStatus.Text = $"Cleared: [{item.Definition.Code}] {item.Definition.Name}";
+                    lblAlarmTestStatus.ForeColor = Color.Lime;
+                }
+                else
+                {
+                    lblAlarmTestStatus.Text = "Not active";
+                    lblAlarmTestStatus.ForeColor = Color.LightGray;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 알람 콤보박스 아이템
+        /// </summary>
+        private class AlarmComboItem
+        {
+            public InterlockDefinition Definition { get; }
+
+            public AlarmComboItem(InterlockDefinition def)
+            {
+                Definition = def;
+            }
+
+            public override string ToString()
+            {
+                return $"[{Definition.Code}] {Definition.Name} ({Definition.Severity})";
+            }
         }
 
         #endregion

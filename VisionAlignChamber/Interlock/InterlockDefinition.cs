@@ -43,35 +43,53 @@ namespace VisionAlignChamber.Interlock
         /// <summary>통신 관련</summary>
         Communication,
 
+        /// <summary>시퀀스 관련</summary>
+        Sequence,
+
         /// <summary>사용자 정의</summary>
         User
     }
 
     /// <summary>
+    /// 알람 발생 소스 레벨
+    /// </summary>
+    public enum AlarmSourceLevel
+    {
+        /// <summary>시스템 레벨</summary>
+        System,
+
+        /// <summary>하드웨어 레벨 (AJIN, 센서 등)</summary>
+        Hardware,
+
+        /// <summary>Facade 레벨 (타임아웃, 조건 실패 등)</summary>
+        Facade
+    }
+
+    /// <summary>
     /// 인터락 정의 클래스
-    /// 각 인터락 조건과 관련 정보를 정의합니다.
+    /// AlarmDefine.csv에서 로드하여 사용합니다.
     /// </summary>
     public class InterlockDefinition
     {
         #region Properties
 
         /// <summary>
-        /// 인터락 ID (고유 식별자)
+        /// 인터락 ID (고유 식별자, CSV의 Code 컬럼)
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 인터락 코드 (예: "IL001", "MTN_001")
+        /// 인터락 코드 (영문 식별자, CSV의 Name 컬럼. 예: "EMO_ACTIVATED")
         /// </summary>
         public string Code { get; set; }
 
         /// <summary>
-        /// 인터락 이름
+        /// 인터락 이름 (한글 설명, CSV의 Description 컬럼)
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 인터락 설명
+        /// 인터락 상세 설명
         /// </summary>
         public string Description { get; set; }
 
@@ -84,6 +102,11 @@ namespace VisionAlignChamber.Interlock
         /// 알람 카테고리
         /// </summary>
         public AlarmCategory Category { get; set; }
+
+        /// <summary>
+        /// 발생 소스 레벨
+        /// </summary>
+        public AlarmSourceLevel SourceLevel { get; set; }
 
         /// <summary>
         /// 활성화 여부
@@ -108,13 +131,84 @@ namespace VisionAlignChamber.Interlock
         {
         }
 
-        public InterlockDefinition(int id, string code, string name, AlarmSeverity severity, AlarmCategory category)
+        public InterlockDefinition(int id, string code, string name, AlarmSeverity severity, AlarmCategory category, AlarmSourceLevel sourceLevel = AlarmSourceLevel.Facade)
         {
             Id = id;
             Code = code;
             Name = name;
             Severity = severity;
             Category = category;
+            SourceLevel = sourceLevel;
+        }
+
+        #endregion
+
+        #region CSV Parsing
+
+        /// <summary>
+        /// CSV 라인에서 InterlockDefinition 생성
+        /// 포맷: Code,Name,Description,Level,Category,Source
+        /// </summary>
+        public static InterlockDefinition ParseCsvLine(string csvLine)
+        {
+            if (string.IsNullOrWhiteSpace(csvLine) || csvLine.StartsWith("#"))
+                return null;
+
+            var parts = csvLine.Split(',');
+            if (parts.Length < 6)
+                return null;
+
+            if (!int.TryParse(parts[0].Trim(), out int code))
+                return null;
+
+            return new InterlockDefinition
+            {
+                Id = code,
+                Code = parts[1].Trim(),
+                Name = parts[2].Trim(),
+                Description = parts[2].Trim(),
+                Severity = ParseSeverity(parts[3].Trim()),
+                Category = ParseCategory(parts[4].Trim()),
+                SourceLevel = ParseSourceLevel(parts[5].Trim())
+            };
+        }
+
+        private static AlarmSeverity ParseSeverity(string value)
+        {
+            switch (value.ToLower())
+            {
+                case "info": return AlarmSeverity.Info;
+                case "warning": return AlarmSeverity.Warning;
+                case "error": return AlarmSeverity.Error;
+                case "critical": return AlarmSeverity.Critical;
+                default: return AlarmSeverity.Warning;
+            }
+        }
+
+        private static AlarmCategory ParseCategory(string value)
+        {
+            switch (value.ToLower())
+            {
+                case "system": return AlarmCategory.System;
+                case "motion": return AlarmCategory.Motion;
+                case "io": return AlarmCategory.IO;
+                case "vision": return AlarmCategory.Vision;
+                case "sequence": return AlarmCategory.Sequence;
+                case "sensor": return AlarmCategory.Sensor;
+                case "communication": return AlarmCategory.Communication;
+                default: return AlarmCategory.System;
+            }
+        }
+
+        private static AlarmSourceLevel ParseSourceLevel(string value)
+        {
+            switch (value.ToLower())
+            {
+                case "system": return AlarmSourceLevel.System;
+                case "hardware": return AlarmSourceLevel.Hardware;
+                case "facade": return AlarmSourceLevel.Facade;
+                default: return AlarmSourceLevel.Facade;
+            }
         }
 
         #endregion

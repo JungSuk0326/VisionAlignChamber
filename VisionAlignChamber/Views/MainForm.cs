@@ -357,6 +357,12 @@ namespace VisionAlignChamber.Views
                 resultHistoryPanel.BindViewModel(_viewModel.ResultHistory);
             }
 
+            // AlarmHistory 탭 바인딩
+            if (_viewModel.AlarmHistory != null)
+            {
+                alarmHistoryPanel.BindViewModel(_viewModel.AlarmHistory);
+            }
+
             // Log 탭 바인딩
             _logViewModel = new LogViewModel();
             logPanel.BindViewModel(_logViewModel);

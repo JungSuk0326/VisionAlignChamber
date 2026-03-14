@@ -4,8 +4,11 @@ Code,Name,Description,Level,Category,Source
 1002,INITIALIZATION_FAILED,시스템 초기화 실패,Error,System,System
 1003,COMMUNICATION_ERROR,통신 에러,Error,System,System
 1004,CONFIG_LOAD_FAILED,설정 파일 로드 실패,Warning,System,System
-# Motion Hardware Alarms (20xx) - AJIN Driver Level
-2001,MOTION_SERVO_ALARM,서보 드라이버 알람,Critical,Motion,Hardware
+# Motion Hardware Alarms (20xx) - AJIN Driver Level (축별)
+2011,SERVO_ALARM_WEDGE_UPDOWN,서보 알람 - WedgeUpDown,Critical,Motion,Hardware
+2012,SERVO_ALARM_CHUCK_ROTATION,서보 알람 - ChuckRotation,Critical,Motion,Hardware
+2013,SERVO_ALARM_CENTERING_1,서보 알람 - CenteringStage1,Critical,Motion,Hardware
+2014,SERVO_ALARM_CENTERING_2,서보 알람 - CenteringStage2,Critical,Motion,Hardware
 2002,MOTION_POSITION_ERROR,위치 편차 과대,Error,Motion,Hardware
 2003,MOTION_OVERLOAD,과부하 발생,Critical,Motion,Hardware
 2004,MOTION_ENCODER_ERROR,엔코더 에러,Error,Motion,Hardware

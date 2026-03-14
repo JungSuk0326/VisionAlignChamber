@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using CommObject;
 using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Vision;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Communication.Interfaces;
 using VisionAlignChamber.Database;
+using VisionAlignChamber.Interlock;
 using VisionAlignChamber.Models;
 
 namespace VisionAlignChamber.Core
@@ -24,6 +26,7 @@ namespace VisionAlignChamber.Core
         private readonly ICTCCommunication _ctcComm;
 
         private VisionAlignerSequence _sequence;
+        private InterlockMonitor _interlockMonitor;
         private bool _isInitialized;
         private bool _disposed;
 
@@ -186,6 +189,9 @@ namespace VisionAlignChamber.Core
                 return true;
             }
 
+            // 알람 DB 저장 활성화
+            InterlockManager.Instance.EnableDatabase();
+
             bool anySuccess = false;
             int step = 0;
             int totalSteps = (HasMotion ? 1 : 0) + (HasIO ? 1 : 0) + (HasVision ? 1 : 0) + (HasCTC ? 1 : 0);
@@ -234,6 +240,12 @@ namespace VisionAlignChamber.Core
                 }
 
                 _isInitialized = anySuccess;
+
+                // 모션 초기화 성공 시 서보 알람 상시 체크 등록
+                if (IsMotionInitialized)
+                {
+                    RegisterServoAlarmMonitor();
+                }
 
                 // Sequence 생성 (Motion과 IO가 필수)
                 if (HasMotion && HasIO)
@@ -353,6 +365,10 @@ namespace VisionAlignChamber.Core
         {
             try
             {
+                // 인터락 모니터 정지
+                _interlockMonitor?.Dispose();
+                _interlockMonitor = null;
+
                 // Sequence 이벤트 해제
                 UnsubscribeSequenceEvents();
 
@@ -453,6 +469,39 @@ namespace VisionAlignChamber.Core
         private void RaiseInitializationProgress(string message, int currentStep, int totalSteps)
         {
             InitializationProgress?.Invoke(this, new InitializationProgressEventArgs(message, currentStep, totalSteps));
+        }
+
+        /// <summary>
+        /// 축별 서보 알람 상시 체크 등록
+        /// AlarmDefine.csv: 2011~2014 (축별 서보 알람)
+        /// </summary>
+        private void RegisterServoAlarmMonitor()
+        {
+            _interlockMonitor = new InterlockMonitor();
+
+            // 축별 서보 알람 ID 매핑
+            var axisAlarmMap = new Dictionary<VAMotionAxis, int>
+            {
+                { VAMotionAxis.WedgeUpDown,      2011 },
+                { VAMotionAxis.ChuckRotation,    2012 },
+                { VAMotionAxis.CenteringStage_1, 2013 },
+                { VAMotionAxis.CenteringStage_2, 2014 },
+            };
+
+            foreach (var pair in axisAlarmMap)
+            {
+                var axis = pair.Key;
+                int alarmId = pair.Value;
+
+                _interlockMonitor.RegisterMonitorItem(
+                    alarmId,
+                    () => _motion.IsAlarm(axis),
+                    () => $"Axis: {axis}"
+                );
+            }
+
+            _interlockMonitor.Start();
+            System.Diagnostics.Debug.WriteLine("[VisionAlignerSystem] Servo alarm monitor started (4 axes)");
         }
 
         /// <summary>

@@ -33,7 +33,14 @@ namespace VisionAlignChamber.Views.Controls
             this.btnPreCenterExecute = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.lblPreCenterStatus = new System.Windows.Forms.Label();
+            this.grpAlarmTest = new System.Windows.Forms.GroupBox();
+            this.lblAlarmTestDesc = new System.Windows.Forms.Label();
+            this.cboAlarmList = new System.Windows.Forms.ComboBox();
+            this.btnAlarmRaise = new System.Windows.Forms.Button();
+            this.btnAlarmClear = new System.Windows.Forms.Button();
+            this.lblAlarmTestStatus = new System.Windows.Forms.Label();
             this.grpPreCenter.SuspendLayout();
+            this.grpAlarmTest.SuspendLayout();
             this.SuspendLayout();
             //
             // lblTitle
@@ -214,16 +221,94 @@ namespace VisionAlignChamber.Views.Controls
             this.lblPreCenterStatus.TabIndex = 13;
             this.lblPreCenterStatus.Text = "Ready";
             //
+            // grpAlarmTest
+            //
+            this.grpAlarmTest.Controls.Add(this.lblAlarmTestDesc);
+            this.grpAlarmTest.Controls.Add(this.cboAlarmList);
+            this.grpAlarmTest.Controls.Add(this.btnAlarmRaise);
+            this.grpAlarmTest.Controls.Add(this.btnAlarmClear);
+            this.grpAlarmTest.Controls.Add(this.lblAlarmTestStatus);
+            this.grpAlarmTest.ForeColor = System.Drawing.Color.White;
+            this.grpAlarmTest.Location = new System.Drawing.Point(420, 40);
+            this.grpAlarmTest.Name = "grpAlarmTest";
+            this.grpAlarmTest.Size = new System.Drawing.Size(340, 160);
+            this.grpAlarmTest.TabIndex = 2;
+            this.grpAlarmTest.TabStop = false;
+            this.grpAlarmTest.Text = "Alarm Test";
+            //
+            // lblAlarmTestDesc
+            //
+            this.lblAlarmTestDesc.AutoSize = true;
+            this.lblAlarmTestDesc.ForeColor = System.Drawing.Color.LightGray;
+            this.lblAlarmTestDesc.Location = new System.Drawing.Point(10, 22);
+            this.lblAlarmTestDesc.Name = "lblAlarmTestDesc";
+            this.lblAlarmTestDesc.Size = new System.Drawing.Size(200, 15);
+            this.lblAlarmTestDesc.TabIndex = 0;
+            this.lblAlarmTestDesc.Text = "알람 강제 발생/해제 테스트";
+            //
+            // cboAlarmList
+            //
+            this.cboAlarmList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.cboAlarmList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboAlarmList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cboAlarmList.Font = new System.Drawing.Font("Consolas", 9F);
+            this.cboAlarmList.ForeColor = System.Drawing.Color.White;
+            this.cboAlarmList.Location = new System.Drawing.Point(10, 50);
+            this.cboAlarmList.Name = "cboAlarmList";
+            this.cboAlarmList.Size = new System.Drawing.Size(320, 22);
+            this.cboAlarmList.TabIndex = 1;
+            //
+            // btnAlarmRaise
+            //
+            this.btnAlarmRaise.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.btnAlarmRaise.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAlarmRaise.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnAlarmRaise.ForeColor = System.Drawing.Color.White;
+            this.btnAlarmRaise.Location = new System.Drawing.Point(10, 85);
+            this.btnAlarmRaise.Name = "btnAlarmRaise";
+            this.btnAlarmRaise.Size = new System.Drawing.Size(100, 32);
+            this.btnAlarmRaise.TabIndex = 2;
+            this.btnAlarmRaise.Text = "Raise";
+            this.btnAlarmRaise.UseVisualStyleBackColor = false;
+            this.btnAlarmRaise.Click += new System.EventHandler(this.btnAlarmRaise_Click);
+            //
+            // btnAlarmClear
+            //
+            this.btnAlarmClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnAlarmClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAlarmClear.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnAlarmClear.ForeColor = System.Drawing.Color.White;
+            this.btnAlarmClear.Location = new System.Drawing.Point(120, 85);
+            this.btnAlarmClear.Name = "btnAlarmClear";
+            this.btnAlarmClear.Size = new System.Drawing.Size(100, 32);
+            this.btnAlarmClear.TabIndex = 3;
+            this.btnAlarmClear.Text = "Clear";
+            this.btnAlarmClear.UseVisualStyleBackColor = false;
+            this.btnAlarmClear.Click += new System.EventHandler(this.btnAlarmClear_Click);
+            //
+            // lblAlarmTestStatus
+            //
+            this.lblAlarmTestStatus.AutoSize = true;
+            this.lblAlarmTestStatus.ForeColor = System.Drawing.Color.LightGray;
+            this.lblAlarmTestStatus.Location = new System.Drawing.Point(10, 130);
+            this.lblAlarmTestStatus.Name = "lblAlarmTestStatus";
+            this.lblAlarmTestStatus.Size = new System.Drawing.Size(40, 15);
+            this.lblAlarmTestStatus.TabIndex = 4;
+            this.lblAlarmTestStatus.Text = "Ready";
+            //
             // SetUpPanel
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.Controls.Add(this.grpAlarmTest);
             this.Controls.Add(this.grpPreCenter);
             this.Controls.Add(this.lblTitle);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "SetUpPanel";
             this.Size = new System.Drawing.Size(774, 631);
+            this.grpAlarmTest.ResumeLayout(false);
+            this.grpAlarmTest.PerformLayout();
             this.grpPreCenter.ResumeLayout(false);
             this.grpPreCenter.PerformLayout();
             this.ResumeLayout(false);
@@ -248,5 +333,11 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnPreCenterExecute;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Label lblPreCenterStatus;
+        private System.Windows.Forms.GroupBox grpAlarmTest;
+        private System.Windows.Forms.Label lblAlarmTestDesc;
+        private System.Windows.Forms.ComboBox cboAlarmList;
+        private System.Windows.Forms.Button btnAlarmRaise;
+        private System.Windows.Forms.Button btnAlarmClear;
+        private System.Windows.Forms.Label lblAlarmTestStatus;
     }
 }

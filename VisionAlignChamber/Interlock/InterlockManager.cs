@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using VisionAlignChamber.Core;
 using VisionAlignChamber.Database;
@@ -44,6 +45,7 @@ namespace VisionAlignChamber.Interlock
         private readonly Dictionary<int, AlarmInfo> _activeAlarms = new Dictionary<int, AlarmInfo>();
         private readonly List<AlarmInfo> _alarmHistory = new List<AlarmInfo>();
         private const int MaxHistoryCount = 1000;
+        private const string AlarmDefineCsvFileName = "AlarmDefine.csv";
         private bool _databaseEnabled;
 
         #endregion
@@ -121,112 +123,70 @@ namespace VisionAlignChamber.Interlock
         #region Initialization
 
         /// <summary>
-        /// 초기화 (기본 인터락 정의 등록)
+        /// 초기화 (CSV에서 인터락 정의 로드)
         /// </summary>
         private void Initialize()
         {
-            RegisterDefaultInterlocks();
+            LoadDefinitionsFromCsv();
         }
 
         /// <summary>
-        /// 기본 인터락 정의 등록
+        /// AlarmDefine.csv에서 인터락 정의를 로드합니다.
         /// </summary>
-        private void RegisterDefaultInterlocks()
+        private void LoadDefinitionsFromCsv()
         {
-            // 시스템 관련 인터락
-            RegisterDefinition(new InterlockDefinition(1001, "SYS_001", "시스템 초기화 실패", AlarmSeverity.Critical, AlarmCategory.System)
-            {
-                Description = "시스템 초기화 중 오류가 발생했습니다.",
-                RecoveryGuide = "프로그램을 재시작하세요."
-            });
+            string csvPath = FindAlarmDefineCsvPath();
 
-            RegisterDefinition(new InterlockDefinition(1002, "SYS_002", "설정 파일 로드 실패", AlarmSeverity.Error, AlarmCategory.System)
+            if (string.IsNullOrEmpty(csvPath) || !File.Exists(csvPath))
             {
-                Description = "설정 파일을 읽을 수 없습니다.",
-                RecoveryGuide = "설정 파일 경로 및 권한을 확인하세요."
-            });
+                System.Diagnostics.Debug.WriteLine($"[InterlockManager] AlarmDefine.csv not found. No alarm definitions loaded.");
+                return;
+            }
 
-            // 모션 관련 인터락
-            RegisterDefinition(new InterlockDefinition(2001, "MTN_001", "모션 연결 실패", AlarmSeverity.Critical, AlarmCategory.Motion)
+            try
             {
-                Description = "모션 컨트롤러와 연결할 수 없습니다.",
-                RecoveryGuide = "모션 컨트롤러 전원 및 케이블을 확인하세요."
-            });
+                var lines = File.ReadAllLines(csvPath);
+                int loadedCount = 0;
 
-            RegisterDefinition(new InterlockDefinition(2002, "MTN_002", "축 리밋 도달", AlarmSeverity.Warning, AlarmCategory.Motion)
-            {
-                Description = "모션 축이 리밋에 도달했습니다.",
-                AutoRecoverable = true,
-                RecoveryGuide = "반대 방향으로 이동하세요."
-            });
+                foreach (var line in lines)
+                {
+                    // 헤더, 주석, 빈 줄 스킵
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith("Code,"))
+                        continue;
 
-            RegisterDefinition(new InterlockDefinition(2003, "MTN_003", "서보 알람", AlarmSeverity.Error, AlarmCategory.Motion)
-            {
-                Description = "서보 드라이버에서 알람이 발생했습니다.",
-                RecoveryGuide = "서보 드라이버 상태를 확인하고 알람을 리셋하세요."
-            });
+                    var definition = InterlockDefinition.ParseCsvLine(line);
+                    if (definition != null)
+                    {
+                        RegisterDefinition(definition);
+                        loadedCount++;
+                    }
+                }
 
-            // 비전 관련 인터락
-            RegisterDefinition(new InterlockDefinition(3001, "VIS_001", "카메라 연결 실패", AlarmSeverity.Error, AlarmCategory.Vision)
+                System.Diagnostics.Debug.WriteLine($"[InterlockManager] Loaded {loadedCount} alarm definitions from {csvPath}");
+            }
+            catch (Exception ex)
             {
-                Description = "카메라와 연결할 수 없습니다.",
-                RecoveryGuide = "카메라 전원 및 케이블을 확인하세요."
-            });
+                System.Diagnostics.Debug.WriteLine($"[InterlockManager] Failed to load AlarmDefine.csv: {ex.Message}");
+            }
+        }
 
-            RegisterDefinition(new InterlockDefinition(3002, "VIS_002", "이미지 획득 실패", AlarmSeverity.Warning, AlarmCategory.Vision)
-            {
-                Description = "이미지를 획득할 수 없습니다.",
-                AutoRecoverable = true,
-                RecoveryGuide = "카메라 상태를 확인하고 재시도하세요."
-            });
+        /// <summary>
+        /// AlarmDefine.csv 파일 경로를 찾습니다.
+        /// </summary>
+        private string FindAlarmDefineCsvPath()
+        {
+            // 실행 파일 기준 Config 폴더
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string path = Path.Combine(baseDir, "Config", AlarmDefineCsvFileName);
+            if (File.Exists(path))
+                return path;
 
-            RegisterDefinition(new InterlockDefinition(3003, "VIS_003", "검사 실패", AlarmSeverity.Info, AlarmCategory.Vision)
-            {
-                Description = "비전 검사에서 불량이 감지되었습니다.",
-                AutoRecoverable = true
-            });
+            // 실행 파일 바로 아래
+            path = Path.Combine(baseDir, AlarmDefineCsvFileName);
+            if (File.Exists(path))
+                return path;
 
-            // 센서 관련 인터락
-            RegisterDefinition(new InterlockDefinition(4001, "SNS_001", "웨이퍼 미감지", AlarmSeverity.Warning, AlarmCategory.Sensor)
-            {
-                Description = "웨이퍼가 감지되지 않습니다.",
-                AutoRecoverable = true,
-                RecoveryGuide = "웨이퍼 유무를 확인하세요."
-            });
-
-            RegisterDefinition(new InterlockDefinition(4002, "SNS_002", "도어 열림", AlarmSeverity.Warning, AlarmCategory.Sensor)
-            {
-                Description = "챔버 도어가 열려있습니다.",
-                AutoRecoverable = true,
-                RecoveryGuide = "도어를 닫으세요."
-            });
-
-            // I/O 관련 인터락
-            RegisterDefinition(new InterlockDefinition(5001, "IO_001", "비상 정지", AlarmSeverity.Critical, AlarmCategory.IO)
-            {
-                Description = "비상 정지 스위치가 눌렸습니다.",
-                RecoveryGuide = "비상 정지 스위치를 해제하세요."
-            });
-
-            RegisterDefinition(new InterlockDefinition(5002, "IO_002", "에어 압력 부족", AlarmSeverity.Error, AlarmCategory.IO)
-            {
-                Description = "공압이 부족합니다.",
-                RecoveryGuide = "에어 공급 상태를 확인하세요."
-            });
-
-            // 통신 관련 인터락
-            RegisterDefinition(new InterlockDefinition(6001, "COM_001", "PLC 통신 끊김", AlarmSeverity.Error, AlarmCategory.Communication)
-            {
-                Description = "PLC와 통신이 끊어졌습니다.",
-                RecoveryGuide = "PLC 전원 및 네트워크를 확인하세요."
-            });
-
-            RegisterDefinition(new InterlockDefinition(6002, "COM_002", "호스트 통신 끊김", AlarmSeverity.Warning, AlarmCategory.Communication)
-            {
-                Description = "호스트와 통신이 끊어졌습니다.",
-                AutoRecoverable = true,
-                RecoveryGuide = "네트워크 상태를 확인하세요."
-            });
+            return null;
         }
 
         #endregion

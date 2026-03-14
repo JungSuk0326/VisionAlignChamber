@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using VisionAlignChamber.ViewModels;
 using VisionAlignChamber.Hardware.Facade;
@@ -394,19 +395,29 @@ namespace VisionAlignChamber.Views
 
         #region Timer
 
-        private void UpdateTimer_Tick(object sender, EventArgs e)
+        private bool _isPolling;
+
+        private async void UpdateTimer_Tick(object sender, EventArgs e)
         {
+            if (_isPolling) return; // 이전 폴링이 아직 진행 중이면 스킵
+            _isPolling = true;
+
             try
             {
-                // ViewModel 상태 업데이트
-                _viewModel?.UpdateStatus();
+                // 하드웨어 상태 폴링을 백그라운드 스레드에서 수행
+                // (P/Invoke 호출이 UI 스레드를 블로킹하지 않도록)
+                await Task.Run(() => _viewModel?.UpdateStatus());
 
-                // UI 업데이트
+                // UI 업데이트는 UI 스레드에서 수행 (await 이후 자동 복귀)
                 UpdateUI();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Update error: {ex.Message}");
+            }
+            finally
+            {
+                _isPolling = false;
             }
         }
 

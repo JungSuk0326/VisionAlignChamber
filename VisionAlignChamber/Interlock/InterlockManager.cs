@@ -253,6 +253,8 @@ namespace VisionAlignChamber.Interlock
         /// <returns>발생된 알람 정보 (이미 활성 상태면 null)</returns>
         public AlarmInfo RaiseAlarm(int interlockId, string source = null, string additionalMessage = null)
         {
+            AlarmInfo alarm = null;
+
             lock (_lock)
             {
                 // 이미 활성 상태인지 확인
@@ -271,7 +273,7 @@ namespace VisionAlignChamber.Interlock
                     return null;
 
                 // 알람 정보 생성
-                var alarm = new AlarmInfo(definition, source, additionalMessage);
+                alarm = new AlarmInfo(definition, source, additionalMessage);
 
                 // 활성 알람에 추가
                 _activeAlarms[interlockId] = alarm;
@@ -281,14 +283,14 @@ namespace VisionAlignChamber.Interlock
 
                 // 데이터베이스에 저장
                 SaveAlarmToDatabase(alarm);
-
-                // 이벤트 발행
-                EventManager.Publish(EventManager.AlarmOccurred, alarm);
-
-                System.Diagnostics.Debug.WriteLine($"[InterlockManager] Alarm raised: {alarm}");
-
-                return alarm;
             }
+
+            // 이벤트 발행 (lock 밖에서 호출하여 데드락 방지)
+            EventManager.Publish(EventManager.AlarmOccurred, alarm);
+
+            System.Diagnostics.Debug.WriteLine($"[InterlockManager] Alarm raised: {alarm}");
+
+            return alarm;
         }
 
         /// <summary>
@@ -310,9 +312,11 @@ namespace VisionAlignChamber.Interlock
         /// <returns>해제 성공 여부</returns>
         public bool ClearAlarm(int interlockId)
         {
+            AlarmInfo alarm;
+
             lock (_lock)
             {
-                if (!_activeAlarms.TryGetValue(interlockId, out var alarm))
+                if (!_activeAlarms.TryGetValue(interlockId, out alarm))
                     return false;
 
                 // 알람 해제 처리
@@ -323,14 +327,14 @@ namespace VisionAlignChamber.Interlock
 
                 // 데이터베이스 업데이트
                 UpdateAlarmClearedInDatabase(interlockId, alarm.ClearedTime.Value);
-
-                // 이벤트 발행
-                EventManager.Publish(EventManager.AlarmCleared, alarm);
-
-                System.Diagnostics.Debug.WriteLine($"[InterlockManager] Alarm cleared: {alarm}");
-
-                return true;
             }
+
+            // 이벤트 발행 (lock 밖에서 호출하여 데드락 방지)
+            EventManager.Publish(EventManager.AlarmCleared, alarm);
+
+            System.Diagnostics.Debug.WriteLine($"[InterlockManager] Alarm cleared: {alarm}");
+
+            return true;
         }
 
         /// <summary>
@@ -350,13 +354,15 @@ namespace VisionAlignChamber.Interlock
         /// </summary>
         public void ClearAllAlarms()
         {
+            List<int> alarmIds;
             lock (_lock)
             {
-                var alarmIds = _activeAlarms.Keys.ToList();
-                foreach (var id in alarmIds)
-                {
-                    ClearAlarm(id);
-                }
+                alarmIds = _activeAlarms.Keys.ToList();
+            }
+
+            foreach (var id in alarmIds)
+            {
+                ClearAlarm(id);
             }
         }
 
@@ -365,17 +371,18 @@ namespace VisionAlignChamber.Interlock
         /// </summary>
         public void ClearAutoRecoverableAlarms()
         {
+            List<int> autoRecoverableIds;
             lock (_lock)
             {
-                var autoRecoverableIds = _activeAlarms
+                autoRecoverableIds = _activeAlarms
                     .Where(kv => kv.Value.Definition?.AutoRecoverable == true)
                     .Select(kv => kv.Key)
                     .ToList();
+            }
 
-                foreach (var id in autoRecoverableIds)
-                {
-                    ClearAlarm(id);
-                }
+            foreach (var id in autoRecoverableIds)
+            {
+                ClearAlarm(id);
             }
         }
 

@@ -574,7 +574,7 @@ namespace VisionAlignChamber.Views
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<object>(OnAlarmOccurred), data);
+                BeginInvoke(new Action<object>(OnAlarmOccurred), data);
                 return;
             }
 
@@ -656,7 +656,7 @@ namespace VisionAlignChamber.Views
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<object>(OnAlarmCleared), data);
+                BeginInvoke(new Action<object>(OnAlarmCleared), data);
                 return;
             }
 

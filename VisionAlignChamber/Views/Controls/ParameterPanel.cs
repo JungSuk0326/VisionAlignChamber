@@ -58,6 +58,23 @@ namespace VisionAlignChamber.Views.Controls
                 // Vision Scan
                 txtScanStepAngle.Text = _param.ScanStepAngle.ToString();
                 txtScanImageCount.Text = _param.ScanImageCount.ToString();
+
+                // Axis Motion Parameters
+                txtChuckZ_Vel.Text = _param.WedgeUpDown.Velocity.ToString();
+                txtChuckZ_Acc.Text = _param.WedgeUpDown.Accel.ToString();
+                txtChuckZ_Dec.Text = _param.WedgeUpDown.Decel.ToString();
+
+                txtCenterL_Vel.Text = _param.CenteringStage1.Velocity.ToString();
+                txtCenterL_Acc.Text = _param.CenteringStage1.Accel.ToString();
+                txtCenterL_Dec.Text = _param.CenteringStage1.Decel.ToString();
+
+                txtCenterR_Vel.Text = _param.CenteringStage2.Velocity.ToString();
+                txtCenterR_Acc.Text = _param.CenteringStage2.Accel.ToString();
+                txtCenterR_Dec.Text = _param.CenteringStage2.Decel.ToString();
+
+                txtTheta_Vel.Text = _param.ChuckRotation.Velocity.ToString();
+                txtTheta_Acc.Text = _param.ChuckRotation.Accel.ToString();
+                txtTheta_Dec.Text = _param.ChuckRotation.Decel.ToString();
             }
             catch (Exception ex)
             {
@@ -130,6 +147,43 @@ namespace VisionAlignChamber.Views.Controls
 
                 _param.ScanStepAngle = scanStepAngle;
                 _param.ScanImageCount = scanImageCount;
+
+                // Axis Motion Parameters
+                if (double.TryParse(txtChuckZ_Vel.Text, out double czVel) &&
+                    double.TryParse(txtChuckZ_Acc.Text, out double czAcc) &&
+                    double.TryParse(txtChuckZ_Dec.Text, out double czDec))
+                {
+                    _param.WedgeUpDown.Velocity = czVel;
+                    _param.WedgeUpDown.Accel = czAcc;
+                    _param.WedgeUpDown.Decel = czDec;
+                }
+
+                if (double.TryParse(txtCenterL_Vel.Text, out double clVel) &&
+                    double.TryParse(txtCenterL_Acc.Text, out double clAcc) &&
+                    double.TryParse(txtCenterL_Dec.Text, out double clDec))
+                {
+                    _param.CenteringStage1.Velocity = clVel;
+                    _param.CenteringStage1.Accel = clAcc;
+                    _param.CenteringStage1.Decel = clDec;
+                }
+
+                if (double.TryParse(txtCenterR_Vel.Text, out double crVel) &&
+                    double.TryParse(txtCenterR_Acc.Text, out double crAcc) &&
+                    double.TryParse(txtCenterR_Dec.Text, out double crDec))
+                {
+                    _param.CenteringStage2.Velocity = crVel;
+                    _param.CenteringStage2.Accel = crAcc;
+                    _param.CenteringStage2.Decel = crDec;
+                }
+
+                if (double.TryParse(txtTheta_Vel.Text, out double thVel) &&
+                    double.TryParse(txtTheta_Acc.Text, out double thAcc) &&
+                    double.TryParse(txtTheta_Dec.Text, out double thDec))
+                {
+                    _param.ChuckRotation.Velocity = thVel;
+                    _param.ChuckRotation.Accel = thAcc;
+                    _param.ChuckRotation.Decel = thDec;
+                }
 
                 _param.Save();
                 MessageBox.Show("Parameters saved successfully.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);

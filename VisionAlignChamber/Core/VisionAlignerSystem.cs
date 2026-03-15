@@ -28,6 +28,7 @@ namespace VisionAlignChamber.Core
 
         private VisionAlignerSequence _sequence;
         private InterlockMonitor _interlockMonitor;
+        private Communication.CTCStatusBridge _statusBridge;
         private bool _isInitialized;
         private bool _disposed;
 
@@ -255,6 +256,12 @@ namespace VisionAlignChamber.Core
                     SubscribeSequenceEvents();
                 }
 
+                // StatusBridge 생성 (AppState → StatusObject 자동 변환)
+                if (HasCTC)
+                {
+                    _statusBridge = new Communication.CTCStatusBridge(_ctcComm);
+                }
+
                 // 초기화 완료 시 CTC 상태: PutReady (웨이퍼 수신 대기)
                 SetCTCTransferStatus(CTCTransferStatus.PutReady);
 
@@ -369,6 +376,10 @@ namespace VisionAlignChamber.Core
                 // 인터락 모니터 정지
                 _interlockMonitor?.Dispose();
                 _interlockMonitor = null;
+
+                // StatusBridge 해제
+                _statusBridge?.Dispose();
+                _statusBridge = null;
 
                 // Sequence 이벤트 해제
                 UnsubscribeSequenceEvents();

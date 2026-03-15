@@ -43,7 +43,7 @@ namespace VisionAlignChamber.Communication
             {
                 EquipmentStatus = ConvertEquipStatus(app),
                 ProcessState = ConvertProcessState(app),
-                TransferStatus = _ctcComm.CurrentStatus.TransferStatus, // TransferStatus는 시퀀스에서 직접 관리
+                TransferStatus = ConvertTransferStatus(app),
                 IsWaferOn = app.IsWaferExist,
                 LastError = app.IsEmergencyStop ? "Emergency Stop" : "",
             };
@@ -81,6 +81,26 @@ namespace VisionAlignChamber.Communication
                 default:
                     return StatusObject.eProcessState.Idle;
             }
+        }
+
+        /// <summary>
+        /// AppState → eTransferStatus 변환
+        /// Local/EMO/Error/Running → NotReady, 그 외 → 시퀀스에서 관리하는 값 유지
+        /// </summary>
+        private StatusObject.eTransferStatus ConvertTransferStatus(AppState app)
+        {
+            // Local(PM), 에러, 비상정지, 동작 중에는 Transfer 불가
+            if (app.ControlAuthority == ControlAuthority.Local
+                || app.IsEmergencyStop
+                || app.SystemStatus == SystemStatus.Error
+                || app.SystemStatus == SystemStatus.EMO
+                || app.SystemStatus == SystemStatus.Running)
+            {
+                return StatusObject.eTransferStatus.NotReady;
+            }
+
+            // 그 외에는 시퀀스/핸들러에서 설정한 값 유지
+            return _ctcComm.CurrentStatus.TransferStatus;
         }
 
         #endregion

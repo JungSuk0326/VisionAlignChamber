@@ -42,7 +42,7 @@ namespace VisionAlignChamber.ViewModels
 
         #region Control Authority
 
-        private ControlAuthority _controlAuthority = ControlAuthority.Local;
+        private ControlAuthority _controlAuthority = ControlAuthority.Remote;
         public ControlAuthority ControlAuthority
         {
             get => _controlAuthority;

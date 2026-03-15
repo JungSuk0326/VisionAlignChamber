@@ -262,8 +262,17 @@ namespace VisionAlignChamber.Core
                     _statusBridge = new Communication.CTCStatusBridge(_ctcComm);
                 }
 
-                // 초기화 완료 시 CTC 상태: PutReady (웨이퍼 수신 대기)
-                SetCTCTransferStatus(CTCTransferStatus.PutReady);
+                // 초기화 완료 시 CTC 상태: 웨이퍼 유무에 따라 판단
+                if (_io != null && _io.IsInitialized && _io.IsWaferDetectedOnAllSensors())
+                {
+                    AppState.Current.IsWaferExist = true;
+                    SetCTCTransferStatus(CTCTransferStatus.GetReady);
+                }
+                else
+                {
+                    AppState.Current.IsWaferExist = false;
+                    SetCTCTransferStatus(CTCTransferStatus.PutReady);
+                }
 
                 // AppContext 상태 동기화
                 SyncAppContextState();
@@ -561,27 +570,238 @@ namespace VisionAlignChamber.Core
         /// </summary>
         private void HandleCTCCommand(CommObject.CommandObject cmd)
         {
-            // 비즈니스 로직에 따른 명령 처리
-            // UI와 무관한 로직만 여기서 처리
-            // 예: Initialize, MeasurementStart, TransferReady 등
+            LogManager.System.Info($"[CTC Command] {cmd.Command}");
+
+            // Local(PM) 모드에서는 CTC 명령 거부 (AllStop, AlarmClear 제외)
+            if (AppState.Current.ControlAuthority == ControlAuthority.Local
+                && cmd.Command != CommObject.CommandObject.eCMD.AllStop
+                && cmd.Command != CommObject.CommandObject.eCMD.AlarmClear
+                && cmd.Command != CommObject.CommandObject.eCMD.GetModuleStatus
+                && cmd.Command != CommObject.CommandObject.eCMD.GetWaferCheck)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, "PM mode - command rejected");
+                LogManager.System.Warn($"[CTC Command] Rejected (PM mode): {cmd.Command}");
+                return;
+            }
 
             switch (cmd.Command)
             {
                 case CommObject.CommandObject.eCMD.Initialize:
-                    // 초기화 명령 처리
+                    HandleInitialize(cmd);
                     break;
 
                 case CommObject.CommandObject.eCMD.MeasurementStart:
-                    // 측정 시작 명령 처리
+                    HandleMeasurementStart(cmd);
+                    break;
+
+                case CommObject.CommandObject.eCMD.MeasurementStop:
+                    HandleMeasurementStop(cmd);
                     break;
 
                 case CommObject.CommandObject.eCMD.TransferReady:
-                    // 전송 준비 명령 처리
+                    HandleTransferReady(cmd);
                     break;
 
-                // 다른 명령들은 필요에 따라 추가
+                case CommObject.CommandObject.eCMD.AllStop:
+                    HandleAllStop(cmd);
+                    break;
+
+                case CommObject.CommandObject.eCMD.AlarmClear:
+                    HandleAlarmClear(cmd);
+                    break;
+
+                case CommObject.CommandObject.eCMD.SetRecipeData:
+                    HandleSetRecipeData(cmd);
+                    break;
             }
         }
+
+        #region CTC Command Handlers
+
+        private void HandleInitialize(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                if (_isInitialized)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, true, "Already initialized");
+                    return;
+                }
+
+                AppState.Current.SystemStatus = SystemStatus.Running;
+
+                bool result = InitializeAll();
+
+                if (result)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, true);
+                }
+                else
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, LastError ?? "Initialize failed");
+                    AppState.Current.SystemStatus = SystemStatus.Error;
+                }
+            }
+            catch (Exception ex)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
+                AppState.Current.SystemStatus = SystemStatus.Error;
+            }
+        }
+
+        private async void HandleMeasurementStart(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                // 사전 조건 체크
+                if (!_isInitialized)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "Not initialized");
+                    return;
+                }
+
+                if (AppState.Current.SystemStatus == SystemStatus.Running)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "Already running");
+                    return;
+                }
+
+                if (!AppState.Current.IsWaferExist)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "No wafer detected");
+                    return;
+                }
+
+                if (_sequence == null)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "Sequence not available");
+                    return;
+                }
+
+                // 상태 전환: Execute + NotReady
+                AppState.Current.SystemStatus = SystemStatus.Running;
+                SetCTCTransferStatus(CTCTransferStatus.NotReady);
+
+                _ctcComm?.SendResponse(cmd.Command, true);
+
+                // 시퀀스 비동기 실행
+                // TODO: isFlat 판단 로직 (레시피에서 결정)
+                bool isFlat = false;
+                bool result = await _sequence.RunSequenceAsync(isFlat);
+
+                if (!result && _sequence.State != VisionAlignerSequence.SequenceState.Aborted)
+                {
+                    LogManager.System.Error($"[MeasurementStart] Sequence failed: {_sequence.LastError}");
+                }
+
+                // 완료 후 상태는 OnSequenceCompleted에서 처리됨
+            }
+            catch (Exception ex)
+            {
+                AppState.Current.SystemStatus = SystemStatus.Error;
+                LogManager.System.Error($"[MeasurementStart] Error: {ex.Message}");
+            }
+        }
+
+        private void HandleMeasurementStop(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                _sequence?.Stop();
+                AppState.Current.SystemStatus = SystemStatus.Idle;
+                _ctcComm?.SendResponse(cmd.Command, true);
+            }
+            catch (Exception ex)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
+            }
+        }
+
+        private void HandleTransferReady(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                if (AppState.Current.SystemStatus == SystemStatus.Running)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "System is running");
+                    return;
+                }
+
+                // 웨이퍼 유무에 따라 Transfer 상태 결정
+                if (AppState.Current.IsWaferExist)
+                {
+                    // 웨이퍼 있음 → 가져갈 수 있도록 GetReady
+                    SetCTCTransferStatus(CTCTransferStatus.GetReady);
+                }
+                else
+                {
+                    // 웨이퍼 없음 → 넣을 수 있도록 PutReady
+                    SetCTCTransferStatus(CTCTransferStatus.PutReady);
+                }
+
+                _ctcComm?.SendResponse(cmd.Command, true);
+            }
+            catch (Exception ex)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
+            }
+        }
+
+        private void HandleAllStop(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                EmergencyStop();
+                _sequence?.Stop();
+                AppState.Current.SystemStatus = SystemStatus.EMO;
+                AppState.Current.IsEmergencyStop = true;
+                SetCTCTransferStatus(CTCTransferStatus.NotReady);
+                _ctcComm?.SendResponse(cmd.Command, true);
+            }
+            catch (Exception ex)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
+            }
+        }
+
+        private void HandleAlarmClear(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                InterlockManager.Instance.ClearAllAlarms();
+                AppState.Current.IsEmergencyStop = false;
+                AppState.Current.SystemStatus = SystemStatus.Idle;
+                AppState.Current.IsHomed = false; // 알람 후 홈 재수행 필요
+
+                // 웨이퍼 유무에 따라 TransferStatus 복구
+                if (AppState.Current.IsWaferExist)
+                    SetCTCTransferStatus(CTCTransferStatus.GetReady);
+                else
+                    SetCTCTransferStatus(CTCTransferStatus.PutReady);
+
+                _ctcComm?.SendResponse(cmd.Command, true);
+            }
+            catch (Exception ex)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
+            }
+        }
+
+        private void HandleSetRecipeData(CommObject.CommandObject cmd)
+        {
+            try
+            {
+                // TODO: 레시피 데이터 적용
+                LogManager.System.Info($"[SetRecipeData] RecipeIndex: {cmd.SetRecipeIndex}");
+                _ctcComm?.SendResponse(cmd.Command, true);
+            }
+            catch (Exception ex)
+            {
+                _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
+            }
+        }
+
+        #endregion
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace VisionAlignChamber.Core
         private AppState()
         {
             _systemStatus = SystemStatus.Idle;
-            _controlAuthority = ControlAuthority.Local;
+            _controlAuthority = ControlAuthority.Remote;
         }
 
         #endregion
@@ -237,7 +237,7 @@ namespace VisionAlignChamber.Core
             var db = DatabaseManager.Instance;
 
             SystemStatus = SystemStatus.Idle;
-            ControlAuthority = ControlAuthority.Local;
+            ControlAuthority = ControlAuthority.Remote;
             IsEmergencyStop = false;
             IsInitialized = false;  // VisionAlignerSystem.InitializeAll() 후 true로 설정됨
             IsHomed = false;

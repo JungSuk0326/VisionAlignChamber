@@ -277,6 +277,9 @@
     <Compile Include="Views\Controls\SetUpPanel.Designer.cs">
       <DependentUpon>SetUpPanel.cs</DependentUpon>
     </Compile>
+    <Content Include="Vision\eMotion\DLLs\OpenCvSharp.dll" />
+    <Content Include="Vision\eMotion\DLLs\OpenCvSharpExtern.dll" />
+    <Content Include="Vision\eMotion\DLLs\opencv_videoio_ffmpeg4110_64.dll" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -362,6 +365,11 @@
       <Link>eMotionAlign.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Vision\eMotion\DLLs\eMotionAlign.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Vision\eMotion\DLLs\eMotionAlign_flat_안됨.dll" />
+    <Content Include="Vision\eMotion\DLLs\Newtonsoft.Json.dll" />
     <Content Include="Vision\eMotion\DLLs\OpenCvSharp.dll">
       <Link>OpenCvSharp.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -145,12 +145,14 @@ namespace VisionAlignChamber.Vision
 
                 // Grabber 생성 (카메라 오픈은 별도)
                 bool debug = false;
-#if DEBUG
-                debug = true;
-#endif
+                //#if DEBUG
+                //                debug = true;
+                //#endif
+                debug = AppSettings.SimulationMode;
+                
                 _grabber = new MulticamEx(debug);
                 _grabber.OnCallback += OnGrabberCallback;
-
+                
                 _isInitialized = true;
 
                 // 조명 초기화 (실패해도 비전은 사용 가능)

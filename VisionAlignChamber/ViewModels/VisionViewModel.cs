@@ -210,6 +210,20 @@ namespace VisionAlignChamber.ViewModels
             set => SetProperty(ref _camFilePath, value);
         }
 
+        private bool _isTrigLive;
+        public bool IsTrigLive
+        {
+            get => _isTrigLive;
+            set => SetProperty(ref _isTrigLive, value);
+        }
+
+        private int _exposureTime = 10000;
+        public int ExposureTime
+        {
+            get => _exposureTime;
+            set => SetProperty(ref _exposureTime, value);
+        }
+
         #endregion
 
         #region Inspection Mode Properties
@@ -344,6 +358,10 @@ namespace VisionAlignChamber.ViewModels
         public ICommand TriggerCommand { get; private set; }
         public ICommand SaveImageCommand { get; private set; }
 
+        // Camera Option Commands
+        public ICommand SetExposureTimeCommand { get; private set; }
+        public ICommand SetTrigLiveCommand { get; private set; }
+
         // Light Commands
         public ICommand LightOnCommand { get; private set; }
         public ICommand LightOffCommand { get; private set; }
@@ -367,6 +385,10 @@ namespace VisionAlignChamber.ViewModels
             DeactivateGrabberCommand = new RelayCommand(ExecuteDeactivateGrabber, () => IsGrabberActive);
             TriggerCommand = new RelayCommand(ExecuteTrigger, () => IsCameraOpened && IsGrabberActive);
             SaveImageCommand = new RelayCommand<string>(ExecuteSaveImage, _ => IsCameraOpened);
+
+            // Camera Option Commands
+            SetExposureTimeCommand = new RelayCommand<int>(ExecuteSetExposureTime, _ => IsCameraOpened);
+            SetTrigLiveCommand = new RelayCommand<bool>(ExecuteSetTrigLive, _ => IsCameraOpened);
 
             // Light Commands
             LightOnCommand = new RelayCommand(ExecuteLightOn, () => IsLightInitialized && !IsLightOn);
@@ -680,6 +702,34 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
+        private void ExecuteSetExposureTime(int exposureTime)
+        {
+            try
+            {
+                _vision.SetExposureTime(exposureTime);
+                ExposureTime = exposureTime;
+                StatusMessage = $"Exposure: {exposureTime} μs";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Exposure 설정 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteSetTrigLive(bool enable)
+        {
+            try
+            {
+                _vision.SetTrigLive(enable);
+                IsTrigLive = enable;
+                StatusMessage = enable ? "TrigLive ON" : "TrigLive OFF";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"TrigLive 설정 오류: {ex.Message}";
+            }
+        }
+
         private void ExecuteLightOn()
         {
             try
@@ -810,6 +860,22 @@ namespace VisionAlignChamber.ViewModels
         public void SetLightPowerValue(int power)
         {
             ExecuteSetLightPower(power);
+        }
+
+        /// <summary>
+        /// Exposure Time 설정
+        /// </summary>
+        public void SetExposureTimeValue(int exposureTime)
+        {
+            ExecuteSetExposureTime(exposureTime);
+        }
+
+        /// <summary>
+        /// TrigLive 토글
+        /// </summary>
+        public void SetTrigLiveValue(bool enable)
+        {
+            ExecuteSetTrigLive(enable);
         }
 
         #endregion

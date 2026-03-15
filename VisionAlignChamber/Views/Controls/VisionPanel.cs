@@ -97,6 +97,9 @@ namespace VisionAlignChamber.Views.Controls
             btnGrabberActive.Enabled = _viewModel.IsCameraOpened;
             btnTrigger.Enabled = _viewModel.IsCameraOpened && _viewModel.IsGrabberActive;
             btnFileSave.Enabled = _viewModel.IsCameraOpened;
+            chkTrigLive.Enabled = _viewModel.IsCameraOpened;
+            btnExposure.Enabled = _viewModel.IsCameraOpened;
+            txtExposure.Enabled = _viewModel.IsCameraOpened;
 
             // Setting 버튼 텍스트 동기화
             btnCamOpen.Text = _viewModel.IsCameraOpened ? "Close" : "Open";
@@ -328,6 +331,21 @@ namespace VisionAlignChamber.Views.Controls
             if (rdoFlat.Checked && _viewModel != null)
             {
                 _viewModel.IsFlatMode = true;
+            }
+        }
+
+        private void chkTrigLive_CheckedChanged(object sender, EventArgs e)
+        {
+            _viewModel?.SetTrigLiveValue(chkTrigLive.Checked);
+        }
+
+        private void btnExposure_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null) return;
+
+            if (int.TryParse(txtExposure.Text, out int exposureTime) && exposureTime > 0)
+            {
+                _viewModel.SetExposureTimeValue(exposureTime);
             }
         }
 

@@ -25,6 +25,10 @@ namespace VisionAlignChamber.Views.Controls
             this.rdoNotch = new System.Windows.Forms.RadioButton();
             this.pnlRunSetting = new System.Windows.Forms.Panel();
             this.grpSetting = new System.Windows.Forms.GroupBox();
+            this.chkTrigLive = new System.Windows.Forms.CheckBox();
+            this.lblExposure = new System.Windows.Forms.Label();
+            this.txtExposure = new System.Windows.Forms.TextBox();
+            this.btnExposure = new System.Windows.Forms.Button();
             this.lblCamFile = new System.Windows.Forms.Label();
             this.btnFileSave = new System.Windows.Forms.Button();
             this.btnTrigger = new System.Windows.Forms.Button();
@@ -66,6 +70,7 @@ namespace VisionAlignChamber.Views.Controls
             this.colRadius = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlStatusBar = new System.Windows.Forms.Panel();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.grpStatus.SuspendLayout();
             this.grpMode.SuspendLayout();
             this.pnlRunSetting.SuspendLayout();
@@ -175,11 +180,15 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlRunSetting.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRunSetting.Location = new System.Drawing.Point(0, 95);
             this.pnlRunSetting.Name = "pnlRunSetting";
-            this.pnlRunSetting.Size = new System.Drawing.Size(350, 130);
+            this.pnlRunSetting.Size = new System.Drawing.Size(350, 175);
             this.pnlRunSetting.TabIndex = 2;
             // 
             // grpSetting
             // 
+            this.grpSetting.Controls.Add(this.chkTrigLive);
+            this.grpSetting.Controls.Add(this.lblExposure);
+            this.grpSetting.Controls.Add(this.txtExposure);
+            this.grpSetting.Controls.Add(this.btnExposure);
             this.grpSetting.Controls.Add(this.lblCamFile);
             this.grpSetting.Controls.Add(this.btnFileSave);
             this.grpSetting.Controls.Add(this.btnTrigger);
@@ -188,16 +197,55 @@ namespace VisionAlignChamber.Views.Controls
             this.grpSetting.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpSetting.Location = new System.Drawing.Point(175, 0);
             this.grpSetting.Name = "grpSetting";
-            this.grpSetting.Size = new System.Drawing.Size(175, 130);
+            this.grpSetting.Size = new System.Drawing.Size(175, 175);
             this.grpSetting.TabIndex = 1;
             this.grpSetting.TabStop = false;
             this.grpSetting.Text = "Setting";
+            // 
+            // chkTrigLive
+            // 
+            this.chkTrigLive.AutoSize = true;
+            this.chkTrigLive.Location = new System.Drawing.Point(8, 92);
+            this.chkTrigLive.Name = "chkTrigLive";
+            this.chkTrigLive.Size = new System.Drawing.Size(71, 19);
+            this.chkTrigLive.TabIndex = 5;
+            this.chkTrigLive.Text = "Trig Live";
+            this.chkTrigLive.UseVisualStyleBackColor = true;
+            this.chkTrigLive.CheckedChanged += new System.EventHandler(this.chkTrigLive_CheckedChanged);
+            // 
+            // lblExposure
+            // 
+            this.lblExposure.AutoSize = true;
+            this.lblExposure.Location = new System.Drawing.Point(8, 118);
+            this.lblExposure.Name = "lblExposure";
+            this.lblExposure.Size = new System.Drawing.Size(29, 15);
+            this.lblExposure.TabIndex = 6;
+            this.lblExposure.Text = "Exp:";
+            // 
+            // txtExposure
+            // 
+            this.txtExposure.Location = new System.Drawing.Point(40, 115);
+            this.txtExposure.Name = "txtExposure";
+            this.txtExposure.Size = new System.Drawing.Size(65, 23);
+            this.txtExposure.TabIndex = 7;
+            this.txtExposure.Text = "10000";
+            this.txtExposure.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnExposure
+            // 
+            this.btnExposure.Location = new System.Drawing.Point(110, 114);
+            this.btnExposure.Name = "btnExposure";
+            this.btnExposure.Size = new System.Drawing.Size(55, 25);
+            this.btnExposure.TabIndex = 8;
+            this.btnExposure.Text = "Set";
+            this.btnExposure.UseVisualStyleBackColor = true;
+            this.btnExposure.Click += new System.EventHandler(this.btnExposure_Click);
             // 
             // lblCamFile
             // 
             this.lblCamFile.AutoSize = true;
             this.lblCamFile.ForeColor = System.Drawing.Color.Gray;
-            this.lblCamFile.Location = new System.Drawing.Point(8, 95);
+            this.lblCamFile.Location = new System.Drawing.Point(8, 145);
             this.lblCamFile.Name = "lblCamFile";
             this.lblCamFile.Size = new System.Drawing.Size(70, 15);
             this.lblCamFile.TabIndex = 4;
@@ -258,7 +306,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpRunning.Dock = System.Windows.Forms.DockStyle.Left;
             this.grpRunning.Location = new System.Drawing.Point(0, 0);
             this.grpRunning.Name = "grpRunning";
-            this.grpRunning.Size = new System.Drawing.Size(175, 130);
+            this.grpRunning.Size = new System.Drawing.Size(175, 175);
             this.grpRunning.TabIndex = 0;
             this.grpRunning.TabStop = false;
             this.grpRunning.Text = "Running";
@@ -395,7 +443,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpControl.Controls.Add(this.btnLoadImages);
             this.grpControl.Controls.Add(this.btnInitialize);
             this.grpControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpControl.Location = new System.Drawing.Point(0, 225);
+            this.grpControl.Location = new System.Drawing.Point(0, 270);
             this.grpControl.Name = "grpControl";
             this.grpControl.Size = new System.Drawing.Size(350, 75);
             this.grpControl.TabIndex = 3;
@@ -443,24 +491,24 @@ namespace VisionAlignChamber.Views.Controls
             this.btnInitialize.Text = "초기화";
             this.btnInitialize.UseVisualStyleBackColor = true;
             this.btnInitialize.Click += new System.EventHandler(this.btnInitialize_Click);
-            //
+            // 
             // grpLight
-            //
+            // 
             this.grpLight.Controls.Add(this.lblLightPowerValue);
             this.grpLight.Controls.Add(this.trkLightPower);
             this.grpLight.Controls.Add(this.lblLightPower);
             this.grpLight.Controls.Add(this.lblLightStatus);
             this.grpLight.Controls.Add(this.btnLightOnOff);
             this.grpLight.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpLight.Location = new System.Drawing.Point(0, 300);
+            this.grpLight.Location = new System.Drawing.Point(0, 345);
             this.grpLight.Name = "grpLight";
             this.grpLight.Size = new System.Drawing.Size(350, 60);
             this.grpLight.TabIndex = 4;
             this.grpLight.TabStop = false;
             this.grpLight.Text = "Light";
-            //
+            // 
             // lblLightPowerValue
-            //
+            // 
             this.lblLightPowerValue.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
             this.lblLightPowerValue.Location = new System.Drawing.Point(305, 22);
             this.lblLightPowerValue.Name = "lblLightPowerValue";
@@ -468,9 +516,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblLightPowerValue.TabIndex = 4;
             this.lblLightPowerValue.Text = "80%";
             this.lblLightPowerValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // trkLightPower
-            //
+            // 
             this.trkLightPower.AutoSize = false;
             this.trkLightPower.Location = new System.Drawing.Point(175, 20);
             this.trkLightPower.Maximum = 100;
@@ -481,18 +529,18 @@ namespace VisionAlignChamber.Views.Controls
             this.trkLightPower.TickFrequency = 10;
             this.trkLightPower.Value = 80;
             this.trkLightPower.Scroll += new System.EventHandler(this.trkLightPower_Scroll);
-            //
+            // 
             // lblLightPower
-            //
+            // 
             this.lblLightPower.AutoSize = true;
             this.lblLightPower.Location = new System.Drawing.Point(125, 25);
             this.lblLightPower.Name = "lblLightPower";
-            this.lblLightPower.Size = new System.Drawing.Size(44, 15);
+            this.lblLightPower.Size = new System.Drawing.Size(43, 15);
             this.lblLightPower.TabIndex = 2;
             this.lblLightPower.Text = "Power:";
-            //
+            // 
             // lblLightStatus
-            //
+            // 
             this.lblLightStatus.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
             this.lblLightStatus.ForeColor = System.Drawing.Color.Gray;
             this.lblLightStatus.Location = new System.Drawing.Point(70, 25);
@@ -500,9 +548,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblLightStatus.Size = new System.Drawing.Size(40, 15);
             this.lblLightStatus.TabIndex = 1;
             this.lblLightStatus.Text = "OFF";
-            //
+            // 
             // btnLightOnOff
-            //
+            // 
             this.btnLightOnOff.Location = new System.Drawing.Point(10, 20);
             this.btnLightOnOff.Name = "btnLightOnOff";
             this.btnLightOnOff.Size = new System.Drawing.Size(55, 30);
@@ -510,14 +558,14 @@ namespace VisionAlignChamber.Views.Controls
             this.btnLightOnOff.Text = "ON";
             this.btnLightOnOff.UseVisualStyleBackColor = true;
             this.btnLightOnOff.Click += new System.EventHandler(this.btnLightOnOff_Click);
-            //
+            // 
             // grpResult
-            //
+            // 
             this.grpResult.Controls.Add(this.listResult);
             this.grpResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpResult.Location = new System.Drawing.Point(0, 360);
+            this.grpResult.Location = new System.Drawing.Point(0, 405);
             this.grpResult.Name = "grpResult";
-            this.grpResult.Size = new System.Drawing.Size(350, 210);
+            this.grpResult.Size = new System.Drawing.Size(350, 165);
             this.grpResult.TabIndex = 5;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "검사 결과";
@@ -544,7 +592,7 @@ namespace VisionAlignChamber.Views.Controls
             this.listResult.HideSelection = false;
             this.listResult.Location = new System.Drawing.Point(3, 19);
             this.listResult.Name = "listResult";
-            this.listResult.Size = new System.Drawing.Size(344, 248);
+            this.listResult.Size = new System.Drawing.Size(344, 143);
             this.listResult.TabIndex = 0;
             this.listResult.UseCompatibleStateImageBehavior = false;
             this.listResult.View = System.Windows.Forms.View.Details;
@@ -690,6 +738,10 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnGrabberActive;
         private System.Windows.Forms.Button btnTrigger;
         private System.Windows.Forms.Button btnFileSave;
+        private System.Windows.Forms.CheckBox chkTrigLive;
+        private System.Windows.Forms.Label lblExposure;
+        private System.Windows.Forms.TextBox txtExposure;
+        private System.Windows.Forms.Button btnExposure;
         private System.Windows.Forms.Label lblCamFile;
         private System.Windows.Forms.GroupBox grpControl;
         private System.Windows.Forms.Button btnExecute;
@@ -716,5 +768,6 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Label lblLightPower;
         private System.Windows.Forms.TrackBar trkLightPower;
         private System.Windows.Forms.Label lblLightPowerValue;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

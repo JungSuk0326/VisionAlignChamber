@@ -169,6 +169,7 @@
     <Compile Include="Communication\Interfaces\ICTCCommunication.cs" />
     <Compile Include="Communication\CTCCommServer.cs" />
     <Compile Include="Communication\CTCCommController.cs" />
+    <Compile Include="Communication\CTCStatusBridge.cs" />
     <!-- 비전 -->
     <Compile Include="Vision\VisionAlignWrapper.cs" />
     <!-- 모델 -->

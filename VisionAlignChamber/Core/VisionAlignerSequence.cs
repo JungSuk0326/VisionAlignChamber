@@ -378,14 +378,15 @@ namespace VisionAlignChamber.Core
 
                 // Centering Open
                 if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
+                    _param.CenterL_Open, _param.CenterR_Open,
+                    _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     LogManager.Sequence.Error("PrepareForPut: Centering Open 실패");
                     return false;
                 }
 
                 // Chuck Z Down
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     LogManager.Sequence.Error("PrepareForPut: Chuck Z Down 실패");
                     return false;
@@ -424,14 +425,15 @@ namespace VisionAlignChamber.Core
 
                 // Centering Open
                 if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
+                    _param.CenterL_Open, _param.CenterR_Open,
+                    _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     LogManager.Sequence.Error("PrepareForGet: Centering Open 실패");
                     return false;
                 }
 
                 // Chuck Z Down
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     LogManager.Sequence.Error("PrepareForGet: Chuck Z Down 실패");
                     return false;
@@ -524,7 +526,8 @@ namespace VisionAlignChamber.Core
 
                 // Centering MinCtr (L/R 동시)
                 if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_MinCtr, _param.CenterR_MinCtr, ct: _cts.Token))
+                    _param.CenterL_MinCtr, _param.CenterR_MinCtr,
+                    _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("PreCenter 이동 실패");
                     return false;
@@ -557,14 +560,15 @@ namespace VisionAlignChamber.Core
 
                 // Centering Open
                 if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
+                    _param.CenterL_Open, _param.CenterR_Open,
+                    _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("Centering Open 이동 실패");
                     return false;
                 }
 
                 // Chuck Z Vision (상승하면서 LiftPin 위 웨이퍼를 Chuck으로 안착)
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Vision, ct: _cts.Token))
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Vision, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     SetError("Chuck Z Vision 이동 실패");
                     return false;
@@ -660,7 +664,7 @@ namespace VisionAlignChamber.Core
                         // AngleStep 만큼 이동
                         double targetAngle = stepAngle * (i + 1);
 
-                        if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, ct: _cts.Token))
+                        if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
                         {
                             SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
                             return false;
@@ -745,7 +749,7 @@ namespace VisionAlignChamber.Core
                 }
 
                 // 1. Theta 정렬 (척 위에서 AbsAngle 만큼 회전)
-                if (!await _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, ct: _cts.Token))
+                if (!await _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
                     SetError("Theta Align 이동 실패");
                     return false;
@@ -761,7 +765,7 @@ namespace VisionAlignChamber.Core
                 _io.SetLiftPinBlow(false);
 
                 // Chuck Z Down (하강 → 웨이퍼가 LiftPin에 안착)
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     SetError("Chuck Z Down 이동 실패");
                     return false;
@@ -774,7 +778,7 @@ namespace VisionAlignChamber.Core
                 double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset;
                 double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset;
 
-                if (!await _motion.CenteringStagesMoveSyncAsync(centerL, centerR, ct: _cts.Token))
+                if (!await _motion.CenteringStagesMoveSyncAsync(centerL, centerR, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("Center Align 이동 실패");
                     return false;
@@ -800,14 +804,15 @@ namespace VisionAlignChamber.Core
             {
                 // Centering Open
                 if (!await _motion.CenteringStagesMoveSyncAsync(
-                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
+                    _param.CenterL_Open, _param.CenterR_Open,
+                    _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("Centering Open 이동 실패");
                     return false;
                 }
 
                 // Chuck Z Eddy
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, ct: _cts.Token))
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     SetError("Chuck Z Eddy 이동 실패");
                     return false;

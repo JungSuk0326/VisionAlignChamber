@@ -105,6 +105,23 @@ namespace VisionAlignChamber.Core
             }
         }
 
+        private bool _isHomed;
+        /// <summary>
+        /// 원점 복귀 완료 여부
+        /// </summary>
+        public bool IsHomed
+        {
+            get => _isHomed;
+            set
+            {
+                if (_isHomed != value)
+                {
+                    _isHomed = value;
+                    OnStateChanged(nameof(IsHomed));
+                }
+            }
+        }
+
         private bool _isWaferExist;
         /// <summary>
         /// 웨이퍼 존재 여부 (Sensor1 AND Sensor2)
@@ -118,6 +135,23 @@ namespace VisionAlignChamber.Core
                 {
                     _isWaferExist = value;
                     OnStateChanged(nameof(IsWaferExist));
+                }
+            }
+        }
+
+        private SystemMode _systemMode;
+        /// <summary>
+        /// 현재 운전 모드 (Manual, Auto, Setup)
+        /// </summary>
+        public SystemMode SystemMode
+        {
+            get => _systemMode;
+            set
+            {
+                if (_systemMode != value)
+                {
+                    _systemMode = value;
+                    OnStateChanged(nameof(SystemMode));
                 }
             }
         }
@@ -206,7 +240,9 @@ namespace VisionAlignChamber.Core
             ControlAuthority = ControlAuthority.Local;
             IsEmergencyStop = false;
             IsInitialized = false;  // VisionAlignerSystem.InitializeAll() 후 true로 설정됨
+            IsHomed = false;
             IsWaferExist = false;
+            SystemMode = SystemMode.Manual;
             CurrentRunStep = 0;
             TotalRunCount = 0;
             _lastVisionResult = WaferVisionResult.Empty;

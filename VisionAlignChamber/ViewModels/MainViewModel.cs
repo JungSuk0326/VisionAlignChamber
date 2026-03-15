@@ -96,13 +96,6 @@ namespace VisionAlignChamber.ViewModels
 
         #region System State
 
-        private SystemState _systemState;
-        public SystemState SystemState
-        {
-            get => _systemState;
-            set => SetProperty(ref _systemState, value);
-        }
-
         private SystemMode _currentMode;
         public SystemMode CurrentMode
         {
@@ -111,10 +104,15 @@ namespace VisionAlignChamber.ViewModels
             {
                 if (SetProperty(ref _currentMode, value))
                 {
-                    SystemState.Mode = value;
                     OnPropertyChanged(nameof(IsManualMode));
                     OnPropertyChanged(nameof(IsAutoMode));
                     OnPropertyChanged(nameof(IsSetupMode));
+
+                    // AppState 동기화 (SSOT)
+                    if (!_isSyncing)
+                    {
+                        AppState.Current.SystemMode = value;
+                    }
                 }
             }
         }
@@ -131,7 +129,6 @@ namespace VisionAlignChamber.ViewModels
             {
                 if (SetProperty(ref _currentStatus, value))
                 {
-                    SystemState.Status = value;
                     OnPropertyChanged(nameof(IsIdle));
                     OnPropertyChanged(nameof(IsRunning));
                     OnPropertyChanged(nameof(IsError));
@@ -161,8 +158,6 @@ namespace VisionAlignChamber.ViewModels
             {
                 if (SetProperty(ref _isInitialized, value))
                 {
-                    SystemState.IsInitialized = value;
-
                     // AppState 동기화 (SSOT)
                     if (!_isSyncing)
                     {
@@ -180,7 +175,11 @@ namespace VisionAlignChamber.ViewModels
             {
                 if (SetProperty(ref _isHomed, value))
                 {
-                    SystemState.IsHomed = value;
+                    // AppState 동기화 (SSOT)
+                    if (!_isSyncing)
+                    {
+                        AppState.Current.IsHomed = value;
+                    }
                 }
             }
         }
@@ -234,7 +233,6 @@ namespace VisionAlignChamber.ViewModels
         public MainViewModel()
         {
             // 상태 초기화
-            SystemState = new SystemState();
             AlignParameters = AlignParameters.CreateDefault();
             ActiveAlarms = new ObservableCollection<AlarmInfo>();
 
@@ -511,7 +509,7 @@ namespace VisionAlignChamber.ViewModels
             Vision?.UpdateStatus();
             Eddy?.UpdateStatus();
 
-            SystemState.LastUpdated = DateTime.Now;
+            // 상태 업데이트 시간은 AppState에서 관리
         }
 
         /// <summary>
@@ -557,15 +555,22 @@ namespace VisionAlignChamber.ViewModels
             {
                 _controlAuthority = AppState.Current.ControlAuthority;
                 _currentStatus = AppState.Current.SystemStatus;
+                _currentMode = AppState.Current.SystemMode;
                 _isInitialized = AppState.Current.IsInitialized;
+                _isHomed = AppState.Current.IsHomed;
 
                 OnPropertyChanged(nameof(ControlAuthority));
                 OnPropertyChanged(nameof(CurrentStatus));
+                OnPropertyChanged(nameof(CurrentMode));
                 OnPropertyChanged(nameof(IsInitialized));
+                OnPropertyChanged(nameof(IsHomed));
                 OnPropertyChanged(nameof(IsLocalControl));
                 OnPropertyChanged(nameof(IsRemoteControl));
                 OnPropertyChanged(nameof(IsLocked));
                 OnPropertyChanged(nameof(CanOperateUI));
+                OnPropertyChanged(nameof(IsManualMode));
+                OnPropertyChanged(nameof(IsAutoMode));
+                OnPropertyChanged(nameof(IsSetupMode));
                 OnPropertyChanged(nameof(IsIdle));
                 OnPropertyChanged(nameof(IsRunning));
                 OnPropertyChanged(nameof(IsError));
@@ -595,7 +600,6 @@ namespace VisionAlignChamber.ViewModels
                         if (_currentStatus != AppState.Current.SystemStatus)
                         {
                             _currentStatus = AppState.Current.SystemStatus;
-                            SystemState.Status = _currentStatus;
                             OnPropertyChanged(nameof(CurrentStatus));
                             OnPropertyChanged(nameof(IsIdle));
                             OnPropertyChanged(nameof(IsRunning));
@@ -609,9 +613,28 @@ namespace VisionAlignChamber.ViewModels
                         if (_isInitialized != AppState.Current.IsInitialized)
                         {
                             _isInitialized = AppState.Current.IsInitialized;
-                            SystemState.IsInitialized = _isInitialized;
                             OnPropertyChanged(nameof(IsInitialized));
                             RaiseCanExecuteChanged();
+                        }
+                        break;
+
+                    case nameof(AppState.IsHomed):
+                        if (_isHomed != AppState.Current.IsHomed)
+                        {
+                            _isHomed = AppState.Current.IsHomed;
+                            OnPropertyChanged(nameof(IsHomed));
+                            RaiseCanExecuteChanged();
+                        }
+                        break;
+
+                    case nameof(AppState.SystemMode):
+                        if (_currentMode != AppState.Current.SystemMode)
+                        {
+                            _currentMode = AppState.Current.SystemMode;
+                            OnPropertyChanged(nameof(CurrentMode));
+                            OnPropertyChanged(nameof(IsManualMode));
+                            OnPropertyChanged(nameof(IsAutoMode));
+                            OnPropertyChanged(nameof(IsSetupMode));
                         }
                         break;
                 }

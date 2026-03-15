@@ -717,7 +717,7 @@ namespace VisionAlignChamber.Core
             }
         }
 
-        private void HandleTransferReady(CommObject.CommandObject cmd)
+        private async void HandleTransferReady(CommObject.CommandObject cmd)
         {
             try
             {
@@ -727,22 +727,49 @@ namespace VisionAlignChamber.Core
                     return;
                 }
 
-                // 웨이퍼 유무에 따라 Transfer 상태 결정
+                if (_sequence == null)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "Sequence not available");
+                    return;
+                }
+
+                AppState.Current.SystemStatus = SystemStatus.Running;
+
+                bool success;
                 if (AppState.Current.IsWaferExist)
                 {
-                    // 웨이퍼 있음 → 가져갈 수 있도록 GetReady
-                    SetCTCTransferStatus(CTCTransferStatus.GetReady);
+                    // 웨이퍼 있음 → Get 준비 (Centering Open + ChuckZ Down + LiftPin Blow)
+                    success = await _sequence.PrepareForGetAsync();
+                    if (success)
+                    {
+                        SetCTCTransferStatus(CTCTransferStatus.GetReady);
+                    }
                 }
                 else
                 {
-                    // 웨이퍼 없음 → 넣을 수 있도록 PutReady
-                    SetCTCTransferStatus(CTCTransferStatus.PutReady);
+                    // 웨이퍼 없음 → Put 준비 (Centering Open + ChuckZ Down + LiftPin Blow)
+                    success = await _sequence.PrepareForPutAsync();
+                    if (success)
+                    {
+                        SetCTCTransferStatus(CTCTransferStatus.PutReady);
+                    }
                 }
 
-                _ctcComm?.SendResponse(cmd.Command, true);
+                AppState.Current.SystemStatus = SystemStatus.Idle;
+
+                if (success)
+                {
+                    _ctcComm?.SendResponse(cmd.Command, true);
+                }
+                else
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, "Transfer ready failed");
+                    AppState.Current.SystemStatus = SystemStatus.Error;
+                }
             }
             catch (Exception ex)
             {
+                AppState.Current.SystemStatus = SystemStatus.Error;
                 _ctcComm?.SendResponse(cmd.Command, false, ex.Message);
             }
         }

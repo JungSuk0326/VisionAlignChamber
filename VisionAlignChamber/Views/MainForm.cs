@@ -375,10 +375,14 @@ namespace VisionAlignChamber.Views
                 commPanel.BindController(_ctcController);
             }
 
-            // SetUp 탭 바인딩 (Motion 파사드)
+            // SetUp 탭 바인딩 (Motion 파사드 + Sequence)
             if (_vaMotion != null)
             {
                 setupPanel.SetMotion(_vaMotion);
+            }
+            if (_system?.Sequence != null)
+            {
+                setupPanel.SetSequence(_system.Sequence);
             }
 
             // 초기 로그 메시지

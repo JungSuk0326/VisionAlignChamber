@@ -40,6 +40,15 @@ namespace VisionAlignChamber.Views.Controls
             this.btnAlarmClear = new System.Windows.Forms.Button();
             this.lblAlarmTestStatus = new System.Windows.Forms.Label();
             this.grpPreCenter.SuspendLayout();
+            this.grpPositionTest = new System.Windows.Forms.GroupBox();
+            this.lblPositionTestDesc = new System.Windows.Forms.Label();
+            this.btnPutReady = new System.Windows.Forms.Button();
+            this.btnGetReady = new System.Windows.Forms.Button();
+            this.btnReady = new System.Windows.Forms.Button();
+            this.btnScanTest = new System.Windows.Forms.Button();
+            this.chkFlatMode = new System.Windows.Forms.CheckBox();
+            this.lblPositionTestStatus = new System.Windows.Forms.Label();
+            this.grpPositionTest.SuspendLayout();
             this.grpAlarmTest.SuspendLayout();
             this.SuspendLayout();
             //
@@ -221,6 +230,110 @@ namespace VisionAlignChamber.Views.Controls
             this.lblPreCenterStatus.TabIndex = 13;
             this.lblPreCenterStatus.Text = "Ready";
             //
+            // grpPositionTest
+            //
+            this.grpPositionTest.Controls.Add(this.lblPositionTestDesc);
+            this.grpPositionTest.Controls.Add(this.btnPutReady);
+            this.grpPositionTest.Controls.Add(this.btnGetReady);
+            this.grpPositionTest.Controls.Add(this.btnReady);
+            this.grpPositionTest.Controls.Add(this.btnScanTest);
+            this.grpPositionTest.Controls.Add(this.chkFlatMode);
+            this.grpPositionTest.Controls.Add(this.lblPositionTestStatus);
+            this.grpPositionTest.ForeColor = System.Drawing.Color.White;
+            this.grpPositionTest.Location = new System.Drawing.Point(10, 310);
+            this.grpPositionTest.Name = "grpPositionTest";
+            this.grpPositionTest.Size = new System.Drawing.Size(400, 160);
+            this.grpPositionTest.TabIndex = 3;
+            this.grpPositionTest.TabStop = false;
+            this.grpPositionTest.Text = "Position Test";
+            //
+            // lblPositionTestDesc
+            //
+            this.lblPositionTestDesc.AutoSize = true;
+            this.lblPositionTestDesc.ForeColor = System.Drawing.Color.LightGray;
+            this.lblPositionTestDesc.Location = new System.Drawing.Point(10, 22);
+            this.lblPositionTestDesc.Name = "lblPositionTestDesc";
+            this.lblPositionTestDesc.Size = new System.Drawing.Size(300, 15);
+            this.lblPositionTestDesc.TabIndex = 0;
+            this.lblPositionTestDesc.Text = "Transfer 자세 테스트 (Motion + IO)";
+            //
+            // btnPutReady
+            //
+            this.btnPutReady.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnPutReady.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPutReady.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnPutReady.ForeColor = System.Drawing.Color.White;
+            this.btnPutReady.Location = new System.Drawing.Point(10, 50);
+            this.btnPutReady.Name = "btnPutReady";
+            this.btnPutReady.Size = new System.Drawing.Size(120, 32);
+            this.btnPutReady.TabIndex = 1;
+            this.btnPutReady.Text = "Put Ready";
+            this.btnPutReady.UseVisualStyleBackColor = false;
+            this.btnPutReady.Click += new System.EventHandler(this.btnPutReady_Click);
+            //
+            // btnGetReady
+            //
+            this.btnGetReady.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnGetReady.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGetReady.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnGetReady.ForeColor = System.Drawing.Color.White;
+            this.btnGetReady.Location = new System.Drawing.Point(140, 50);
+            this.btnGetReady.Name = "btnGetReady";
+            this.btnGetReady.Size = new System.Drawing.Size(120, 32);
+            this.btnGetReady.TabIndex = 2;
+            this.btnGetReady.Text = "Get Ready";
+            this.btnGetReady.UseVisualStyleBackColor = false;
+            this.btnGetReady.Click += new System.EventHandler(this.btnGetReady_Click);
+            //
+            // btnReady
+            //
+            this.btnReady.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnReady.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReady.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnReady.ForeColor = System.Drawing.Color.White;
+            this.btnReady.Location = new System.Drawing.Point(270, 50);
+            this.btnReady.Name = "btnReady";
+            this.btnReady.Size = new System.Drawing.Size(120, 32);
+            this.btnReady.TabIndex = 4;
+            this.btnReady.Text = "Ready";
+            this.btnReady.UseVisualStyleBackColor = false;
+            this.btnReady.Click += new System.EventHandler(this.btnReady_Click);
+            //
+            // btnScanTest
+            //
+            this.btnScanTest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnScanTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnScanTest.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnScanTest.ForeColor = System.Drawing.Color.White;
+            this.btnScanTest.Location = new System.Drawing.Point(10, 92);
+            this.btnScanTest.Name = "btnScanTest";
+            this.btnScanTest.Size = new System.Drawing.Size(120, 32);
+            this.btnScanTest.TabIndex = 5;
+            this.btnScanTest.Text = "Scan";
+            this.btnScanTest.UseVisualStyleBackColor = false;
+            this.btnScanTest.Click += new System.EventHandler(this.btnScanTest_Click);
+            //
+            // chkFlatMode
+            //
+            this.chkFlatMode.AutoSize = true;
+            this.chkFlatMode.ForeColor = System.Drawing.Color.White;
+            this.chkFlatMode.Location = new System.Drawing.Point(140, 99);
+            this.chkFlatMode.Name = "chkFlatMode";
+            this.chkFlatMode.Size = new System.Drawing.Size(46, 19);
+            this.chkFlatMode.TabIndex = 6;
+            this.chkFlatMode.Text = "Flat";
+            this.chkFlatMode.UseVisualStyleBackColor = true;
+            //
+            // lblPositionTestStatus
+            //
+            this.lblPositionTestStatus.AutoSize = true;
+            this.lblPositionTestStatus.ForeColor = System.Drawing.Color.LightGray;
+            this.lblPositionTestStatus.Location = new System.Drawing.Point(10, 132);
+            this.lblPositionTestStatus.Name = "lblPositionTestStatus";
+            this.lblPositionTestStatus.Size = new System.Drawing.Size(40, 15);
+            this.lblPositionTestStatus.TabIndex = 3;
+            this.lblPositionTestStatus.Text = "Ready";
+            //
             // grpAlarmTest
             //
             this.grpAlarmTest.Controls.Add(this.lblAlarmTestDesc);
@@ -301,12 +414,15 @@ namespace VisionAlignChamber.Views.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.Controls.Add(this.grpPositionTest);
             this.Controls.Add(this.grpAlarmTest);
             this.Controls.Add(this.grpPreCenter);
             this.Controls.Add(this.lblTitle);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "SetUpPanel";
             this.Size = new System.Drawing.Size(774, 631);
+            this.grpPositionTest.ResumeLayout(false);
+            this.grpPositionTest.PerformLayout();
             this.grpAlarmTest.ResumeLayout(false);
             this.grpAlarmTest.PerformLayout();
             this.grpPreCenter.ResumeLayout(false);
@@ -339,5 +455,13 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnAlarmRaise;
         private System.Windows.Forms.Button btnAlarmClear;
         private System.Windows.Forms.Label lblAlarmTestStatus;
+        private System.Windows.Forms.GroupBox grpPositionTest;
+        private System.Windows.Forms.Label lblPositionTestDesc;
+        private System.Windows.Forms.Button btnPutReady;
+        private System.Windows.Forms.Button btnGetReady;
+        private System.Windows.Forms.Button btnReady;
+        private System.Windows.Forms.Button btnScanTest;
+        private System.Windows.Forms.CheckBox chkFlatMode;
+        private System.Windows.Forms.Label lblPositionTestStatus;
     }
 }

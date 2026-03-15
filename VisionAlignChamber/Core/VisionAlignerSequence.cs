@@ -364,6 +364,126 @@ namespace VisionAlignChamber.Core
             LastError = null;
         }
 
+        /// <summary>
+        /// Transfer Put 준비 (웨이퍼 수신 대기 자세)
+        /// Centering Open + Chuck Z Down + Lift Pin Blow ON
+        /// 로봇이 Lift Pin 위에 웨이퍼를 내려놓을 수 있는 상태
+        /// </summary>
+        public async Task<bool> PrepareForPutAsync()
+        {
+            try
+            {
+                _cts = new CancellationTokenSource();
+                LogManager.Sequence.Info("PrepareForPut 시작");
+
+                // Centering Open
+                if (!await _motion.CenteringStagesMoveSyncAsync(
+                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
+                {
+                    LogManager.Sequence.Error("PrepareForPut: Centering Open 실패");
+                    return false;
+                }
+
+                // Chuck Z Down
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
+                {
+                    LogManager.Sequence.Error("PrepareForPut: Chuck Z Down 실패");
+                    return false;
+                }
+
+                // Lift Pin Vacuum ON / Blow OFF (핀 올림 → 로봇이 웨이퍼 놓을 위치)
+                _io.SetLiftPinBlow(false);
+                _io.SetLiftPinVacuum(true);
+
+                LogManager.Sequence.Info("PrepareForPut 완료");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Sequence.Error($"PrepareForPut 실패: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                _cts?.Dispose();
+                _cts = null;
+            }
+        }
+
+        /// <summary>
+        /// Transfer Get 준비 (웨이퍼 반출 대기 자세)
+        /// Centering Open + Chuck Z Down + Lift Pin Blow ON
+        /// 웨이퍼가 Lift Pin 위에 올라간 상태에서 로봇이 가져갈 수 있는 상태
+        /// </summary>
+        public async Task<bool> PrepareForGetAsync()
+        {
+            try
+            {
+                _cts = new CancellationTokenSource();
+                LogManager.Sequence.Info("PrepareForGet 시작");
+
+                // Centering Open
+                if (!await _motion.CenteringStagesMoveSyncAsync(
+                    _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
+                {
+                    LogManager.Sequence.Error("PrepareForGet: Centering Open 실패");
+                    return false;
+                }
+
+                // Chuck Z Down
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
+                {
+                    LogManager.Sequence.Error("PrepareForGet: Chuck Z Down 실패");
+                    return false;
+                }
+
+                // Lift Pin Vacuum OFF / Blow ON (웨이퍼를 핀 위로 올림 → 로봇이 가져갈 위치)
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(true);
+
+                LogManager.Sequence.Info("PrepareForGet 완료");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Sequence.Error($"PrepareForGet 실패: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                _cts?.Dispose();
+                _cts = null;
+            }
+        }
+
+        /// <summary>
+        /// Ready 스텝 단독 실행 (SetUp 테스트용)
+        /// Chuck Vacuum ON + LiftPin OFF + Centering Open + ChuckZ Vision + Light ON
+        /// </summary>
+        public async Task<bool> RunStepReadyAsync()
+        {
+            try
+            {
+                _cts = new CancellationTokenSource();
+                LogManager.Sequence.Info("RunStepReady 시작");
+
+                bool result = await ExecuteReadyAsync();
+
+                LogManager.Sequence.Info($"RunStepReady {(result ? "완료" : "실패")}");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Sequence.Error($"RunStepReady 실패: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                _cts?.Dispose();
+                _cts = null;
+            }
+        }
+
         #endregion
 
         #region Step Execution
@@ -398,6 +518,10 @@ namespace VisionAlignChamber.Core
         {
             try
             {
+                // Lift Pin Vacuum OFF / Blow ON (에어로 웨이퍼가 미끄러지며 센터링)
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(true);
+
                 // Centering MinCtr (L/R 동시)
                 if (!await _motion.CenteringStagesMoveSyncAsync(
                     _param.CenterL_MinCtr, _param.CenterR_MinCtr, ct: _cts.Token))
@@ -423,6 +547,14 @@ namespace VisionAlignChamber.Core
         {
             try
             {
+                // Chuck Vacuum ON / Blow OFF (척 흡착 준비)
+                _io.SetChuckVacuum(true);
+                _io.SetChuckBlow(false);
+
+                // Lift Pin Vacuum OFF / Blow OFF (핀 해제)
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(false);
+
                 // Centering Open
                 if (!await _motion.CenteringStagesMoveSyncAsync(
                     _param.CenterL_Open, _param.CenterR_Open, ct: _cts.Token))
@@ -431,7 +563,7 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Chuck Z Vision
+                // Chuck Z Vision (상승하면서 LiftPin 위 웨이퍼를 Chuck으로 안착)
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Vision, ct: _cts.Token))
                 {
                     SetError("Chuck Z Vision 이동 실패");
@@ -612,31 +744,43 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Chuck Z Down
+                // 1. Theta 정렬 (척 위에서 AbsAngle 만큼 회전)
+                if (!await _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, ct: _cts.Token))
+                {
+                    SetError("Theta Align 이동 실패");
+                    return false;
+                }
+
+                LogManager.Sequence.Info($"Theta Align 완료 - AbsAngle: {_visionResult.AbsAngle:F3}°");
+
+                // 2. 웨이퍼를 Chuck → LiftPin으로 이동
+                // Chuck 해제, LiftPin 받을 준비
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(true);
+                _io.SetLiftPinVacuum(true);
+                _io.SetLiftPinBlow(false);
+
+                // Chuck Z Down (하강 → 웨이퍼가 LiftPin에 안착)
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, ct: _cts.Token))
                 {
                     SetError("Chuck Z Down 이동 실패");
                     return false;
                 }
 
-                // Centering with Radius - MinCtr 위치 + Vision 오프셋으로 센터링 위치 계산
-                // 단위 변환은 .mot 파일의 MOVE_PULSE/MOVE_UNIT 설정으로 자동 처리됨
+                // 3. 센터 정렬 (LiftPin 위에서 에어 센터링)
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(true);
+
                 double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset;
                 double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset;
 
-                // Centering (L/R 동시) + Theta Align 동시 시작
-                var centerTask = _motion.CenteringStagesMoveSyncAsync(centerL, centerR, ct: _cts.Token);
-                var thetaTask = _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, ct: _cts.Token);
-
-                await Task.WhenAll(centerTask, thetaTask);
-
-                if (!centerTask.Result || !thetaTask.Result)
+                if (!await _motion.CenteringStagesMoveSyncAsync(centerL, centerR, ct: _cts.Token))
                 {
-                    SetError("Align 이동 실패");
+                    SetError("Center Align 이동 실패");
                     return false;
                 }
 
-                LogManager.Sequence.Info($"Align 완료 - CenterL: {centerL:F3}, CenterR: {centerR:F3}, Theta: {_visionResult.AbsAngle:F3}°");
+                LogManager.Sequence.Info($"Center Align 완료 - CenterL: {centerL:F3}, CenterR: {centerR:F3}");
                 return true;
             }
             catch (Exception ex)

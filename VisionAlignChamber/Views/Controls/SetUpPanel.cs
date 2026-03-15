@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VisionAlignChamber.Config;
+using VisionAlignChamber.Core;
 using VisionAlignChamber.Hardware;
 using VisionAlignChamber.Hardware.Facade;
 using VisionAlignChamber.Interlock;
@@ -18,6 +19,7 @@ namespace VisionAlignChamber.Views.Controls
         #region Fields
 
         private VisionAlignerMotion _motion;
+        private VisionAlignerSequence _sequence;
         private TeachingParameter _param;
         private CancellationTokenSource _cts;
         private bool _isRunning = false;
@@ -43,6 +45,14 @@ namespace VisionAlignChamber.Views.Controls
         public void SetMotion(VisionAlignerMotion motion)
         {
             _motion = motion;
+        }
+
+        /// <summary>
+        /// Sequence 설정 (자세 테스트용)
+        /// </summary>
+        public void SetSequence(VisionAlignerSequence sequence)
+        {
+            _sequence = sequence;
         }
 
         #endregion
@@ -164,6 +174,95 @@ namespace VisionAlignChamber.Views.Controls
 
             lblPreCenterStatus.Text = text;
             lblPreCenterStatus.ForeColor = color;
+        }
+
+        #endregion
+
+        #region Position Test
+
+        private async void btnPutReady_Click(object sender, EventArgs e)
+        {
+            await ExecutePositionTestAsync("Put Ready", async () => await _sequence.PrepareForPutAsync());
+        }
+
+        private async void btnGetReady_Click(object sender, EventArgs e)
+        {
+            await ExecutePositionTestAsync("Get Ready", async () => await _sequence.PrepareForGetAsync());
+        }
+
+        private async void btnReady_Click(object sender, EventArgs e)
+        {
+            await ExecutePositionTestAsync("Ready", async () =>
+            {
+                // ExecuteReadyAsync는 private이므로 Sequence의 public 시퀀스 사용
+                // Ready: Chuck Vacuum ON + LiftPin OFF + Centering Open + ChuckZ Vision + Light ON
+                return await _sequence.RunStepReadyAsync();
+            });
+        }
+
+        private async void btnScanTest_Click(object sender, EventArgs e)
+        {
+            bool isFlat = chkFlatMode.Checked;
+            await ExecutePositionTestAsync("Scan", async () => await _sequence.RunScanOnlyAsync(isFlat));
+        }
+
+        private async Task ExecutePositionTestAsync(string name, Func<Task<bool>> action)
+        {
+            if (_sequence == null)
+            {
+                MessageBox.Show("Sequence가 초기화되지 않았습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_isRunning)
+            {
+                MessageBox.Show("이미 동작 중입니다.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _isRunning = true;
+            SetPositionTestStatus($"{name} Running...", Color.Yellow);
+            btnPutReady.Enabled = false;
+            btnGetReady.Enabled = false;
+            btnReady.Enabled = false;
+            btnScanTest.Enabled = false;
+
+            try
+            {
+                bool result = await action();
+                if (result)
+                {
+                    SetPositionTestStatus($"{name} Completed", Color.Lime);
+                }
+                else
+                {
+                    SetPositionTestStatus($"{name} Failed", Color.Red);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetPositionTestStatus($"{name} Error: {ex.Message}", Color.Red);
+            }
+            finally
+            {
+                _isRunning = false;
+                btnPutReady.Enabled = true;
+                btnGetReady.Enabled = true;
+                btnReady.Enabled = true;
+                btnScanTest.Enabled = true;
+            }
+        }
+
+        private void SetPositionTestStatus(string text, Color color)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => SetPositionTestStatus(text, color)));
+                return;
+            }
+
+            lblPositionTestStatus.Text = text;
+            lblPositionTestStatus.ForeColor = color;
         }
 
         #endregion

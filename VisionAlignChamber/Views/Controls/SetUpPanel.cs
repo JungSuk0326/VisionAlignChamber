@@ -110,23 +110,30 @@ namespace VisionAlignChamber.Views.Controls
 
             try
             {
-                // CenteringStage L 이동
-                bool start1 = _motion.MoveAbsolute(VAMotionAxis.CenteringStage_1, centerLPos, velocity, accel, decel);
-                // CenteringStage R 이동
-                bool start2 = _motion.MoveAbsolute(VAMotionAxis.CenteringStage_2, centerRPos, velocity, accel, decel);
+                var token = _cts.Token;
+                var (success, done) = await Task.Run(async () =>
+                {
+                    // CenteringStage L 이동
+                    bool start1 = _motion.MoveAbsolute(VAMotionAxis.CenteringStage_1, centerLPos, velocity, accel, decel);
+                    // CenteringStage R 이동
+                    bool start2 = _motion.MoveAbsolute(VAMotionAxis.CenteringStage_2, centerRPos, velocity, accel, decel);
 
-                if (!start1 || !start2)
+                    if (!start1 || !start2)
+                        return (false, false);
+
+                    // 완료 대기
+                    var wait1 = _motion.WaitForDoneAsync(VAMotionAxis.CenteringStage_1, 30000, token);
+                    var wait2 = _motion.WaitForDoneAsync(VAMotionAxis.CenteringStage_2, 30000, token);
+                    await Task.WhenAll(wait1, wait2);
+
+                    return (true, wait1.Result && wait2.Result);
+                }, token);
+
+                if (!success)
                 {
                     SetPreCenterStatus("Move Start Failed", Color.Red);
-                    return;
                 }
-
-                // 완료 대기
-                var wait1 = _motion.WaitForDoneAsync(VAMotionAxis.CenteringStage_1, 30000, _cts.Token);
-                var wait2 = _motion.WaitForDoneAsync(VAMotionAxis.CenteringStage_2, 30000, _cts.Token);
-                await Task.WhenAll(wait1, wait2);
-
-                if (wait1.Result && wait2.Result)
+                else if (done)
                 {
                     SetPreCenterStatus("Completed", Color.Lime);
                 }
@@ -235,7 +242,7 @@ namespace VisionAlignChamber.Views.Controls
 
             try
             {
-                bool result = await action();
+                bool result = await Task.Run(action);
                 if (result)
                 {
                     SetPositionTestStatus($"{name} Completed", Color.Lime);

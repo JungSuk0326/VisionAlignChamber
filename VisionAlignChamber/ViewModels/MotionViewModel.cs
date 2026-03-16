@@ -223,24 +223,45 @@ namespace VisionAlignChamber.ViewModels
 
         #region Public Methods
 
+        private int _slowPollCounter;
+
         /// <summary>
         /// 상태 업데이트 (Timer에서 호출)
+        /// Fast(매번): Position, IsMoving — 4축 × 2 = 8 P/Invoke
+        /// Slow(10회마다): ServoOn, Alarm, Homed, Limit — 4축 × 5 = 20 P/Invoke
         /// </summary>
         public void UpdateStatus()
         {
-            // 개별 축 상태 업데이트
+            // Fast 폴링 (매 호출)
             foreach (var axis in _allAxes)
             {
-                axis.UpdateStatus();
+                axis.UpdateStatusFast();
             }
 
-            // 전체 상태 계산
-            IsAnyAxisMoving = _motion.IsAnyAxisMoving();
-            IsAllHomed = WedgeAxis.IsHomed && ChuckAxis.IsHomed &&
-                         CenteringStage1Axis.IsHomed && CenteringStage2Axis.IsHomed;
+            // Slow 폴링 (10회마다 = ~1초)
+            _slowPollCounter++;
+            if (_slowPollCounter >= 10)
+            {
+                _slowPollCounter = 0;
 
-            // Command 실행 가능 상태 갱신
-            ((RelayCommand)HomeAllCommand).RaiseCanExecuteChanged();
+                foreach (var axis in _allAxes)
+                {
+                    axis.UpdateStatusSlow();
+                }
+
+                IsAnyAxisMoving = _motion.IsAnyAxisMoving();
+                IsAllHomed = WedgeAxis.IsHomed && ChuckAxis.IsHomed &&
+                             CenteringStage1Axis.IsHomed && CenteringStage2Axis.IsHomed;
+
+                // Command 실행 가능 상태 갱신
+                ((RelayCommand)HomeAllCommand).RaiseCanExecuteChanged();
+            }
+            else
+            {
+                // Fast에서도 IsAnyAxisMoving은 IsMoving 프로퍼티로 계산
+                IsAnyAxisMoving = WedgeAxis.IsMoving || ChuckAxis.IsMoving ||
+                                  CenteringStage1Axis.IsMoving || CenteringStage2Axis.IsMoving;
+            }
         }
 
         /// <summary>

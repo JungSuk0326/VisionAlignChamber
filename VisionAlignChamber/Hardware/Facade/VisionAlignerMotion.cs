@@ -302,6 +302,10 @@ namespace VisionAlignChamber.Hardware.Facade
         public bool WaitForDone(VAMotionAxis axis, int timeoutMs = 30000)
         {
             var info = _mapping.GetAxisInfo(axis);
+
+            // 모션 명령 발행 후 하드웨어 상태 레지스터 업데이트 대기
+            System.Threading.Thread.Sleep(50);
+
             var sw = System.Diagnostics.Stopwatch.StartNew();
             while (sw.ElapsedMilliseconds < timeoutMs)
             {
@@ -318,6 +322,11 @@ namespace VisionAlignChamber.Hardware.Facade
         public async Task<bool> WaitForDoneAsync(VAMotionAxis axis, int timeoutMs = 30000, CancellationToken ct = default)
         {
             var info = _mapping.GetAxisInfo(axis);
+
+            // 모션 명령 발행 후 하드웨어 상태 레지스터 업데이트 대기
+            // (AxmMovePos 직후 AxmStatusReadInMotion이 아직 '정지'를 반환하는 race condition 방지)
+            await Task.Delay(50, ct);
+
             var sw = System.Diagnostics.Stopwatch.StartNew();
             while (sw.ElapsedMilliseconds < timeoutMs)
             {

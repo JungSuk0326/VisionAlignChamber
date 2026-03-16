@@ -513,12 +513,19 @@ namespace VisionAlignChamber.ViewModels
         #region Public Methods
 
         /// <summary>
-        /// 상태 업데이트 (Timer에서 호출)
+        /// Fast 폴링 (100ms 주기) — Position, IsMoving만
         /// </summary>
-        public void UpdateStatus()
+        public void UpdateStatusFast()
         {
             Position = _motion.GetPosition(_axis);
             IsMoving = _motion.IsMoving(_axis);
+        }
+
+        /// <summary>
+        /// Slow 폴링 (1000ms 주기) — 자주 변하지 않는 상태
+        /// </summary>
+        public void UpdateStatusSlow()
+        {
             IsServoOn = _motion.IsServoOn(_axis);
             IsAlarm = _motion.IsAlarm(_axis);
             IsHomed = _motion.IsHomeDone(_axis);
@@ -538,6 +545,15 @@ namespace VisionAlignChamber.ViewModels
 
             // Command 실행 가능 상태 갱신
             RaiseCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// 전체 상태 업데이트 (Fast + Slow)
+        /// </summary>
+        public void UpdateStatus()
+        {
+            UpdateStatusFast();
+            UpdateStatusSlow();
         }
 
         /// <summary>

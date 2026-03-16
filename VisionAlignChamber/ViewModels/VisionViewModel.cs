@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Vision;
@@ -547,7 +548,7 @@ namespace VisionAlignChamber.ViewModels
                 RaiseCanExecuteChanged();
 
                 bool isFlat = IsFlatMode;
-                bool result = await _sequence.RunScanOnlyAsync(isFlat);
+                bool result = await Task.Run(() => _sequence.RunScanOnlyAsync(isFlat));
 
                 if (!result && _sequence.State != VisionAlignerSequence.SequenceState.Aborted)
                 {

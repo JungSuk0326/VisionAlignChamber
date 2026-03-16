@@ -300,6 +300,9 @@
     <EmbeddedResource Include="Views\Controls\MainTabPanel.resx">
       <DependentUpon>MainTabPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\SetUpPanel.resx">
+      <DependentUpon>SetUpPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\VisionPanel.resx">
       <DependentUpon>VisionPanel.cs</DependentUpon>
     </EmbeddedResource>

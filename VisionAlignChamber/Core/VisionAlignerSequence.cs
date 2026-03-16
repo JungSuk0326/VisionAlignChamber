@@ -486,6 +486,34 @@ namespace VisionAlignChamber.Core
             }
         }
 
+        /// <summary>
+        /// PreCenter 스텝 단독 실행 (SetUp 테스트용)
+        /// LiftPin Blow ON + Centering MinCtr (L/R 동시)
+        /// </summary>
+        public async Task<bool> RunStepPreCenterAsync()
+        {
+            try
+            {
+                _cts = new CancellationTokenSource();
+                LogManager.Sequence.Info("RunStepPreCenter 시작");
+
+                bool result = await ExecutePreCenterAsync();
+
+                LogManager.Sequence.Info($"RunStepPreCenter {(result ? "완료" : "실패")}");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Sequence.Error($"RunStepPreCenter 실패: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                _cts?.Dispose();
+                _cts = null;
+            }
+        }
+
         #endregion
 
         #region Step Execution

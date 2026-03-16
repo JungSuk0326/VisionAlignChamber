@@ -200,6 +200,11 @@ namespace VisionAlignChamber.Views.Controls
             });
         }
 
+        private async void btnPreCenterTest_Click(object sender, EventArgs e)
+        {
+            await ExecutePositionTestAsync("PreCenter", async () => await _sequence.RunStepPreCenterAsync());
+        }
+
         private async void btnScanTest_Click(object sender, EventArgs e)
         {
             bool isFlat = chkFlatMode.Checked;
@@ -225,6 +230,7 @@ namespace VisionAlignChamber.Views.Controls
             btnPutReady.Enabled = false;
             btnGetReady.Enabled = false;
             btnReady.Enabled = false;
+            btnPreCenterTest.Enabled = false;
             btnScanTest.Enabled = false;
 
             try
@@ -249,6 +255,7 @@ namespace VisionAlignChamber.Views.Controls
                 btnPutReady.Enabled = true;
                 btnGetReady.Enabled = true;
                 btnReady.Enabled = true;
+                btnPreCenterTest.Enabled = true;
                 btnScanTest.Enabled = true;
             }
         }

@@ -775,6 +775,13 @@ namespace VisionAlignChamber.Views
         private void btnInitialize_Click(object sender, EventArgs e)
         {
             _viewModel?.InitializeSystemCommand?.Execute(null);
+
+            // Initialize 완료 후 Sequence가 생성되므로 SetUpPanel에 재주입
+            if (_system?.Sequence != null)
+            {
+                setupPanel.SetSequence(_system.Sequence);
+                setupPanel.SetMotion(_vaMotion);
+            }
         }
 
         private void btnHomeAll_Click(object sender, EventArgs e)

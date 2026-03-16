@@ -36,12 +36,20 @@ namespace VisionAlignChamber.ViewModels
             EventManager.Subscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Subscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
 
+            // Grabber 이미지 콜백 구독
+            _vision.ImageCaptured += OnImageCaptured;
+
             // Sequence 이벤트 구독
             if (_sequence != null)
             {
                 _sequence.StepChanged += OnSequenceStepChanged;
                 _sequence.StateChanged += OnSequenceStateChanged;
             }
+        }
+
+        private void OnImageCaptured(System.Drawing.Bitmap image)
+        {
+            CurrentImage = image;
         }
 
         private void OnSequenceStepChanged(object sender, VisionAlignerSequence.SequenceStep step)
@@ -920,6 +928,9 @@ namespace VisionAlignChamber.ViewModels
             // EventManager 구독 해제
             EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Unsubscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+
+            // Grabber 이미지 콜백 해제
+            _vision.ImageCaptured -= OnImageCaptured;
 
             // Sequence 이벤트 해제
             if (_sequence != null)

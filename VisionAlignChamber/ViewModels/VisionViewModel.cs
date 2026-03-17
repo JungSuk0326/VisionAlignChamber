@@ -470,22 +470,34 @@ namespace VisionAlignChamber.ViewModels
             return IsInitialized && !IsInspecting && ImageCount > 0;
         }
 
-        private void ExecuteInspection()
+        private async void ExecuteInspection()
         {
             try
             {
                 IsInspecting = true;
                 StatusMessage = "검사 실행 중...";
+                RaiseCanExecuteChanged();
 
                 bool isFlat = IsFlatMode;
-                bool success = _vision.ExecuteInspection(isFlat);
+
+                // Vision DLL 검사를 백그라운드에서 수행 (UI 블로킹 방지)
+                var (success, result, resultImage, waferImage) = await Task.Run(() =>
+                {
+                    bool ok = _vision.ExecuteInspection(isFlat);
+                    if (!ok) return (false, WaferVisionResult.Empty, (Bitmap)null, (Bitmap)null);
+
+                    return (true,
+                        _vision.GetResult(isFlat),
+                        _vision.GetResultImage(isFlat),
+                        _vision.GetWaferImage(isFlat));
+                });
 
                 if (success)
                 {
                     IsInspectionComplete = true;
-                    AlignResult = _vision.GetResult(isFlat);
-                    ResultImage = _vision.GetResultImage(isFlat);
-                    WaferImage = _vision.GetWaferImage(isFlat);
+                    AlignResult = result;
+                    ResultImage = resultImage;
+                    WaferImage = waferImage;
 
                     // AppContext에 검사 결과 저장 (자동으로 InspectionComplete 이벤트 발행)
                     Core.AppState.Current.LastVisionResult = AlignResult;

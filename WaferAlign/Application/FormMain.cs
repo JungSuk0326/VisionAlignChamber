@@ -269,7 +269,7 @@ namespace eMotion
        
         
         //=====================================================================
-        /*
+        
         //running
         private void Running()
         {
@@ -280,9 +280,9 @@ namespace eMotion
                 default: break;
 
                 case 1:     //data set
-                    Table.Speed(1000);
-                    Table.Accel(1);
-                    Table.Mode(ClassTable.eMotorMode.Set);
+                    //Table.Speed(1000);
+                    //Table.Accel(1);
+                    //Table.Mode(ClassTable.eMotorMode.Set);
                     Aligner.ClearList();
 
                     run.count = 0;
@@ -290,7 +290,7 @@ namespace eMotion
                     run.step++;
                     break;
                 case 2:
-                    Table.Velocity(run.pos);
+                    //Table.Velocity(run.pos);
                     run.delay = DefDelay;
                     run.step++;
                     break;
@@ -347,7 +347,7 @@ namespace eMotion
                     break;
             }
         }
-        */
+        
         private void buttonStartRun_Click(object sender, EventArgs e)
         {
             run.setCount = Aligner.Setting.ImageCount;

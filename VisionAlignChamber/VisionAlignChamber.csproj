@@ -59,6 +59,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Communication\DLLs\CommObject.dll</HintPath>
     </Reference>
+    <Reference Include="eMotionAlign, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\eMotionAlign.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>packages\NLog.5.2.8\lib\net46\NLog.dll</HintPath>
     </Reference>
@@ -89,17 +93,8 @@
     <!-- MVVM ICommand 지원 -->
     <Reference Include="PresentationCore" />
     <!-- eMotionAlign.dll 참조 -->
-    <Reference Include="eMotionAlign">
-      <HintPath>Vision\eMotion\DLLs\eMotionAlign.dll</HintPath>
-    </Reference>
     <!-- OpenCvSharp 참조 -->
-    <Reference Include="OpenCvSharp">
-      <HintPath>Vision\eMotion\DLLs\OpenCvSharp.dll</HintPath>
-    </Reference>
     <!-- Newtonsoft.Json 참조 -->
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Vision\eMotion\DLLs\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <!-- SQLite 참조 -->
     <!-- Dapper 참조 -->
     <Reference Include="Dapper">

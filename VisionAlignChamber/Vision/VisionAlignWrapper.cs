@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using VisionAlignChamber.Config;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VisionAlignChamber.Vision
 {
@@ -537,6 +538,12 @@ namespace VisionAlignChamber.Vision
                 // DLL의 AddImg(string path) 호출
                 _aligner.AddImg(folderPath);
 
+                if (_imageWidth == 0 && _imageWidth == 0)
+                {
+                    _imageWidth = _aligner.CanvasX();
+                    _imageHeight = _aligner.CanvasY();
+                }
+
                 // 이미지 개수 업데이트 (폴더 내 jpg 파일 수로 추정)
                 var files = Directory.GetFiles(folderPath, "*.jpg");
                 _imageCount = files.Length;
@@ -596,7 +603,7 @@ namespace VisionAlignChamber.Vision
                 }
 
                 _inspectionComplete = _aligner.GetEnd(isFlat);
-                return _inspectionComplete;
+                return _inspectionComplete;                
             }
             catch (Exception ex)
             {

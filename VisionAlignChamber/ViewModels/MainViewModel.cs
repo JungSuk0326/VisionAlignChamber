@@ -385,12 +385,13 @@ namespace VisionAlignChamber.ViewModels
 
         #region Command Implementations
 
-        private void ExecuteInitializeSystem()
+        private async void ExecuteInitializeSystem()
         {
             try
             {
                 CurrentStatus = SystemStatus.Running;
                 StatusMessage = "시스템 초기화 중...";
+                RaiseCanExecuteChanged();
 
                 // VisionAlignerSystem을 통해 초기화 (비즈니스 로직)
                 if (_system == null)
@@ -398,12 +399,15 @@ namespace VisionAlignChamber.ViewModels
                     throw new InvalidOperationException("VisionAlignerSystem이 설정되지 않았습니다.");
                 }
 
-                if (!_system.InitializeAll())
+                // 하드웨어 초기화를 백그라운드에서 수행 (UI 블로킹 방지)
+                bool success = await System.Threading.Tasks.Task.Run(() => _system.InitializeAll());
+
+                if (!success)
                 {
                     throw new Exception(_system.LastError ?? "시스템 초기화 실패");
                 }
 
-                // ViewModel 상태 갱신
+                // ViewModel 상태 갱신 (UI 스레드)
                 OnPropertyChanged(nameof(Motion));
                 OnPropertyChanged(nameof(IO));
                 OnPropertyChanged(nameof(Vision));
@@ -426,6 +430,7 @@ namespace VisionAlignChamber.ViewModels
                 AddAlarm(AlarmCodes.INITIALIZATION_FAILED, ex.Message, AlarmLevel.Error, AlarmSource.System);
                 CurrentStatus = SystemStatus.Error;
                 StatusMessage = $"초기화 실패: {ex.Message}";
+                RaiseCanExecuteChanged();
             }
         }
 

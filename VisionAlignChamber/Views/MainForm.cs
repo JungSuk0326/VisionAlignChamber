@@ -779,6 +779,9 @@ namespace VisionAlignChamber.Views
             {
                 setupPanel.SetSequence(_system.Sequence);
                 setupPanel.SetMotion(_vaMotion);
+
+                // MainTabViewModel에도 새 Sequence 주입 (CTC Remote Initialize 시 필수)
+                _viewModel?.MainTab?.Initialize(_system.Sequence);
             }
         }
 

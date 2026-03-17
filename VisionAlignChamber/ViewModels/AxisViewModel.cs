@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Hardware.Facade;
@@ -332,12 +333,12 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
-        private void ExecuteMoveAbsolute()
+        private async void ExecuteMoveAbsolute()
         {
             try
             {
                 double? vel = Velocity > 0 ? Velocity : (double?)null;
-                _motion.MoveAbsolute(_axis, TargetPosition, vel);
+                await Task.Run(() => _motion.MoveAbsolute(_axis, TargetPosition, vel));
                 StatusMessage = $"이동 중: {TargetPosition} {Unit}";
             }
             catch (Exception ex)

@@ -499,8 +499,8 @@
 35:ALARM_RESET_LEVEL.   =0
 36:ENCODER_TYPE.        =0
 37:SOFT_LIMIT_SEL.      =0
-38:SOFT_LIMIT_STOP_MODE.=1
-39:SOFT_LIMIT_ENABLE.   =1
+38:SOFT_LIMIT_STOP_MODE.=0
+39:SOFT_LIMIT_ENABLE.   =0
 40:MOVE_ACC_UNIT.       =1
 #=======================================================
 00:AXIS_NO.             =12

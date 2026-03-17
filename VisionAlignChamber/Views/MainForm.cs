@@ -535,19 +535,36 @@ namespace VisionAlignChamber.Views
 
         private void UpdateVisionImage()
         {
-            // 시퀀스 결과 이미지 우선 (공용 디스플레이)
-            if (_viewModel?.SequenceResultImage != null)
+            try
             {
-                picVisionDisplay.Image = _viewModel.SequenceResultImage;
+                Bitmap source = null;
+
+                // 시퀀스 결과 이미지 우선 (공용 디스플레이)
+                if (_viewModel?.SequenceResultImage != null)
+                {
+                    source = _viewModel.SequenceResultImage;
+                }
+                // Vision 탭 수동 검사용 이미지
+                else if (_viewModel?.Vision?.CurrentImage != null)
+                {
+                    source = _viewModel.Vision.CurrentImage;
+                }
+                else if (_viewModel?.Vision?.ResultImage != null)
+                {
+                    source = _viewModel.Vision.ResultImage;
+                }
+
+                if (source != null)
+                {
+                    // Bitmap Clone으로 스레드 안전하게 표시 (Grabber 콜백과 동시 접근 방지)
+                    var old = picVisionDisplay.Image;
+                    picVisionDisplay.Image = (Bitmap)source.Clone();
+                    old?.Dispose();
+                }
             }
-            // Vision 탭 수동 검사용 이미지
-            else if (_viewModel?.Vision?.CurrentImage != null)
+            catch (InvalidOperationException)
             {
-                picVisionDisplay.Image = _viewModel.Vision.CurrentImage;
-            }
-            else if (_viewModel?.Vision?.ResultImage != null)
-            {
-                picVisionDisplay.Image = _viewModel.Vision.ResultImage;
+                // Bitmap이 다른 스레드에서 잠긴 경우 무시 (다음 주기에 갱신)
             }
         }
 

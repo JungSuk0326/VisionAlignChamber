@@ -149,6 +149,8 @@ namespace VisionAlignChamber.Models
         public const int SEQUENCE_ERROR = 5001;
         public const int STEP_TIMEOUT = 5002;
         public const int ABORT_REQUESTED = 5003;
+        public const int IO_CONDITION_ERROR = 5004;
+        public const int PRECONDITION_FAILED = 5005;
 
         /// <summary>
         /// 알람 코드에 대한 기본 메시지 가져오기
@@ -176,6 +178,8 @@ namespace VisionAlignChamber.Models
                 case SEQUENCE_ERROR: return "Sequence error";
                 case STEP_TIMEOUT: return "Step timeout";
                 case ABORT_REQUESTED: return "Abort requested";
+                case IO_CONDITION_ERROR: return "IO condition mismatch";
+                case PRECONDITION_FAILED: return "Precondition failed";
                 default: return $"Unknown alarm ({code})";
             }
         }

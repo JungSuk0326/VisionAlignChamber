@@ -843,6 +843,7 @@ namespace VisionAlignChamber.Core
 
             _sequence.TransferStatusChangeRequested += OnSequenceTransferStatusChanged;
             _sequence.SequenceCompleted += OnSequenceCompleted;
+            _sequence.ErrorOccurred += OnSequenceError;
         }
 
         /// <summary>
@@ -854,6 +855,15 @@ namespace VisionAlignChamber.Core
 
             _sequence.TransferStatusChangeRequested -= OnSequenceTransferStatusChanged;
             _sequence.SequenceCompleted -= OnSequenceCompleted;
+            _sequence.ErrorOccurred -= OnSequenceError;
+        }
+
+        /// <summary>
+        /// Sequence 에러 발생 시 알람 연동
+        /// </summary>
+        private void OnSequenceError(object sender, SequenceErrorEventArgs e)
+        {
+            InterlockManager.Instance.RaiseAlarm(e.AlarmCode, "Sequence", e.Message);
         }
 
         /// <summary>

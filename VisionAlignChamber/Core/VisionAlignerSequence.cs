@@ -145,9 +145,9 @@ namespace VisionAlignChamber.Core
         public event EventHandler<WaferVisionResult> SequenceCompleted;
 
         /// <summary>
-        /// 에러 발생 이벤트
+        /// 에러 발생 이벤트 (알람 코드 포함)
         /// </summary>
-        public event EventHandler<string> ErrorOccurred;
+        public event EventHandler<SequenceErrorEventArgs> ErrorOccurred;
 
         /// <summary>
         /// CTC Transfer 상태 변경 요청 이벤트
@@ -883,12 +883,12 @@ namespace VisionAlignChamber.Core
 
         #region Private Methods
 
-        private void SetError(string message)
+        private void SetError(string message, int alarmCode = AlarmCodes.SEQUENCE_ERROR)
         {
             LastError = message;
             State = SequenceState.Error;
-            LogManager.Sequence.Error($"Error: {message}");
-            ErrorOccurred?.Invoke(this, message);
+            LogManager.Sequence.Error($"Error [{alarmCode}]: {message}");
+            ErrorOccurred?.Invoke(this, new SequenceErrorEventArgs(alarmCode, message));
         }
 
         /// <summary>
@@ -938,6 +938,25 @@ namespace VisionAlignChamber.Core
         {
             Status = status;
             Result = result;
+        }
+    }
+
+    #endregion
+
+    #region Sequence Error
+
+    /// <summary>
+    /// 시퀀스 에러 이벤트 인자 (알람 코드 + 메시지)
+    /// </summary>
+    public class SequenceErrorEventArgs : EventArgs
+    {
+        public int AlarmCode { get; }
+        public string Message { get; }
+
+        public SequenceErrorEventArgs(int alarmCode, string message)
+        {
+            AlarmCode = alarmCode;
+            Message = message;
         }
     }
 

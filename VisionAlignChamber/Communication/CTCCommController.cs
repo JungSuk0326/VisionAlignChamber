@@ -338,6 +338,9 @@ namespace VisionAlignChamber.Communication
 
                 case CommandObject.eCMD.MeasurementStart:
                     break;
+
+                case CommandObject.eCMD.Initialize:                    
+                    break;
                 // 나머지 명령은 OnCommandReceived 이벤트를 통해 외부에서 처리
                 // 예: Initialize, MeasurementStart, TransferReady 등
             }

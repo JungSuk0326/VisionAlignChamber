@@ -461,16 +461,16 @@ namespace VisionAlignChamber.ViewModels
             }
         }
 
-        private void OnErrorOccurred(object sender, string error)
+        private void OnErrorOccurred(object sender, Core.SequenceErrorEventArgs e)
         {
             // UI 스레드에서 실행
             if (Application.OpenForms.Count > 0 && Application.OpenForms[0].InvokeRequired)
             {
-                Application.OpenForms[0].BeginInvoke(new Action(() => ErrorMessage = error));
+                Application.OpenForms[0].BeginInvoke(new Action(() => ErrorMessage = e.Message));
             }
             else
             {
-                ErrorMessage = error;
+                ErrorMessage = e.Message;
             }
         }
 

@@ -85,6 +85,7 @@ namespace VisionAlignChamber.Views
             EventManager.Subscribe(EventManager.AlarmCleared, OnAlarmCleared);
             EventManager.Subscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Subscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+            EventManager.Subscribe(EventManager.SystemInitialized, OnSystemInitialized);
         }
 
         private void InitializeViewModel()
@@ -762,6 +763,25 @@ namespace VisionAlignChamber.Views
             lblWaferStatus.BackColor = isWaferExist ? Color.FromArgb(0, 80, 0) : Color.FromArgb(60, 60, 60);
         }
 
+        /// <summary>
+        /// 시스템 초기화 완료 시 (버튼/CTC Remote 공통)
+        /// </summary>
+        private void OnSystemInitialized(object data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action<object>(OnSystemInitialized), data);
+                return;
+            }
+
+            // Sequence가 생성되었으므로 SetUpPanel에 주입
+            if (_system?.Sequence != null)
+            {
+                setupPanel.SetSequence(_system.Sequence);
+                setupPanel.SetMotion(_vaMotion);
+            }
+        }
+
         #endregion
 
         #region Event Handlers
@@ -775,13 +795,6 @@ namespace VisionAlignChamber.Views
         private void btnInitialize_Click(object sender, EventArgs e)
         {
             _viewModel?.InitializeSystemCommand?.Execute(null);
-
-            // Initialize 완료 후 Sequence가 생성되므로 SetUpPanel에 재주입
-            if (_system?.Sequence != null)
-            {
-                setupPanel.SetSequence(_system.Sequence);
-                setupPanel.SetMotion(_vaMotion);
-            }
         }
 
         private void btnHomeAll_Click(object sender, EventArgs e)
@@ -858,6 +871,7 @@ namespace VisionAlignChamber.Views
             EventManager.Unsubscribe(EventManager.AlarmCleared, OnAlarmCleared);
             EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Unsubscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+            EventManager.Unsubscribe(EventManager.SystemInitialized, OnSystemInitialized);
 
             _viewModel?.Dispose();
 

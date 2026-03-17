@@ -44,6 +44,9 @@ namespace VisionAlignChamber.Core
         /// <summary>시퀀스 완료 (결과 데이터 포함)</summary>
         public const string SequenceCompleted = "SequenceCompleted";
 
+        /// <summary>시스템 초기화 완료</summary>
+        public const string SystemInitialized = "SystemInitialized";
+
         #endregion
 
         #region Public Methods

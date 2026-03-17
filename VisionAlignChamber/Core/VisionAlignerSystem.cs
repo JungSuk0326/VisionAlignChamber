@@ -278,6 +278,13 @@ namespace VisionAlignChamber.Core
                 SyncAppContextState();
 
                 RaiseInitializationProgress("시스템 초기화 완료", totalSteps, totalSteps);
+
+                // 초기화 완료 이벤트 발행 (MainForm 등에서 UI 갱신용)
+                if (anySuccess)
+                {
+                    EventManager.Publish(EventManager.SystemInitialized, this);
+                }
+
                 return anySuccess;
             }
             catch (Exception ex)

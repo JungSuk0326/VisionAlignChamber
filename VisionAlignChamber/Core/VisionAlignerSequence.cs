@@ -660,6 +660,9 @@ namespace VisionAlignChamber.Core
                 // Vision 이미지 클리어
                 _vision.ClearImages();
 
+                // 현재 위치를 0으로 리셋
+                _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
+
                 // 시뮬레이션 모드: 폴더에서 이미지 로드
                 if (AppSettings.SimulationMode)
                 {

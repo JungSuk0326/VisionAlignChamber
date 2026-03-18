@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using VisionAlignChamber.Config;
+using VisionAlignChamber.Hardware.Facade;
 
 namespace VisionAlignChamber.Views.Controls
 {
@@ -13,6 +14,7 @@ namespace VisionAlignChamber.Views.Controls
         #region Fields
 
         private TeachingParameter _param;
+        private HardwareMapping _hardwareMapping;
         private bool _isLoading = false;
 
         #endregion
@@ -24,6 +26,18 @@ namespace VisionAlignChamber.Views.Controls
             InitializeComponent();
             _param = TeachingParameter.Instance;
             LoadParametersToUI();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// HardwareMapping 주입 (Save 시 모션 파라미터 동기화용)
+        /// </summary>
+        public void SetHardwareMapping(HardwareMapping mapping)
+        {
+            _hardwareMapping = mapping;
         }
 
         #endregion
@@ -186,6 +200,20 @@ namespace VisionAlignChamber.Views.Controls
                 }
 
                 _param.Save();
+
+                // HardwareMapping 모션 파라미터 동기화
+                if (_hardwareMapping != null)
+                {
+                    _hardwareMapping.UpdateAxisParameters(VAMotionAxis.WedgeUpDown,
+                        _param.WedgeUpDown.Velocity, _param.WedgeUpDown.Accel, _param.WedgeUpDown.Decel);
+                    _hardwareMapping.UpdateAxisParameters(VAMotionAxis.CenteringStage_1,
+                        _param.CenteringStage1.Velocity, _param.CenteringStage1.Accel, _param.CenteringStage1.Decel);
+                    _hardwareMapping.UpdateAxisParameters(VAMotionAxis.CenteringStage_2,
+                        _param.CenteringStage2.Velocity, _param.CenteringStage2.Accel, _param.CenteringStage2.Decel);
+                    _hardwareMapping.UpdateAxisParameters(VAMotionAxis.ChuckRotation,
+                        _param.ChuckRotation.Velocity, _param.ChuckRotation.Accel, _param.ChuckRotation.Decel);
+                }
+
                 MessageBox.Show("Parameters saved successfully.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

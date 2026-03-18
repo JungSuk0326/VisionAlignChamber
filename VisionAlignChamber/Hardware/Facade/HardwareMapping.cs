@@ -117,6 +117,19 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
+        /// 축 모션 파라미터 업데이트 (TeachingParameter Save 시 호출)
+        /// </summary>
+        public void UpdateAxisParameters(VAMotionAxis axis, double velocity, double accel, double decel)
+        {
+            if (_axisMapping.TryGetValue(axis, out var info))
+            {
+                info.DefaultVelocity = velocity;
+                info.DefaultAccel = accel;
+                info.DefaultDecel = decel;
+            }
+        }
+
+        /// <summary>
         /// 매핑 다시 로드
         /// </summary>
         public void Reload()

@@ -386,6 +386,12 @@ namespace VisionAlignChamber.Views
                 setupPanel.SetSequence(_system.Sequence);
             }
 
+            // Parameter 탭에 HardwareMapping 주입 (Save 시 모션 파라미터 동기화)
+            if (_hardwareMapping != null)
+            {
+                parameterPanel.SetHardwareMapping(_hardwareMapping);
+            }
+
             // 초기 로그 메시지
             LogManager.System.Info("VisionAlignChamber 시작");
         }

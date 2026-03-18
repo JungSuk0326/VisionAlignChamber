@@ -434,6 +434,12 @@ namespace VisionAlignChamber.ViewModels
             try
             {
                 IsInitialized = _vision.Initialize();
+
+                // AutoOpen으로 카메라가 이미 열렸을 수 있으므로 상태 동기화
+                IsCameraOpened = _vision.IsCameraOpened;
+                IsGrabberActive = _vision.IsGrabberActive;
+                IsLightInitialized = _vision.IsLightInitialized;
+
                 StatusMessage = IsInitialized ? "Vision 초기화 완료" : "Vision 초기화 실패";
                 RaiseCanExecuteChanged();
             }

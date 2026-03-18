@@ -218,7 +218,7 @@ namespace VisionAlignChamber.Views.Controls
             await ExecutePositionTestAsync("Scan", async () => await _sequence.RunScanOnlyAsync(isFlat));
         }
 
-        private async Task ExecutePositionTestAsync(string name, Func<Task<bool>> action)
+        private async Task ExecutePositionTestAsync(string name, Func<Task<bool>> action) 
         {
             if (_sequence == null)
             {

@@ -331,6 +331,7 @@ namespace VisionAlignChamber.Core
                 AppState.Current.SystemStatus = SystemStatus.Idle;
                 LogManager.Sequence.Info("Scan Only 완료");
 
+                SequenceCompleted?.Invoke(this, _visionResult);
                 return true;
             }
             catch (OperationCanceledException)

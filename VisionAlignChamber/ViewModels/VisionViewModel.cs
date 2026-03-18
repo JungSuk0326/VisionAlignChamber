@@ -194,6 +194,20 @@ namespace VisionAlignChamber.ViewModels
 
         public double DegPerStep => _setCount > 0 ? 360.0 / _setCount : 0;
 
+        private int _cycleCount = 1;
+        public int CycleCount
+        {
+            get => _cycleCount;
+            set => SetProperty(ref _cycleCount, value);
+        }
+
+        private int _currentCycle;
+        public int CurrentCycle
+        {
+            get => _currentCycle;
+            set => SetProperty(ref _currentCycle, value);
+        }
+
         #endregion
 
         #region Camera/Grabber Properties
@@ -556,25 +570,38 @@ namespace VisionAlignChamber.ViewModels
                 IsRunning = true;
                 RunCount = 0;
                 RunStep = 0;
-                StatusMessage = $"시퀀스 시작 (Count: {SetCount}, Deg: {DegPerStep:F2})";
+                CurrentCycle = 0;
                 RaiseCanExecuteChanged();
 
                 bool isFlat = IsFlatMode;
-                bool result = await Task.Run(() => _sequence.RunScanOnlyAsync(isFlat));
+                int totalCycles = CycleCount;
 
-                if (!result && _sequence.State != VisionAlignerSequence.SequenceState.Aborted)
+                for (int cycle = 1; cycle <= totalCycles; cycle++)
                 {
-                    StatusMessage = $"시퀀스 실패: {_sequence.LastError}";
-                }
+                    CurrentCycle = cycle;
+                    StatusMessage = $"Cycle {cycle}/{totalCycles} 시작 (Count: {SetCount}, Deg: {DegPerStep:F2})";
 
-                // 결과 반영
-                if (result)
-                {
+                    bool result = await Task.Run(() => _sequence.RunScanOnlyAsync(isFlat));
+
+                    if (!result)
+                    {
+                        if (_sequence.State == VisionAlignerSequence.SequenceState.Aborted)
+                        {
+                            StatusMessage = $"Cycle {cycle}/{totalCycles} 중단됨";
+                            break;
+                        }
+                        StatusMessage = $"Cycle {cycle}/{totalCycles} 실패: {_sequence.LastError}";
+                        break;
+                    }
+
+                    // 결과 반영
                     AlignResult = _sequence.VisionResult;
                     ResultImage = _vision.GetResultImage(isFlat);
                     WaferImage = _vision.GetWaferImage(isFlat);
                     ImageCount = _vision.ImageCount;
                     CurrentImage = ResultImage;
+
+                    StatusMessage = $"Cycle {cycle}/{totalCycles} 완료";
                 }
             }
             catch (Exception ex)

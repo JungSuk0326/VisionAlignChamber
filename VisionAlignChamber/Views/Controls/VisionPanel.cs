@@ -86,12 +86,14 @@ namespace VisionAlignChamber.Views.Controls
             // Running 섹션 업데이트
             txtRunCnt.Text = _viewModel.RunCount.ToString();
             txtRunStep.Text = _viewModel.RunStep.ToString();
+            txtCycleCurrent.Text = $"{_viewModel.CurrentCycle}/{_viewModel.CycleCount}";
 
             // Running 버튼 상태
             bool isRunning = _viewModel.IsRunning;
             btnRun.Enabled = _viewModel.IsInitialized && !isRunning;
             btnStop.Enabled = isRunning;
             numCount.Enabled = !isRunning;
+            numCycle.Enabled = !isRunning;
 
             // Setting 버튼 상태
             btnGrabberActive.Enabled = _viewModel.IsCameraOpened;
@@ -193,6 +195,12 @@ namespace VisionAlignChamber.Views.Controls
         {
             UpdateDegValue();
             _viewModel?.SetRunningCount((int)numCount.Value);
+        }
+
+        private void numCycle_ValueChanged(object sender, EventArgs e)
+        {
+            if (_viewModel != null)
+                _viewModel.CycleCount = (int)numCycle.Value;
         }
 
         private void UpdateDegValue()

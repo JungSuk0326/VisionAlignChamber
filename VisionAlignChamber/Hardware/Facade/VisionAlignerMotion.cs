@@ -228,6 +228,15 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
+        /// 현재 위치 값 설정 (ActPos + CmdPos)
+        /// </summary>
+        public bool SetPosition(VAMotionAxis axis, double position)
+        {
+            var info = _mapping.GetAxisInfo(axis);
+            return _motion.SetActualPosition(info.AxisNo, position);
+        }
+
+        /// <summary>
         /// 절대 위치 이동
         /// </summary>
         public bool MoveAbsolute(VAMotionAxis axis, double position, double? velocity = null)

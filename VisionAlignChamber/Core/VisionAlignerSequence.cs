@@ -718,6 +718,10 @@ namespace VisionAlignChamber.Core
                     }
                 }
 
+                // 360° 회전 완료 후 현재 위치를 0으로 리셋
+                _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
+                LogManager.Sequence.Info("Chuck 위치 0으로 리셋");
+
                 // Vision Light OFF (스캔 완료 후 조명 끄기)
                 _vision?.SetLightOff();
 

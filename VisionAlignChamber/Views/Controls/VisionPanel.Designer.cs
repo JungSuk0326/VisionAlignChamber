@@ -293,6 +293,9 @@ namespace VisionAlignChamber.Views.Controls
             // 
             // grpRunning
             // 
+            this.grpRunning.Controls.Add(this.lblCycle);
+            this.grpRunning.Controls.Add(this.numCycle);
+            this.grpRunning.Controls.Add(this.txtCycleCurrent);
             this.grpRunning.Controls.Add(this.lblRunStep);
             this.grpRunning.Controls.Add(this.txtRunStep);
             this.grpRunning.Controls.Add(this.lblRunCnt);
@@ -435,7 +438,59 @@ namespace VisionAlignChamber.Views.Controls
             0,
             0});
             this.numCount.ValueChanged += new System.EventHandler(this.numCount_ValueChanged);
-            // 
+            //
+            // lblCycle
+            //
+            this.lblCycle = new System.Windows.Forms.Label();
+            this.lblCycle.AutoSize = true;
+            this.lblCycle.Location = new System.Drawing.Point(8, 125);
+            this.lblCycle.Name = "lblCycle";
+            this.lblCycle.Size = new System.Drawing.Size(38, 15);
+            this.lblCycle.TabIndex = 10;
+            this.lblCycle.Text = "Cycle:";
+            //
+            // numCycle
+            //
+            this.numCycle = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numCycle)).BeginInit();
+            this.numCycle.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.numCycle.Location = new System.Drawing.Point(48, 122);
+            this.numCycle.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numCycle.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numCycle.Name = "numCycle";
+            this.numCycle.Size = new System.Drawing.Size(55, 23);
+            this.numCycle.TabIndex = 11;
+            this.numCycle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numCycle.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numCycle.ValueChanged += new System.EventHandler(this.numCycle_ValueChanged);
+            ((System.ComponentModel.ISupportInitialize)(this.numCycle)).EndInit();
+            //
+            // txtCycleCurrent
+            //
+            this.txtCycleCurrent = new System.Windows.Forms.TextBox();
+            this.txtCycleCurrent.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.txtCycleCurrent.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.txtCycleCurrent.ForeColor = System.Drawing.Color.White;
+            this.txtCycleCurrent.Location = new System.Drawing.Point(120, 122);
+            this.txtCycleCurrent.Name = "txtCycleCurrent";
+            this.txtCycleCurrent.ReadOnly = true;
+            this.txtCycleCurrent.Size = new System.Drawing.Size(45, 23);
+            this.txtCycleCurrent.TabIndex = 12;
+            this.txtCycleCurrent.Text = "0/1";
+            this.txtCycleCurrent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            //
             // grpControl
             // 
             this.grpControl.Controls.Add(this.btnExecute);
@@ -733,6 +788,9 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TextBox txtRunStep;
         private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Label lblCycle;
+        private System.Windows.Forms.NumericUpDown numCycle;
+        private System.Windows.Forms.TextBox txtCycleCurrent;
         private System.Windows.Forms.GroupBox grpSetting;
         private System.Windows.Forms.Button btnCamOpen;
         private System.Windows.Forms.Button btnGrabberActive;

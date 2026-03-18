@@ -574,6 +574,7 @@ namespace VisionAlignChamber.ViewModels
                     ResultImage = _vision.GetResultImage(isFlat);
                     WaferImage = _vision.GetWaferImage(isFlat);
                     ImageCount = _vision.ImageCount;
+                    CurrentImage = ResultImage;
                 }
             }
             catch (Exception ex)

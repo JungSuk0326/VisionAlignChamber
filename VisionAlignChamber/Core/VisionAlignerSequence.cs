@@ -311,6 +311,9 @@ namespace VisionAlignChamber.Core
             _visionResult = WaferVisionResult.Empty;
             _isFlat = isFlat;
 
+            // AppState 상태 동기화 (SSOT)
+            AppState.Current.SystemStatus = SystemStatus.Running;
+
             try
             {
                 LogManager.Sequence.Info($"Scan Only 시작 (Type: {(isFlat ? "Flat" : "Notch")})");
@@ -325,6 +328,7 @@ namespace VisionAlignChamber.Core
                 // 완료
                 CurrentStep = SequenceStep.Complete;
                 State = SequenceState.Completed;
+                AppState.Current.SystemStatus = SystemStatus.Idle;
                 LogManager.Sequence.Info("Scan Only 완료");
 
                 return true;
@@ -332,12 +336,14 @@ namespace VisionAlignChamber.Core
             catch (OperationCanceledException)
             {
                 State = SequenceState.Aborted;
+                AppState.Current.SystemStatus = SystemStatus.Idle;
                 LogManager.Sequence.Warn("Scan Only 중단됨");
                 return false;
             }
             catch (Exception ex)
             {
                 SetError($"Scan Only 예외: {ex.Message}");
+                AppState.Current.SystemStatus = SystemStatus.Error;
                 return false;
             }
         }

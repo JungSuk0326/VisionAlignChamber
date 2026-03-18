@@ -806,6 +806,12 @@ namespace VisionAlignChamber.Views
                 // MainTabViewModel에도 새 Sequence 주입 (CTC Remote Initialize 시 필수)
                 _viewModel?.MainTab?.Initialize(_system.Sequence);
             }
+
+            // Eddy 자동 연결
+            if (_viewModel?.Eddy != null && !_viewModel.Eddy.IsConnected)
+            {
+                _viewModel.Eddy.ConnectCommand?.Execute(null);
+            }
         }
 
         #endregion

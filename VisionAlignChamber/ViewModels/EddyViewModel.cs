@@ -22,9 +22,9 @@ namespace VisionAlignChamber.ViewModels
         {
             _sensor = sensor ?? throw new ArgumentNullException(nameof(sensor));
 
-            // 기본값 설정
-            IpAddress = "192.168.1.99";
-            Port = 502;
+            // Settings.ini에서 IP/Port 읽기
+            IpAddress = Config.AppSettings.EddyIP;
+            Port = Config.AppSettings.EddyPort;
 
             InitializeCommands();
         }

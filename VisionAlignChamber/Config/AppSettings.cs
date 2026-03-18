@@ -279,6 +279,28 @@ namespace VisionAlignChamber.Config
 
         #endregion
 
+        #region Eddy Properties
+
+        /// <summary>
+        /// Eddy Current Sensor IP 주소
+        /// </summary>
+        public static string EddyIP
+        {
+            get => ReadValue("Eddy", "IP", "192.168.1.99");
+            set => WriteValue("Eddy", "IP", value);
+        }
+
+        /// <summary>
+        /// Eddy Current Sensor 포트 (Modbus TCP)
+        /// </summary>
+        public static int EddyPort
+        {
+            get => GetInt("Eddy", "Port", 502);
+            set => WriteValue("Eddy", "Port", value.ToString());
+        }
+
+        #endregion
+
         #region Communication Properties
 
         /// <summary>
@@ -515,6 +537,11 @@ AngleStep=15.0
 CamFile=
 ; 초기화 시 카메라 자동 오픈
 AutoOpen=false
+
+[Eddy]
+; Eddy Current Sensor 설정
+IP=192.168.1.99
+Port=502
 
 [Communication]
 ; CTC 통신 포트 (VisionAlignChamber가 서버)

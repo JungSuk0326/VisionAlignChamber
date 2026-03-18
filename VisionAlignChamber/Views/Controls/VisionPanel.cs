@@ -326,6 +326,16 @@ namespace VisionAlignChamber.Views.Controls
             _viewModel?.ExecuteInspectionCommand?.Execute(null);
         }
 
+        private void btnViewNotchImage_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ViewNotchImageCommand?.Execute(null);
+        }
+
+        private void btnViewWaferImage_Click(object sender, EventArgs e)
+        {
+            _viewModel?.ViewWaferImageCommand?.Execute(null);
+        }
+
         private void rdoNotch_CheckedChanged(object sender, EventArgs e)
         {
             if (rdoNotch.Checked && _viewModel != null)

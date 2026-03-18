@@ -49,6 +49,8 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCount = new System.Windows.Forms.Label();
             this.numCount = new System.Windows.Forms.NumericUpDown();
             this.grpControl = new System.Windows.Forms.GroupBox();
+            this.btnViewWaferImage = new System.Windows.Forms.Button();
+            this.btnViewNotchImage = new System.Windows.Forms.Button();
             this.btnExecute = new System.Windows.Forms.Button();
             this.btnClearImages = new System.Windows.Forms.Button();
             this.btnLoadImages = new System.Windows.Forms.Button();
@@ -492,6 +494,8 @@ namespace VisionAlignChamber.Views.Controls
             // 
             // grpControl
             // 
+            this.grpControl.Controls.Add(this.btnViewWaferImage);
+            this.grpControl.Controls.Add(this.btnViewNotchImage);
             this.grpControl.Controls.Add(this.btnExecute);
             this.grpControl.Controls.Add(this.btnClearImages);
             this.grpControl.Controls.Add(this.btnLoadImages);
@@ -515,7 +519,27 @@ namespace VisionAlignChamber.Views.Controls
             this.btnExecute.Text = "검사\r\n실행";
             this.btnExecute.UseVisualStyleBackColor = false;
             this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
-            // 
+            //
+            // btnViewNotchImage
+            //
+            this.btnViewNotchImage.Location = new System.Drawing.Point(342, 20);
+            this.btnViewNotchImage.Name = "btnViewNotchImage";
+            this.btnViewNotchImage.Size = new System.Drawing.Size(75, 45);
+            this.btnViewNotchImage.TabIndex = 4;
+            this.btnViewNotchImage.Text = "노치\r\n이미지";
+            this.btnViewNotchImage.UseVisualStyleBackColor = true;
+            this.btnViewNotchImage.Click += new System.EventHandler(this.btnViewNotchImage_Click);
+            //
+            // btnViewWaferImage
+            //
+            this.btnViewWaferImage.Location = new System.Drawing.Point(425, 20);
+            this.btnViewWaferImage.Name = "btnViewWaferImage";
+            this.btnViewWaferImage.Size = new System.Drawing.Size(75, 45);
+            this.btnViewWaferImage.TabIndex = 5;
+            this.btnViewWaferImage.Text = "웨이퍼\r\n이미지";
+            this.btnViewWaferImage.UseVisualStyleBackColor = true;
+            this.btnViewWaferImage.Click += new System.EventHandler(this.btnViewWaferImage_Click);
+            //
             // btnClearImages
             // 
             this.btnClearImages.Location = new System.Drawing.Point(176, 20);
@@ -803,6 +827,8 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Label lblCamFile;
         private System.Windows.Forms.GroupBox grpControl;
         private System.Windows.Forms.Button btnExecute;
+        private System.Windows.Forms.Button btnViewNotchImage;
+        private System.Windows.Forms.Button btnViewWaferImage;
         private System.Windows.Forms.Button btnClearImages;
         private System.Windows.Forms.Button btnLoadImages;
         private System.Windows.Forms.Button btnInitialize;

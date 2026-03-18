@@ -368,6 +368,8 @@ namespace VisionAlignChamber.ViewModels
         public ICommand LoadImagesCommand { get; private set; }
         public ICommand ClearImagesCommand { get; private set; }
         public ICommand ExecuteInspectionCommand { get; private set; }
+        public ICommand ViewNotchImageCommand { get; private set; }
+        public ICommand ViewWaferImageCommand { get; private set; }
         public ICommand PreviousImageCommand { get; private set; }
         public ICommand NextImageCommand { get; private set; }
         public ICommand StartRunCommand { get; private set; }
@@ -396,6 +398,8 @@ namespace VisionAlignChamber.ViewModels
             LoadImagesCommand = new RelayCommand<string>(ExecuteLoadImages, _ => IsInitialized && !IsInspecting);
             ClearImagesCommand = new RelayCommand(ExecuteClearImages, () => IsInitialized && ImageCount > 0);
             ExecuteInspectionCommand = new RelayCommand(ExecuteInspection, CanExecuteInspection);
+            ViewNotchImageCommand = new RelayCommand(ExecuteViewNotchImage, () => IsInitialized);
+            ViewWaferImageCommand = new RelayCommand(ExecuteViewWaferImage, () => IsInitialized);
             PreviousImageCommand = new RelayCommand(ExecutePreviousImage, () => CurrentImageIndex > 0);
             NextImageCommand = new RelayCommand(ExecuteNextImage, () => CurrentImageIndex < ImageCount - 1);
             StartRunCommand = new RelayCommand(ExecuteStartRun, () => IsInitialized && !IsRunning);
@@ -538,6 +542,35 @@ namespace VisionAlignChamber.ViewModels
             {
                 IsInspecting = false;
                 RaiseCanExecuteChanged();
+            }
+        }
+
+        private void ExecuteViewNotchImage()
+        {
+            var image = _vision.GetNotchImage();
+            if (image != null)
+            {
+                CurrentImage = image;
+                StatusMessage = "노치 이미지 표시";
+            }
+            else
+            {
+                StatusMessage = "노치 이미지를 가져올 수 없습니다.";
+            }
+        }
+
+        private void ExecuteViewWaferImage()
+        {
+            bool isFlat = IsFlatMode;
+            var image = _vision.GetWaferImage(isFlat);
+            if (image != null)
+            {
+                CurrentImage = image;
+                StatusMessage = "웨이퍼 이미지 표시";
+            }
+            else
+            {
+                StatusMessage = "웨이퍼 이미지를 가져올 수 없습니다.";
             }
         }
 

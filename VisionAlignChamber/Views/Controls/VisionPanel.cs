@@ -291,6 +291,20 @@ namespace VisionAlignChamber.Views.Controls
             }
         }
 
+        private void btnFilesSave_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null) return;
+
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "이미지 저장 폴더 선택";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    _viewModel.SaveAlignImagesCommand?.Execute(dialog.SelectedPath);
+                }
+            }
+        }
+
         private void btnInitialize_Click(object sender, EventArgs e)
         {
             _viewModel?.InitializeCommand?.Execute(null);

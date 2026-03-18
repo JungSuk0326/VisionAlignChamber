@@ -428,6 +428,24 @@ namespace VisionAlignChamber.Vision
         }
 
         /// <summary>
+        /// Grabber 이미지 저장
+        /// </summary>
+        public bool SaveAlignImages(string filePath)
+        {
+
+            try
+            {
+                _aligner.SaveImage(filePath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Save Images Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Grabber 현재 이미지 가져오기
         /// </summary>
         public Bitmap GetGrabberImage()

@@ -382,6 +382,7 @@ namespace VisionAlignChamber.ViewModels
         public ICommand DeactivateGrabberCommand { get; private set; }
         public ICommand TriggerCommand { get; private set; }
         public ICommand SaveImageCommand { get; private set; }
+        public ICommand SaveAlignImagesCommand { get; private set; }
 
         // Camera Option Commands
         public ICommand SetExposureTimeCommand { get; private set; }
@@ -412,6 +413,7 @@ namespace VisionAlignChamber.ViewModels
             DeactivateGrabberCommand = new RelayCommand(ExecuteDeactivateGrabber, () => IsGrabberActive);
             TriggerCommand = new RelayCommand(ExecuteTrigger, () => IsCameraOpened && IsGrabberActive);
             SaveImageCommand = new RelayCommand<string>(ExecuteSaveImage, _ => IsCameraOpened);
+            SaveAlignImagesCommand = new RelayCommand<string>(ExecuteSaveAlignImages, _ => IsInitialized);
 
             // Camera Option Commands
             SetExposureTimeCommand = new RelayCommand<int>(ExecuteSetExposureTime, _ => IsCameraOpened);
@@ -781,6 +783,27 @@ namespace VisionAlignChamber.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = $"이미지 저장 오류: {ex.Message}";
+            }
+        }
+
+        private void ExecuteSaveAlignImages(string folderPath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(folderPath))
+                {
+                    StatusMessage = "폴더 경로가 지정되지 않았습니다.";
+                    return;
+                }
+
+                bool success = _vision.SaveAlignImages(folderPath);
+                StatusMessage = success
+                    ? $"Align 이미지 저장 완료: {folderPath}"
+                    : "Align 이미지 저장 실패";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Align 이미지 저장 오류: {ex.Message}";
             }
         }
 

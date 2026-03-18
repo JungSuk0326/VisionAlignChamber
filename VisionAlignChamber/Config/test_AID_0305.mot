@@ -485,8 +485,8 @@
 21:HOME_SECOND_ACCEL.   =5.000000
 22:HOME_END_CLEAR_TIME. =1000.000000
 23:HOME_END_OFFSET.     =0.000000
-24:NEG_SOFT_LIMIT.      =-180.000000
-25:POS_SOFT_LIMIT.      =180.000000
+24:NEG_SOFT_LIMIT.      =0.000000
+25:POS_SOFT_LIMIT.      =0.000000
 26:MOVE_PULSE.          =3360000.000000
 27:MOVE_UNIT.           =360.000000
 28:INIT_POSITION.       =100.000000
@@ -501,7 +501,7 @@
 37:SOFT_LIMIT_SEL.      =0
 38:SOFT_LIMIT_STOP_MODE.=0
 39:SOFT_LIMIT_ENABLE.   =0
-40:MOVE_ACC_UNIT.       =1
+40:MOVE_ACC_UNIT.       =0
 #=======================================================
 00:AXIS_NO.             =12
 01:PULSE_OUT_METHOD.    =0
@@ -543,7 +543,7 @@
 37:SOFT_LIMIT_SEL.      =0
 38:SOFT_LIMIT_STOP_MODE.=0
 39:SOFT_LIMIT_ENABLE.   =0
-40:MOVE_ACC_UNIT.       =1
+40:MOVE_ACC_UNIT.       =0
 #=======================================================
 00:AXIS_NO.             =13
 01:PULSE_OUT_METHOD.    =0
@@ -585,7 +585,7 @@
 37:SOFT_LIMIT_SEL.      =0
 38:SOFT_LIMIT_STOP_MODE.=0
 39:SOFT_LIMIT_ENABLE.   =0
-40:MOVE_ACC_UNIT.       =1
+40:MOVE_ACC_UNIT.       =0
 #=======================================================
 00:AXIS_NO.             =14
 01:PULSE_OUT_METHOD.    =0

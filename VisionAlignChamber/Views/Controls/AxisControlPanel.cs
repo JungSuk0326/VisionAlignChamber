@@ -106,8 +106,8 @@ namespace VisionAlignChamber.Views.Controls
             bool canMove = _viewModel.IsEnabled && !_viewModel.IsMoving && _viewModel.IsServoOn && !_viewModel.IsAlarm;
             btnHome.Enabled = canMove;
             btnMove.Enabled = canMove;
-            btnJogPlus.Enabled = canMove;
-            btnJogMinus.Enabled = canMove;
+            //btnJogPlus.Enabled = canMove;
+            //btnJogMinus.Enabled = canMove;
         }
 
         #endregion
@@ -166,7 +166,7 @@ namespace VisionAlignChamber.Views.Controls
         private void btnJogPlus_MouseLeave(object sender, EventArgs e)
         {
             // 마우스가 Jog+ 버튼을 벗어나면 정지
-            _viewModel?.JogStopCommand?.Execute(null);
+            //_viewModel?.JogStopCommand?.Execute(null);
         }
 
         private void btnJogMinus_MouseUp(object sender, MouseEventArgs e)
@@ -178,7 +178,7 @@ namespace VisionAlignChamber.Views.Controls
         private void btnJogMinus_MouseLeave(object sender, EventArgs e)
         {
             // 마우스가 Jog- 버튼을 벗어나면 정지
-            _viewModel?.JogStopCommand?.Execute(null);
+            //_viewModel?.JogStopCommand?.Execute(null);
         }
 
         private void UpdateJogParameters()

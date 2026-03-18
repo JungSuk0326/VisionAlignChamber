@@ -31,6 +31,7 @@ namespace VisionAlignChamber.Views.Controls
             this.btnExposure = new System.Windows.Forms.Button();
             this.lblCamFile = new System.Windows.Forms.Label();
             this.btnFileSave = new System.Windows.Forms.Button();
+            this.btnFilesSave = new System.Windows.Forms.Button();
             this.btnTrigger = new System.Windows.Forms.Button();
             this.btnGrabberActive = new System.Windows.Forms.Button();
             this.btnCamOpen = new System.Windows.Forms.Button();
@@ -197,6 +198,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpSetting.Controls.Add(this.btnExposure);
             this.grpSetting.Controls.Add(this.lblCamFile);
             this.grpSetting.Controls.Add(this.btnFileSave);
+            this.grpSetting.Controls.Add(this.btnFilesSave);
             this.grpSetting.Controls.Add(this.btnTrigger);
             this.grpSetting.Controls.Add(this.btnGrabberActive);
             this.grpSetting.Controls.Add(this.btnCamOpen);
@@ -266,7 +268,17 @@ namespace VisionAlignChamber.Views.Controls
             this.btnFileSave.Text = "File Save";
             this.btnFileSave.UseVisualStyleBackColor = true;
             this.btnFileSave.Click += new System.EventHandler(this.btnFileSave_Click);
-            // 
+            //
+            // btnFilesSave
+            //
+            this.btnFilesSave.Location = new System.Drawing.Point(170, 55);
+            this.btnFilesSave.Name = "btnFilesSave";
+            this.btnFilesSave.Size = new System.Drawing.Size(75, 30);
+            this.btnFilesSave.TabIndex = 10;
+            this.btnFilesSave.Text = "Files Save";
+            this.btnFilesSave.UseVisualStyleBackColor = true;
+            this.btnFilesSave.Click += new System.EventHandler(this.btnFilesSave_Click);
+            //
             // btnTrigger
             // 
             this.btnTrigger.Location = new System.Drawing.Point(8, 55);
@@ -820,6 +832,7 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnGrabberActive;
         private System.Windows.Forms.Button btnTrigger;
         private System.Windows.Forms.Button btnFileSave;
+        private System.Windows.Forms.Button btnFilesSave;
         private System.Windows.Forms.CheckBox chkTrigLive;
         private System.Windows.Forms.Label lblExposure;
         private System.Windows.Forms.TextBox txtExposure;

@@ -65,6 +65,8 @@ namespace VisionAlignChamber.Core
         private SequenceStep _currentStep;
         private SequenceState _state;
         private bool _isFlat; // Flat 타입 웨이퍼 여부
+        private int? _overrideImageCount;    // VisionPanel에서 전달된 Count (null이면 _param 사용)
+        private double? _overrideStepAngle;  // VisionPanel에서 전달된 Angle (null이면 _param 사용)
 
         // Vision 결과
         private WaferVisionResult _visionResult;
@@ -347,6 +349,16 @@ namespace VisionAlignChamber.Core
                 AppState.Current.SystemStatus = SystemStatus.Error;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Scan만 실행 (VisionPanel용 오버로드 - Count/Angle 직접 지정)
+        /// </summary>
+        public async Task<bool> RunScanOnlyAsync(bool isFlat, int imageCount, double stepAngle)
+        {
+            _overrideImageCount = imageCount;
+            _overrideStepAngle = stepAngle;
+            return await RunScanOnlyAsync(isFlat);
         }
 
         /// <summary>
@@ -655,8 +667,10 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                int imageCount = _param.ScanImageCount;
-                double stepAngle = _param.ScanStepAngle;
+                int imageCount = _overrideImageCount ?? _param.ScanImageCount;
+                double stepAngle = _overrideStepAngle ?? _param.ScanStepAngle;
+                _overrideImageCount = null;
+                _overrideStepAngle = null;
 
                 // Vision 이미지 클리어
                 _vision.ClearImages();

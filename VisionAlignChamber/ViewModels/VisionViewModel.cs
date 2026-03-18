@@ -622,7 +622,7 @@ namespace VisionAlignChamber.ViewModels
                     CurrentCycle = cycle;
                     StatusMessage = $"Cycle {cycle}/{totalCycles} 시작 (Count: {SetCount}, Deg: {DegPerStep:F2})";
 
-                    bool result = await Task.Run(() => _sequence.RunScanOnlyAsync(isFlat));
+                    bool result = await Task.Run(() => _sequence.RunScanOnlyAsync(isFlat, SetCount, DegPerStep));
 
                     if (!result)
                     {

@@ -35,6 +35,9 @@ namespace VisionAlignChamber.Views.Controls
             this.btnGrabberActive = new System.Windows.Forms.Button();
             this.btnCamOpen = new System.Windows.Forms.Button();
             this.grpRunning = new System.Windows.Forms.GroupBox();
+            this.lblCycle = new System.Windows.Forms.Label();
+            this.numCycle = new System.Windows.Forms.NumericUpDown();
+            this.txtCycleCurrent = new System.Windows.Forms.TextBox();
             this.lblRunStep = new System.Windows.Forms.Label();
             this.txtRunStep = new System.Windows.Forms.TextBox();
             this.lblRunCnt = new System.Windows.Forms.Label();
@@ -76,6 +79,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlRunSetting.SuspendLayout();
             this.grpSetting.SuspendLayout();
             this.grpRunning.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numCycle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCount)).BeginInit();
             this.grpControl.SuspendLayout();
             this.grpLight.SuspendLayout();
@@ -93,7 +97,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpStatus.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpStatus.Location = new System.Drawing.Point(0, 0);
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size(350, 50);
+            this.grpStatus.Size = new System.Drawing.Size(523, 50);
             this.grpStatus.TabIndex = 0;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "상태";
@@ -144,7 +148,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpMode.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpMode.Location = new System.Drawing.Point(0, 50);
             this.grpMode.Name = "grpMode";
-            this.grpMode.Size = new System.Drawing.Size(350, 45);
+            this.grpMode.Size = new System.Drawing.Size(523, 45);
             this.grpMode.TabIndex = 1;
             this.grpMode.TabStop = false;
             this.grpMode.Text = "검사 모드";
@@ -180,7 +184,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlRunSetting.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRunSetting.Location = new System.Drawing.Point(0, 95);
             this.pnlRunSetting.Name = "pnlRunSetting";
-            this.pnlRunSetting.Size = new System.Drawing.Size(350, 175);
+            this.pnlRunSetting.Size = new System.Drawing.Size(523, 175);
             this.pnlRunSetting.TabIndex = 2;
             // 
             // grpSetting
@@ -197,7 +201,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpSetting.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpSetting.Location = new System.Drawing.Point(175, 0);
             this.grpSetting.Name = "grpSetting";
-            this.grpSetting.Size = new System.Drawing.Size(175, 175);
+            this.grpSetting.Size = new System.Drawing.Size(348, 175);
             this.grpSetting.TabIndex = 1;
             this.grpSetting.TabStop = false;
             this.grpSetting.Text = "Setting";
@@ -313,6 +317,53 @@ namespace VisionAlignChamber.Views.Controls
             this.grpRunning.TabIndex = 0;
             this.grpRunning.TabStop = false;
             this.grpRunning.Text = "Running";
+            // 
+            // lblCycle
+            // 
+            this.lblCycle.AutoSize = true;
+            this.lblCycle.Location = new System.Drawing.Point(8, 125);
+            this.lblCycle.Name = "lblCycle";
+            this.lblCycle.Size = new System.Drawing.Size(39, 15);
+            this.lblCycle.TabIndex = 10;
+            this.lblCycle.Text = "Cycle:";
+            // 
+            // numCycle
+            // 
+            this.numCycle.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.numCycle.Location = new System.Drawing.Point(48, 122);
+            this.numCycle.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numCycle.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numCycle.Name = "numCycle";
+            this.numCycle.Size = new System.Drawing.Size(55, 23);
+            this.numCycle.TabIndex = 11;
+            this.numCycle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numCycle.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numCycle.ValueChanged += new System.EventHandler(this.numCycle_ValueChanged);
+            // 
+            // txtCycleCurrent
+            // 
+            this.txtCycleCurrent.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.txtCycleCurrent.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
+            this.txtCycleCurrent.ForeColor = System.Drawing.Color.White;
+            this.txtCycleCurrent.Location = new System.Drawing.Point(120, 122);
+            this.txtCycleCurrent.Name = "txtCycleCurrent";
+            this.txtCycleCurrent.ReadOnly = true;
+            this.txtCycleCurrent.Size = new System.Drawing.Size(45, 23);
+            this.txtCycleCurrent.TabIndex = 12;
+            this.txtCycleCurrent.Text = "0/1";
+            this.txtCycleCurrent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // lblRunStep
             // 
@@ -438,59 +489,7 @@ namespace VisionAlignChamber.Views.Controls
             0,
             0});
             this.numCount.ValueChanged += new System.EventHandler(this.numCount_ValueChanged);
-            //
-            // lblCycle
-            //
-            this.lblCycle = new System.Windows.Forms.Label();
-            this.lblCycle.AutoSize = true;
-            this.lblCycle.Location = new System.Drawing.Point(8, 125);
-            this.lblCycle.Name = "lblCycle";
-            this.lblCycle.Size = new System.Drawing.Size(38, 15);
-            this.lblCycle.TabIndex = 10;
-            this.lblCycle.Text = "Cycle:";
-            //
-            // numCycle
-            //
-            this.numCycle = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.numCycle)).BeginInit();
-            this.numCycle.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
-            this.numCycle.Location = new System.Drawing.Point(48, 122);
-            this.numCycle.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.numCycle.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numCycle.Name = "numCycle";
-            this.numCycle.Size = new System.Drawing.Size(55, 23);
-            this.numCycle.TabIndex = 11;
-            this.numCycle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numCycle.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numCycle.ValueChanged += new System.EventHandler(this.numCycle_ValueChanged);
-            ((System.ComponentModel.ISupportInitialize)(this.numCycle)).EndInit();
-            //
-            // txtCycleCurrent
-            //
-            this.txtCycleCurrent = new System.Windows.Forms.TextBox();
-            this.txtCycleCurrent.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.txtCycleCurrent.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
-            this.txtCycleCurrent.ForeColor = System.Drawing.Color.White;
-            this.txtCycleCurrent.Location = new System.Drawing.Point(120, 122);
-            this.txtCycleCurrent.Name = "txtCycleCurrent";
-            this.txtCycleCurrent.ReadOnly = true;
-            this.txtCycleCurrent.Size = new System.Drawing.Size(45, 23);
-            this.txtCycleCurrent.TabIndex = 12;
-            this.txtCycleCurrent.Text = "0/1";
-            this.txtCycleCurrent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            //
+            // 
             // grpControl
             // 
             this.grpControl.Controls.Add(this.btnExecute);
@@ -500,7 +499,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpControl.Location = new System.Drawing.Point(0, 270);
             this.grpControl.Name = "grpControl";
-            this.grpControl.Size = new System.Drawing.Size(350, 75);
+            this.grpControl.Size = new System.Drawing.Size(523, 75);
             this.grpControl.TabIndex = 3;
             this.grpControl.TabStop = false;
             this.grpControl.Text = "Control";
@@ -557,7 +556,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpLight.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpLight.Location = new System.Drawing.Point(0, 345);
             this.grpLight.Name = "grpLight";
-            this.grpLight.Size = new System.Drawing.Size(350, 60);
+            this.grpLight.Size = new System.Drawing.Size(523, 60);
             this.grpLight.TabIndex = 4;
             this.grpLight.TabStop = false;
             this.grpLight.Text = "Light";
@@ -620,7 +619,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpResult.Location = new System.Drawing.Point(0, 405);
             this.grpResult.Name = "grpResult";
-            this.grpResult.Size = new System.Drawing.Size(350, 165);
+            this.grpResult.Size = new System.Drawing.Size(523, 165);
             this.grpResult.TabIndex = 5;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "검사 결과";
@@ -647,7 +646,7 @@ namespace VisionAlignChamber.Views.Controls
             this.listResult.HideSelection = false;
             this.listResult.Location = new System.Drawing.Point(3, 19);
             this.listResult.Name = "listResult";
-            this.listResult.Size = new System.Drawing.Size(344, 143);
+            this.listResult.Size = new System.Drawing.Size(517, 143);
             this.listResult.TabIndex = 0;
             this.listResult.UseCompatibleStateImageBehavior = false;
             this.listResult.View = System.Windows.Forms.View.Details;
@@ -718,7 +717,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlStatusBar.Location = new System.Drawing.Point(0, 570);
             this.pnlStatusBar.Name = "pnlStatusBar";
-            this.pnlStatusBar.Size = new System.Drawing.Size(350, 30);
+            this.pnlStatusBar.Size = new System.Drawing.Size(523, 30);
             this.pnlStatusBar.TabIndex = 6;
             // 
             // lblStatusMessage
@@ -744,7 +743,7 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpStatus);
             this.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.Name = "VisionPanel";
-            this.Size = new System.Drawing.Size(350, 600);
+            this.Size = new System.Drawing.Size(523, 600);
             this.grpStatus.ResumeLayout(false);
             this.grpStatus.PerformLayout();
             this.grpMode.ResumeLayout(false);
@@ -754,6 +753,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpSetting.PerformLayout();
             this.grpRunning.ResumeLayout(false);
             this.grpRunning.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numCycle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCount)).EndInit();
             this.grpControl.ResumeLayout(false);
             this.grpLight.ResumeLayout(false);

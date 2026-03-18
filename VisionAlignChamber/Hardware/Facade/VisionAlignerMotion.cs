@@ -227,6 +227,64 @@ namespace VisionAlignChamber.Hardware.Facade
             return _mapping.GetAxisInfo(axis).AxisNo;
         }
 
+        #region Motion Interlock
+
+        /// <summary>
+        /// 축별 모션 인터락 체크
+        /// 이동 명령 전에 호출하여 조건 미충족 시 이동 차단
+        /// </summary>
+        /// <returns>true: 이동 가능, false: 인터락 조건 미충족</returns>
+        private bool CheckMotionInterlock(VAMotionAxis axis)
+        {
+            switch (axis)
+            {
+                case VAMotionAxis.WedgeUpDown:
+                    return CheckWedgeInterlock();
+
+                // 다른 축 인터락은 여기에 추가
+                // case VAMotionAxis.ChuckRotation:
+                //     return CheckChuckInterlock();
+
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// Wedge 축 인터락: Centering 1, 2 모두 Home 완료 + Open 위치에 있어야 이동 가능
+        /// </summary>
+        private bool CheckWedgeInterlock()
+        {
+            const double tolerance = 1.0; // 위치 허용 오차
+
+            bool centering1Home = IsHomeDone(VAMotionAxis.CenteringStage_1);
+            bool centering2Home = IsHomeDone(VAMotionAxis.CenteringStage_2);
+
+            if (!centering1Home || !centering2Home)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Interlock] Wedge 이동 차단 - Centering1 Home: {centering1Home}, Centering2 Home: {centering2Home}");
+                return false;
+            }
+
+            var param = Config.TeachingParameter.Instance;
+            double center1Pos = GetPosition(VAMotionAxis.CenteringStage_1);
+            double center2Pos = GetPosition(VAMotionAxis.CenteringStage_2);
+            bool center1AtOpen = Math.Abs(center1Pos - param.CenterL_Open) <= tolerance;
+            bool center2AtOpen = Math.Abs(center2Pos - param.CenterR_Open) <= tolerance;
+
+            if (!center1AtOpen || !center2AtOpen)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Interlock] Wedge 이동 차단 - Centering1 Pos: {center1Pos:F2} (Open: {param.CenterL_Open:F2}), Centering2 Pos: {center2Pos:F2} (Open: {param.CenterR_Open:F2})");
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
         /// <summary>
         /// 현재 위치 값 설정 (ActPos + CmdPos)
         /// </summary>
@@ -241,6 +299,7 @@ namespace VisionAlignChamber.Hardware.Facade
         /// </summary>
         public bool MoveAbsolute(VAMotionAxis axis, double position, double? velocity = null)
         {
+            if (!CheckMotionInterlock(axis)) return false;
             var info = _mapping.GetAxisInfo(axis);
             double vel = velocity ?? info.DefaultVelocity;
             return _motion.MoveAbs(info.AxisNo, position, vel, info.DefaultAccel, info.DefaultDecel);
@@ -251,6 +310,7 @@ namespace VisionAlignChamber.Hardware.Facade
         /// </summary>
         public bool MoveAbsolute(VAMotionAxis axis, double position, double velocity, double accel, double decel)
         {
+            if (!CheckMotionInterlock(axis)) return false;
             var info = _mapping.GetAxisInfo(axis);
             return _motion.MoveAbs(info.AxisNo, position, velocity, accel, decel);
         }
@@ -260,6 +320,7 @@ namespace VisionAlignChamber.Hardware.Facade
         /// </summary>
         public bool MoveRelative(VAMotionAxis axis, double distance, double? velocity = null)
         {
+            if (!CheckMotionInterlock(axis)) return false;
             var info = _mapping.GetAxisInfo(axis);
             double vel = velocity ?? info.DefaultVelocity;
             return _motion.MoveRel(info.AxisNo, distance, vel, info.DefaultAccel, info.DefaultDecel);
@@ -274,6 +335,7 @@ namespace VisionAlignChamber.Hardware.Facade
         /// <param name="decel">감속도</param>
         public bool MoveVelocity(VAMotionAxis axis, double velocity, double accel, double decel)
         {
+            if (!CheckMotionInterlock(axis)) return false;
             var info = _mapping.GetAxisInfo(axis);
             return _motion.MoveVelocity(info.AxisNo, velocity, accel, decel);
         }

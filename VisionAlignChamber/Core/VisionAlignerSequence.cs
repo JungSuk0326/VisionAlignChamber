@@ -239,16 +239,16 @@ namespace VisionAlignChamber.Core
                 if (!await ExecuteStepAsync(SequenceStep.Align, ExecuteAlignAsync))
                     return false;
 
-                // Step 7: Eddy (스킵 가능)
-                if (!skipEddy)
-                {
-                    if (!await ExecuteStepAsync(SequenceStep.Eddy, ExecuteEddyAsync))
-                        return false;
-                }
-                else
-                {
-                    LogManager.Sequence.Info("Step 7: Eddy - Skipped");
-                }
+                // Step 7: Eddy - Scan 스텝에서 병렬로 측정하도록 변경 (기존 단독 스텝 주석 처리)
+                // if (!skipEddy)
+                // {
+                //     if (!await ExecuteStepAsync(SequenceStep.Eddy, ExecuteEddyAsync))
+                //         return false;
+                // }
+                // else
+                // {
+                //     LogManager.Sequence.Info("Step 7: Eddy - Skipped");
+                // }
 
                 // 완료
                 CurrentStep = SequenceStep.Complete;
@@ -426,6 +426,21 @@ namespace VisionAlignChamber.Core
                 _io.SetLiftPinVacuum(true);
 
                 /* Wafer Exist Check*/
+
+                // Eddy SetZero (웨이퍼 없는 상태에서 영점 설정)
+                if (_eddy != null && _eddy.IsConnected)
+                {
+                    if (!_eddy.SetZero())
+                    {
+                        LogManager.Sequence.Warn("Eddy SetZero 실패 - 측정은 계속 진행");
+                    }
+                    else
+                    {
+                        LogManager.Sequence.Info("Eddy SetZero 완료");
+                    }
+                    // 영점 안정화 대기
+                    await Task.Delay(200, _cts.Token);
+                }
 
                 LogManager.Sequence.Info("PrepareForPut 완료");
                 return true;
@@ -690,6 +705,9 @@ namespace VisionAlignChamber.Core
                 // 현재 위치를 0으로 리셋
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
 
+                // Eddy 측정값 (Scan 중 병렬로 측정)
+                double eddyAverage = 0;
+
                 // 시뮬레이션 모드: 폴더에서 이미지 로드
                 if (AppSettings.SimulationMode)
                 {
@@ -712,6 +730,9 @@ namespace VisionAlignChamber.Core
                     }
 
                     LogManager.Sequence.Info($"이미지 {_vision.ImageCount}개 로드 완료");
+
+                    // 시뮬레이션 Eddy 값
+                    eddyAverage = AppSettings.SimulationEddyValue;
                 }
                 else
                 {
@@ -721,30 +742,89 @@ namespace VisionAlignChamber.Core
                     // 스캔 전 TrigLive 비활성화 (수동 Trigger 모드)
                     _vision.SetTrigLive(false);
 
-                    for (int i = 0; i < imageCount; i++)
+                    // Eddy 병렬 측정 태스크: 0°와 180° 시점에서 GetData
+                    bool eddyEnabled = _eddy != null && _eddy.IsConnected;
+                    double eddyAt0 = 0;
+                    double eddyAt180 = 0;
+
+                    // Scan 태스크
+                    Task<bool> scanTask = Task.Run(async () =>
                     {
-                        _cts.Token.ThrowIfCancellationRequested();
-
-                        // AngleStep 만큼 이동
-                        double targetAngle = stepAngle * (i + 1);
-
-                        if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                        for (int i = 0; i < imageCount; i++)
                         {
-                            SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
-                            return false;
+                            _cts.Token.ThrowIfCancellationRequested();
+
+                            // AngleStep 만큼 이동
+                            double targetAngle = stepAngle * (i + 1);
+
+                            if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                            {
+                                SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
+                                return false;
+                            }
+
+                            // 모터 안정화 대기
+                            await Task.Delay(100, _cts.Token);
+
+                            // 카메라 Trigger + GrabDone 대기 + Aligner에 이미지 추가
+                            if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
+                            {
+                                SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
+                                return false;
+                            }
+
+                            LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
                         }
+                        return true;
+                    });
 
-                        // 모터 안정화 대기
-                        await Task.Delay(100, _cts.Token);
+                    // Eddy 측정 태스크: 위치 폴링으로 0° 출발 시점과 180° 통과 시점에서 측정
+                    Task eddyTask = Task.Run(async () =>
+                    {
+                        if (!eddyEnabled) return;
 
-                        // 카메라 Trigger + GrabDone 대기 + Aligner에 이미지 추가
-                        if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
+                        try
                         {
-                            SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
-                            return false;
-                        }
+                            // 0° 시점 측정 (회전 시작 전 현재 위치)
+                            eddyAt0 = _eddy.GetData();
+                            LogManager.Sequence.Info($"Eddy GetData at 0°: {eddyAt0:F4}");
 
-                        LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
+                            // 180° 통과 감지: 위치가 180°를 넘는 순간 측정
+                            bool passed180 = false;
+                            while (!passed180 && !_cts.Token.IsCancellationRequested)
+                            {
+                                await Task.Delay(50, _cts.Token);
+                                double currentPos = _motion.GetPosition(VAMotionAxis.ChuckRotation);
+
+                                if (currentPos >= 180.0)
+                                {
+                                    eddyAt180 = _eddy.GetData();
+                                    passed180 = true;
+                                    LogManager.Sequence.Info($"Eddy GetData at 180° (pos: {currentPos:F1}°): {eddyAt180:F4}");
+                                }
+                            }
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // 취소 시 무시
+                        }
+                        catch (Exception ex)
+                        {
+                            LogManager.Sequence.Warn($"Eddy 측정 태스크 오류: {ex.Message}");
+                        }
+                    });
+
+                    // Scan + Eddy 병렬 실행
+                    await Task.WhenAll(scanTask, eddyTask);
+
+                    if (!scanTask.Result)
+                        return false;
+
+                    // Eddy 평균값 계산
+                    if (eddyEnabled)
+                    {
+                        eddyAverage = Math.Round((eddyAt0 + eddyAt180) / 2.0, 1);
+                        LogManager.Sequence.Info($"Eddy Average: {eddyAverage:F1} (0°: {eddyAt0:F4}, 180°: {eddyAt180:F4})");
                     }
                 }
 
@@ -771,7 +851,10 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                LogManager.Sequence.Info($"Vision Result - Radius: {_visionResult.Radius:F3}, AbsAngle: {_visionResult.AbsAngle:F3}");
+                // Eddy 측정값을 Vision 결과에 저장
+                _visionResult.EddyValue = eddyAverage;
+
+                LogManager.Sequence.Info($"Vision Result - Radius: {_visionResult.Radius:F3}, AbsAngle: {_visionResult.AbsAngle:F3}, Eddy: {eddyAverage:F1}");
                 return true;
             }
             catch (Exception ex)

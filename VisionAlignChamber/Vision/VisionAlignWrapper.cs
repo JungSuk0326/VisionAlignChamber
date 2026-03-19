@@ -395,6 +395,11 @@ namespace VisionAlignChamber.Vision
                 _imageCount++;
                 _inspectionComplete = false;
 
+                // 캡처된 이미지를 디스플레이에 표시
+                var capturedImage = _grabber.GetImage();
+                if (capturedImage != null)
+                    ImageCaptured?.Invoke(capturedImage);
+
                 return true;
             }
             catch (OperationCanceledException)

@@ -697,10 +697,7 @@ namespace VisionAlignChamber.ViewModels
 
         private void OnDisplayImageChanged(object data)
         {
-            if (data is Bitmap image)
-            {
-                SequenceResultImage = image;
-            }
+            SequenceResultImage = data as Bitmap;
         }
 
         #endregion

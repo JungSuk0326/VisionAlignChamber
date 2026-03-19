@@ -205,6 +205,9 @@ namespace VisionAlignChamber.Core
             _visionResult = WaferVisionResult.Empty;
             _isFlat = isFlat;
 
+            // 이전 결과 이미지 초기화 (스캔 중 라이브 이미지 표시를 위해)
+            EventManager.Publish(EventManager.DisplayImageChanged, null);
+
             // AppState 상태 동기화 (SSOT)
             AppState.Current.SystemStatus = SystemStatus.Running;
 

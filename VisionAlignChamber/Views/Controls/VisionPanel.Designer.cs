@@ -78,6 +78,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlStatusBar = new System.Windows.Forms.Panel();
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
             this.grpStatus.SuspendLayout();
             this.grpMode.SuspendLayout();
             this.pnlRunSetting.SuspendLayout();
@@ -879,5 +880,6 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TrackBar trkLightPower;
         private System.Windows.Forms.Label lblLightPowerValue;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog2;
     }
 }

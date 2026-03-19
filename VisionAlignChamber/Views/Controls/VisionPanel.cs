@@ -17,7 +17,7 @@ namespace VisionAlignChamber.Views.Controls
         private VisionViewModel _viewModel;
         private Timer _updateTimer;
         private int _resultCounter;
-        private object _lastResultKey;  // To detect new results
+        private int _lastResultVersion;  // To detect new results
         private const int MaxHistoryCount = 100;
 
         #endregion
@@ -154,12 +154,12 @@ namespace VisionAlignChamber.Views.Controls
             if (!result.IsValid)
                 return;
 
-            // Create a key to detect if this is a new result
-            var currentKey = $"{result.Index1st}_{result.Index2nd}_{result.OffAngle}_{result.AbsAngle}";
-            if (currentKey.Equals(_lastResultKey))
+            // ResultVersion이 변경되었을 때만 추가 (매 검사마다 증가)
+            int currentVersion = _viewModel.ResultVersion;
+            if (currentVersion == _lastResultVersion)
                 return;
 
-            _lastResultKey = currentKey;
+            _lastResultVersion = currentVersion;
             _resultCounter++;
 
             // Add new result row at the top
@@ -334,7 +334,7 @@ namespace VisionAlignChamber.Views.Controls
         {
             listResult.Items.Clear();
             _resultCounter = 0;
-            _lastResultKey = null;
+            _lastResultVersion = 0;
         }
 
         private void btnResultExport_Click(object sender, EventArgs e)

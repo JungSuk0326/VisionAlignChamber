@@ -275,6 +275,9 @@ namespace VisionAlignChamber.ViewModels
         #region Result Properties
 
         private WaferVisionResult _alignResult;
+        private int _resultVersion;
+        public int ResultVersion => _resultVersion;
+
         public WaferVisionResult AlignResult
         {
             get => _alignResult;
@@ -282,6 +285,8 @@ namespace VisionAlignChamber.ViewModels
             {
                 if (SetProperty(ref _alignResult, value))
                 {
+                    if (value.IsValid)
+                        _resultVersion++;
                     OnPropertyChanged(nameof(OffsetAngle));
                     OnPropertyChanged(nameof(AbsoluteAngle));
                     OnPropertyChanged(nameof(WaferCenterX));

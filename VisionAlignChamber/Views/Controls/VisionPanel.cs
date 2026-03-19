@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using VisionAlignChamber.ViewModels;
 
@@ -333,6 +335,52 @@ namespace VisionAlignChamber.Views.Controls
             listResult.Items.Clear();
             _resultCounter = 0;
             _lastResultKey = null;
+        }
+
+        private void btnResultExport_Click(object sender, EventArgs e)
+        {
+            if (listResult.Items.Count == 0)
+            {
+                MessageBox.Show("내보낼 결과 데이터가 없습니다.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var dialog = new SaveFileDialog())
+            {
+                dialog.Filter = "CSV 파일 (*.csv)|*.csv";
+                dialog.DefaultExt = "csv";
+                dialog.FileName = $"VisionResult_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var sb = new StringBuilder();
+
+                        // Header
+                        var headers = new string[listResult.Columns.Count];
+                        for (int i = 0; i < listResult.Columns.Count; i++)
+                            headers[i] = listResult.Columns[i].Text;
+                        sb.AppendLine(string.Join(",", headers));
+
+                        // Data rows
+                        foreach (ListViewItem item in listResult.Items)
+                        {
+                            var values = new string[item.SubItems.Count];
+                            for (int i = 0; i < item.SubItems.Count; i++)
+                                values[i] = item.SubItems[i].Text;
+                            sb.AppendLine(string.Join(",", values));
+                        }
+
+                        File.WriteAllText(dialog.FileName, sb.ToString(), Encoding.UTF8);
+                        MessageBox.Show($"CSV 저장 완료: {Path.GetFileName(dialog.FileName)}", "완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"CSV 저장 실패: {ex.Message}", "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void btnExecute_Click(object sender, EventArgs e)

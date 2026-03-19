@@ -32,6 +32,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCamFile = new System.Windows.Forms.Label();
             this.btnFileSave = new System.Windows.Forms.Button();
             this.btnFilesSave = new System.Windows.Forms.Button();
+            this.btnResultExport = new System.Windows.Forms.Button();
             this.btnTrigger = new System.Windows.Forms.Button();
             this.btnGrabberActive = new System.Windows.Forms.Button();
             this.btnCamOpen = new System.Windows.Forms.Button();
@@ -100,7 +101,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpStatus.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpStatus.Location = new System.Drawing.Point(0, 0);
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size(523, 50);
+            this.grpStatus.Size = new System.Drawing.Size(605, 50);
             this.grpStatus.TabIndex = 0;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "상태";
@@ -151,7 +152,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpMode.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpMode.Location = new System.Drawing.Point(0, 50);
             this.grpMode.Name = "grpMode";
-            this.grpMode.Size = new System.Drawing.Size(523, 45);
+            this.grpMode.Size = new System.Drawing.Size(605, 45);
             this.grpMode.TabIndex = 1;
             this.grpMode.TabStop = false;
             this.grpMode.Text = "검사 모드";
@@ -187,7 +188,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlRunSetting.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRunSetting.Location = new System.Drawing.Point(0, 95);
             this.pnlRunSetting.Name = "pnlRunSetting";
-            this.pnlRunSetting.Size = new System.Drawing.Size(523, 175);
+            this.pnlRunSetting.Size = new System.Drawing.Size(605, 175);
             this.pnlRunSetting.TabIndex = 2;
             // 
             // grpSetting
@@ -199,13 +200,14 @@ namespace VisionAlignChamber.Views.Controls
             this.grpSetting.Controls.Add(this.lblCamFile);
             this.grpSetting.Controls.Add(this.btnFileSave);
             this.grpSetting.Controls.Add(this.btnFilesSave);
+            this.grpSetting.Controls.Add(this.btnResultExport);
             this.grpSetting.Controls.Add(this.btnTrigger);
             this.grpSetting.Controls.Add(this.btnGrabberActive);
             this.grpSetting.Controls.Add(this.btnCamOpen);
             this.grpSetting.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpSetting.Location = new System.Drawing.Point(175, 0);
             this.grpSetting.Name = "grpSetting";
-            this.grpSetting.Size = new System.Drawing.Size(348, 175);
+            this.grpSetting.Size = new System.Drawing.Size(430, 175);
             this.grpSetting.TabIndex = 1;
             this.grpSetting.TabStop = false;
             this.grpSetting.Text = "Setting";
@@ -263,21 +265,31 @@ namespace VisionAlignChamber.Views.Controls
             // 
             this.btnFileSave.Location = new System.Drawing.Point(90, 55);
             this.btnFileSave.Name = "btnFileSave";
-            this.btnFileSave.Size = new System.Drawing.Size(75, 30);
+            this.btnFileSave.Size = new System.Drawing.Size(81, 30);
             this.btnFileSave.TabIndex = 3;
-            this.btnFileSave.Text = "File Save";
+            this.btnFileSave.Text = "Image Save";
             this.btnFileSave.UseVisualStyleBackColor = true;
             this.btnFileSave.Click += new System.EventHandler(this.btnFileSave_Click);
             // 
             // btnFilesSave
             // 
-            this.btnFilesSave.Location = new System.Drawing.Point(170, 55);
+            this.btnFilesSave.Location = new System.Drawing.Point(175, 55);
             this.btnFilesSave.Name = "btnFilesSave";
-            this.btnFilesSave.Size = new System.Drawing.Size(75, 30);
+            this.btnFilesSave.Size = new System.Drawing.Size(85, 30);
             this.btnFilesSave.TabIndex = 10;
-            this.btnFilesSave.Text = "Files Save";
+            this.btnFilesSave.Text = "Images Save";
             this.btnFilesSave.UseVisualStyleBackColor = true;
             this.btnFilesSave.Click += new System.EventHandler(this.btnFilesSave_Click);
+            // 
+            // btnResultExport
+            // 
+            this.btnResultExport.Location = new System.Drawing.Point(264, 55);
+            this.btnResultExport.Name = "btnResultExport";
+            this.btnResultExport.Size = new System.Drawing.Size(90, 30);
+            this.btnResultExport.TabIndex = 11;
+            this.btnResultExport.Text = "Results Export";
+            this.btnResultExport.UseVisualStyleBackColor = true;
+            this.btnResultExport.Click += new System.EventHandler(this.btnResultExport_Click);
             // 
             // btnTrigger
             // 
@@ -515,7 +527,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpControl.Location = new System.Drawing.Point(0, 270);
             this.grpControl.Name = "grpControl";
-            this.grpControl.Size = new System.Drawing.Size(523, 75);
+            this.grpControl.Size = new System.Drawing.Size(605, 75);
             this.grpControl.TabIndex = 3;
             this.grpControl.TabStop = false;
             this.grpControl.Text = "Control";
@@ -592,7 +604,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpLight.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpLight.Location = new System.Drawing.Point(0, 345);
             this.grpLight.Name = "grpLight";
-            this.grpLight.Size = new System.Drawing.Size(523, 60);
+            this.grpLight.Size = new System.Drawing.Size(605, 60);
             this.grpLight.TabIndex = 4;
             this.grpLight.TabStop = false;
             this.grpLight.Text = "Light";
@@ -655,7 +667,7 @@ namespace VisionAlignChamber.Views.Controls
             this.grpResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpResult.Location = new System.Drawing.Point(0, 405);
             this.grpResult.Name = "grpResult";
-            this.grpResult.Size = new System.Drawing.Size(523, 165);
+            this.grpResult.Size = new System.Drawing.Size(605, 165);
             this.grpResult.TabIndex = 5;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "검사 결과";
@@ -682,7 +694,7 @@ namespace VisionAlignChamber.Views.Controls
             this.listResult.HideSelection = false;
             this.listResult.Location = new System.Drawing.Point(3, 19);
             this.listResult.Name = "listResult";
-            this.listResult.Size = new System.Drawing.Size(517, 143);
+            this.listResult.Size = new System.Drawing.Size(599, 143);
             this.listResult.TabIndex = 0;
             this.listResult.UseCompatibleStateImageBehavior = false;
             this.listResult.View = System.Windows.Forms.View.Details;
@@ -753,7 +765,7 @@ namespace VisionAlignChamber.Views.Controls
             this.pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlStatusBar.Location = new System.Drawing.Point(0, 570);
             this.pnlStatusBar.Name = "pnlStatusBar";
-            this.pnlStatusBar.Size = new System.Drawing.Size(523, 30);
+            this.pnlStatusBar.Size = new System.Drawing.Size(605, 30);
             this.pnlStatusBar.TabIndex = 6;
             // 
             // lblStatusMessage
@@ -779,7 +791,7 @@ namespace VisionAlignChamber.Views.Controls
             this.Controls.Add(this.grpStatus);
             this.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.Name = "VisionPanel";
-            this.Size = new System.Drawing.Size(523, 600);
+            this.Size = new System.Drawing.Size(605, 600);
             this.grpStatus.ResumeLayout(false);
             this.grpStatus.PerformLayout();
             this.grpMode.ResumeLayout(false);
@@ -833,6 +845,7 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnTrigger;
         private System.Windows.Forms.Button btnFileSave;
         private System.Windows.Forms.Button btnFilesSave;
+        private System.Windows.Forms.Button btnResultExport;
         private System.Windows.Forms.CheckBox chkTrigLive;
         private System.Windows.Forms.Label lblExposure;
         private System.Windows.Forms.TextBox txtExposure;

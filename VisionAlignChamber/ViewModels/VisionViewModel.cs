@@ -559,6 +559,7 @@ namespace VisionAlignChamber.ViewModels
             if (image != null)
             {
                 CurrentImage = image;
+                EventManager.Publish(EventManager.DisplayImageChanged, image);
                 StatusMessage = "노치 이미지 표시";
             }
             else
@@ -574,6 +575,7 @@ namespace VisionAlignChamber.ViewModels
             if (image != null)
             {
                 CurrentImage = image;
+                EventManager.Publish(EventManager.DisplayImageChanged, image);
                 StatusMessage = "웨이퍼 이미지 표시";
             }
             else

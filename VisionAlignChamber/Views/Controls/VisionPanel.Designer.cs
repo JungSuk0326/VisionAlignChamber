@@ -268,9 +268,9 @@ namespace VisionAlignChamber.Views.Controls
             this.btnFileSave.Text = "File Save";
             this.btnFileSave.UseVisualStyleBackColor = true;
             this.btnFileSave.Click += new System.EventHandler(this.btnFileSave_Click);
-            //
+            // 
             // btnFilesSave
-            //
+            // 
             this.btnFilesSave.Location = new System.Drawing.Point(170, 55);
             this.btnFilesSave.Name = "btnFilesSave";
             this.btnFilesSave.Size = new System.Drawing.Size(75, 30);
@@ -278,7 +278,7 @@ namespace VisionAlignChamber.Views.Controls
             this.btnFilesSave.Text = "Files Save";
             this.btnFilesSave.UseVisualStyleBackColor = true;
             this.btnFilesSave.Click += new System.EventHandler(this.btnFilesSave_Click);
-            //
+            // 
             // btnTrigger
             // 
             this.btnTrigger.Location = new System.Drawing.Point(8, 55);
@@ -520,6 +520,26 @@ namespace VisionAlignChamber.Views.Controls
             this.grpControl.TabStop = false;
             this.grpControl.Text = "Control";
             // 
+            // btnViewWaferImage
+            // 
+            this.btnViewWaferImage.Location = new System.Drawing.Point(425, 20);
+            this.btnViewWaferImage.Name = "btnViewWaferImage";
+            this.btnViewWaferImage.Size = new System.Drawing.Size(75, 45);
+            this.btnViewWaferImage.TabIndex = 5;
+            this.btnViewWaferImage.Text = "웨이퍼\r\n이미지";
+            this.btnViewWaferImage.UseVisualStyleBackColor = true;
+            this.btnViewWaferImage.Click += new System.EventHandler(this.btnViewWaferImage_Click);
+            // 
+            // btnViewNotchImage
+            // 
+            this.btnViewNotchImage.Location = new System.Drawing.Point(342, 20);
+            this.btnViewNotchImage.Name = "btnViewNotchImage";
+            this.btnViewNotchImage.Size = new System.Drawing.Size(75, 45);
+            this.btnViewNotchImage.TabIndex = 4;
+            this.btnViewNotchImage.Text = "노치\r플랫\n이미지";
+            this.btnViewNotchImage.UseVisualStyleBackColor = true;
+            this.btnViewNotchImage.Click += new System.EventHandler(this.btnViewNotchImage_Click);
+            // 
             // btnExecute
             // 
             this.btnExecute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
@@ -531,27 +551,7 @@ namespace VisionAlignChamber.Views.Controls
             this.btnExecute.Text = "검사\r\n실행";
             this.btnExecute.UseVisualStyleBackColor = false;
             this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
-            //
-            // btnViewNotchImage
-            //
-            this.btnViewNotchImage.Location = new System.Drawing.Point(342, 20);
-            this.btnViewNotchImage.Name = "btnViewNotchImage";
-            this.btnViewNotchImage.Size = new System.Drawing.Size(75, 45);
-            this.btnViewNotchImage.TabIndex = 4;
-            this.btnViewNotchImage.Text = "노치\r\n이미지";
-            this.btnViewNotchImage.UseVisualStyleBackColor = true;
-            this.btnViewNotchImage.Click += new System.EventHandler(this.btnViewNotchImage_Click);
-            //
-            // btnViewWaferImage
-            //
-            this.btnViewWaferImage.Location = new System.Drawing.Point(425, 20);
-            this.btnViewWaferImage.Name = "btnViewWaferImage";
-            this.btnViewWaferImage.Size = new System.Drawing.Size(75, 45);
-            this.btnViewWaferImage.TabIndex = 5;
-            this.btnViewWaferImage.Text = "웨이퍼\r\n이미지";
-            this.btnViewWaferImage.UseVisualStyleBackColor = true;
-            this.btnViewWaferImage.Click += new System.EventHandler(this.btnViewWaferImage_Click);
-            //
+            // 
             // btnClearImages
             // 
             this.btnClearImages.Location = new System.Drawing.Point(176, 20);

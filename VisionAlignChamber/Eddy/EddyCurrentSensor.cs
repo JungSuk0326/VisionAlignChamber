@@ -38,7 +38,14 @@ namespace VisionAlignChamber.Eddy
         /// <summary>
         /// 연결 상태
         /// </summary>
-        public bool IsConnected => _tcpClient?.Connected ?? false;
+        public bool IsConnected
+        {
+            get
+            {
+                try { return _tcpClient?.Connected ?? false; }
+                catch { return false; }
+            }
+        }
 
         #endregion
 
@@ -72,12 +79,15 @@ namespace VisionAlignChamber.Eddy
                 else
                 {
                     _tcpClient.Close();
+                    _tcpClient = null;
                     System.Diagnostics.Debug.WriteLine("EddyCurrentSensor: Connection timeout");
                     return false;
                 }
             }
             catch (Exception ex)
             {
+                _tcpClient?.Close();
+                _tcpClient = null;
                 System.Diagnostics.Debug.WriteLine($"EddyCurrentSensor: Connection failed - {ex.Message}");
                 return false;
             }

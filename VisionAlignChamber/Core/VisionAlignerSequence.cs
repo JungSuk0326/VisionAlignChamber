@@ -258,6 +258,11 @@ namespace VisionAlignChamber.Core
                 // CTC 상태: 측정 완료 - 웨이퍼 가져갈 수 있음
                 RequestTransferStatusChange(CTCTransferStatus.GetReady);
 
+                // 결과 이미지를 공용 디스플레이에 발행 (_isFlat 기준)
+                var resultImg = _vision?.GetResultImage(_isFlat);
+                if (resultImg != null)
+                    EventManager.Publish(EventManager.DisplayImageChanged, resultImg);
+
                 SequenceCompleted?.Invoke(this, _visionResult);
                 return true;
             }
@@ -332,6 +337,11 @@ namespace VisionAlignChamber.Core
                 State = SequenceState.Completed;
                 AppState.Current.SystemStatus = SystemStatus.Idle;
                 LogManager.Sequence.Info("Scan Only 완료");
+
+                // 결과 이미지를 공용 디스플레이에 발행 (_isFlat 기준)
+                var resultImg = _vision?.GetResultImage(_isFlat);
+                if (resultImg != null)
+                    EventManager.Publish(EventManager.DisplayImageChanged, resultImg);
 
                 SequenceCompleted?.Invoke(this, _visionResult);
                 return true;
@@ -414,6 +424,8 @@ namespace VisionAlignChamber.Core
                 // Lift Pin Vacuum ON / Blow OFF (핀 올림 → 로봇이 웨이퍼 놓을 위치)
                 _io.SetLiftPinBlow(false);
                 _io.SetLiftPinVacuum(true);
+
+                /* Wafer Exist Check*/
 
                 LogManager.Sequence.Info("PrepareForPut 완료");
                 return true;

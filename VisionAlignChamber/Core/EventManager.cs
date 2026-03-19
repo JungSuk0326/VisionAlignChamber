@@ -47,6 +47,9 @@ namespace VisionAlignChamber.Core
         /// <summary>시스템 초기화 완료</summary>
         public const string SystemInitialized = "SystemInitialized";
 
+        /// <summary>디스플레이 이미지 변경 요청 (Bitmap)</summary>
+        public const string DisplayImageChanged = "DisplayImageChanged";
+
         #endregion
 
         #region Public Methods

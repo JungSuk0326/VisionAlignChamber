@@ -638,7 +638,7 @@ namespace VisionAlignChamber.Core
                 AppState.Current.SystemStatus = SystemStatus.Running;
 
                 bool result = InitializeAll();
-
+                result = HomeAll();
                 if (result)
                 {
                     _ctcComm?.SendResponse(cmd.Command, true);

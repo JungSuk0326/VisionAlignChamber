@@ -127,8 +127,8 @@ namespace VisionAlignChamber.Vision
                 {
                     WaferRadius = 150.0,
                     AngleStep = 15.0,
-                    PerPixel = 7.59878,
-                    ImageCount = 24
+                    PerPixel = 131.0,
+                    ImageCount = 30
                 };
 
                 // DLL의 Setting 프로퍼티에서 값을 가져오기 시도
@@ -138,6 +138,8 @@ namespace VisionAlignChamber.Vision
                     var setting = _aligner.Setting;
                     _settings.ImageCount = setting.ImageCount;
                     _settings.AngleStep = setting.AngleStep;
+
+                    _aligner.SetConfig(setting);
                 }
                 catch
                 {
@@ -233,9 +235,10 @@ namespace VisionAlignChamber.Vision
         {
             try
             {
-                var image = _grabber?.GetImage();
-                if (image != null)
+                var srcImage = _grabber?.GetImage();
+                if (srcImage != null)
                 {
+                    var image = (Bitmap)srcImage.Clone();
                     ImageCaptured?.Invoke(image);
                 }
             }
@@ -395,10 +398,13 @@ namespace VisionAlignChamber.Vision
                 _imageCount++;
                 _inspectionComplete = false;
 
-                // 캡처된 이미지를 디스플레이에 표시
-                var capturedImage = _grabber.GetImage();
-                if (capturedImage != null)
+                // 캡처된 이미지를 디스플레이에 표시 (Clone으로 스레드 안전하게 전달)
+                var srcImage = _grabber.GetImage();
+                if (srcImage != null)
+                {
+                    var capturedImage = (Bitmap)srcImage.Clone();
                     ImageCaptured?.Invoke(capturedImage);
+                }
 
                 return true;
             }
@@ -762,7 +768,7 @@ namespace VisionAlignChamber.Vision
         /// 비전 설정 변경
         /// DLL의 SetConfig 메서드 사용 (가능한 경우)
         /// </summary>
-        public bool SetSettings(double waferRadius, double angleStep, double perPixel)
+        public bool SetSettings(double angleStep, int imageCnt, double waferRadius = 150.0, double perPixel = 130.0, int noisePixel = 30)
         {
             if (!CheckInitialized()) return false;
 
@@ -774,10 +780,16 @@ namespace VisionAlignChamber.Vision
                 _settings.PerPixel = perPixel;
                 _settings.ImageCount = (int)(360.0 / angleStep);
 
+                var setting = _aligner.Setting;
+                setting.WaferRadius = waferRadius;
+                setting.AngleStep = angleStep;
+                setting.ImageCount = imageCnt;
+                setting.PerPixel = perPixel;
+                setting.NoisePixel = noisePixel;
                 // DLL에 SetConfig 메서드가 있으면 호출 시도
-                // SetConfig(SettingInfo info, bool _default = false)
+                _aligner.SetConfig(setting, false);
                 // 참고: DLL의 SettingInfo 구조체와 호환되어야 함
-
+                
                 return true;
             }
             catch (Exception ex)

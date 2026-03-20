@@ -36,6 +36,7 @@ namespace VisionAlignChamber.ViewModels
             // EventManager 구독
             EventManager.Subscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Subscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+            EventManager.Subscribe(EventManager.SystemInitialized, OnSystemInitialized);
 
             // Grabber 이미지 콜백 구독
             _vision.ImageCaptured += OnImageCaptured;
@@ -439,11 +440,7 @@ namespace VisionAlignChamber.ViewModels
             try
             {
                 IsInitialized = _vision.Initialize();
-
-                // AutoOpen으로 카메라가 이미 열렸을 수 있으므로 상태 동기화
-                IsCameraOpened = _vision.IsCameraOpened;
-                IsGrabberActive = _vision.IsGrabberActive;
-                IsLightInitialized = _vision.IsLightInitialized;
+                SyncHardwareState();
 
                 StatusMessage = IsInitialized ? "Vision 초기화 완료" : "Vision 초기화 실패";
                 RaiseCanExecuteChanged();
@@ -452,6 +449,24 @@ namespace VisionAlignChamber.ViewModels
             {
                 StatusMessage = $"초기화 오류: {ex.Message}";
             }
+        }
+
+        /// <summary>
+        /// 하드웨어 상태를 ViewModel에 동기화
+        /// SystemInitialized 이벤트 또는 직접 Initialize 후 호출
+        /// </summary>
+        private void SyncHardwareState()
+        {
+            IsInitialized = _vision.IsInitialized;
+            IsCameraOpened = _vision.IsCameraOpened;
+            IsGrabberActive = _vision.IsGrabberActive;
+            IsLightInitialized = _vision.IsLightInitialized;
+            RaiseCanExecuteChanged();
+        }
+
+        private void OnSystemInitialized(object data)
+        {
+            SyncHardwareState();
         }
 
         private void ExecuteLoadImages(string folderPath)
@@ -1038,6 +1053,7 @@ namespace VisionAlignChamber.ViewModels
             // EventManager 구독 해제
             EventManager.Unsubscribe(EventManager.ControlAuthorityChanged, OnControlAuthorityChanged);
             EventManager.Unsubscribe(EventManager.SystemStateChanged, OnSystemStateChanged);
+            EventManager.Unsubscribe(EventManager.SystemInitialized, OnSystemInitialized);
 
             // Grabber 이미지 콜백 해제
             _vision.ImageCaptured -= OnImageCaptured;

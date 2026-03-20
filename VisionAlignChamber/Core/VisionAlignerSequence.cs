@@ -697,6 +697,9 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
+                // 이전 결과 이미지 클리어 → Scan 중 캡처 이미지가 picVisionDisplay에 표시되도록
+                EventManager.Publish(EventManager.DisplayImageChanged, null);
+
                 int imageCount = _overrideImageCount ?? _param.ScanImageCount;
                 double stepAngle = _overrideStepAngle ?? _param.ScanStepAngle;
                 _overrideImageCount = null;

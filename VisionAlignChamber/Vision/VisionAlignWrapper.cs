@@ -46,6 +46,7 @@ namespace VisionAlignChamber.Vision
         private bool _isLightInitialized = false;
         private bool _isLightOn = false;
         private int _currentLightPower = 80;
+        private readonly object _imageLock = new object();
 
         #endregion
 
@@ -235,11 +236,14 @@ namespace VisionAlignChamber.Vision
         {
             try
             {
-                var srcImage = _grabber?.GetImage();
-                if (srcImage != null)
+                lock (_imageLock)
                 {
-                    var image = (Bitmap)srcImage.Clone();
-                    ImageCaptured?.Invoke(image);
+                    var srcImage = _grabber?.GetImage();
+                    if (srcImage != null)
+                    {
+                        var image = new Bitmap(srcImage);
+                        ImageCaptured?.Invoke(image);
+                    }
                 }
             }
             catch (Exception ex)
@@ -398,12 +402,15 @@ namespace VisionAlignChamber.Vision
                 _imageCount++;
                 _inspectionComplete = false;
 
-                // 캡처된 이미지를 디스플레이에 표시 (Clone으로 스레드 안전하게 전달)
-                var srcImage = _grabber.GetImage();
-                if (srcImage != null)
+                // 캡처된 이미지를 디스플레이에 표시 (new Bitmap으로 독립 복사본 생성)
+                lock (_imageLock)
                 {
-                    var capturedImage = (Bitmap)srcImage.Clone();
-                    ImageCaptured?.Invoke(capturedImage);
+                    var srcImage = _grabber.GetImage();
+                    if (srcImage != null)
+                    {
+                        var capturedImage = new Bitmap(srcImage);
+                        ImageCaptured?.Invoke(capturedImage);
+                    }
                 }
 
                 return true;
@@ -465,7 +472,11 @@ namespace VisionAlignChamber.Vision
 
             try
             {
-                return _grabber.GetImage();
+                lock (_imageLock)
+                {
+                    var src = _grabber.GetImage();
+                    return src != null ? new Bitmap(src) : null;
+                }
             }
             catch (Exception ex)
             {

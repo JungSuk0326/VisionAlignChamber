@@ -21,6 +21,13 @@ namespace VisionAlignChamber.Views.Controls
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.panelLeft = new System.Windows.Forms.Panel();
+            this.grpPNCheck = new System.Windows.Forms.GroupBox();
+            this.lblPN_HoldTime = new System.Windows.Forms.Label();
+            this.txtPN_HoldTime = new System.Windows.Forms.TextBox();
+            this.lblPN_Timeout = new System.Windows.Forms.Label();
+            this.txtPN_Timeout = new System.Windows.Forms.TextBox();
+            this.lblPN_PollInterval = new System.Windows.Forms.Label();
+            this.txtPN_PollInterval = new System.Windows.Forms.TextBox();
             this.grpVisionScan = new System.Windows.Forms.GroupBox();
             this.lblScanImageCount = new System.Windows.Forms.Label();
             this.txtScanImageCount = new System.Windows.Forms.TextBox();
@@ -88,6 +95,7 @@ namespace VisionAlignChamber.Views.Controls
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
             this.panelLeft.SuspendLayout();
+            this.grpPNCheck.SuspendLayout();
             this.grpVisionScan.SuspendLayout();
             this.grpTheta.SuspendLayout();
             this.grpCenterR.SuspendLayout();
@@ -120,6 +128,7 @@ namespace VisionAlignChamber.Views.Controls
             // panelLeft
             //
             this.panelLeft.AutoScroll = true;
+            this.panelLeft.Controls.Add(this.grpPNCheck);
             this.panelLeft.Controls.Add(this.grpVisionScan);
             this.panelLeft.Controls.Add(this.grpTheta);
             this.panelLeft.Controls.Add(this.grpCenterR);
@@ -709,6 +718,85 @@ namespace VisionAlignChamber.Views.Controls
             this.txtScanImageCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtScanImageCount.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
+            // grpPNCheck
+            //
+            this.grpPNCheck.Controls.Add(this.lblPN_HoldTime);
+            this.grpPNCheck.Controls.Add(this.txtPN_HoldTime);
+            this.grpPNCheck.Controls.Add(this.lblPN_Timeout);
+            this.grpPNCheck.Controls.Add(this.txtPN_Timeout);
+            this.grpPNCheck.Controls.Add(this.lblPN_PollInterval);
+            this.grpPNCheck.Controls.Add(this.txtPN_PollInterval);
+            this.grpPNCheck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(173)))), ((int)(((byte)(216)))), ((int)(((byte)(230)))));
+            this.grpPNCheck.Location = new System.Drawing.Point(10, 580);
+            this.grpPNCheck.Name = "grpPNCheck";
+            this.grpPNCheck.Size = new System.Drawing.Size(320, 70);
+            this.grpPNCheck.TabIndex = 6;
+            this.grpPNCheck.TabStop = false;
+            this.grpPNCheck.Text = "PN Check (ms)";
+            //
+            // lblPN_HoldTime
+            //
+            this.lblPN_HoldTime.AutoSize = true;
+            this.lblPN_HoldTime.ForeColor = System.Drawing.Color.White;
+            this.lblPN_HoldTime.Location = new System.Drawing.Point(10, 20);
+            this.lblPN_HoldTime.Name = "lblPN_HoldTime";
+            this.lblPN_HoldTime.Size = new System.Drawing.Size(59, 15);
+            this.lblPN_HoldTime.TabIndex = 0;
+            this.lblPN_HoldTime.Text = "HoldTime";
+            //
+            // txtPN_HoldTime
+            //
+            this.txtPN_HoldTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtPN_HoldTime.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtPN_HoldTime.ForeColor = System.Drawing.Color.White;
+            this.txtPN_HoldTime.Location = new System.Drawing.Point(10, 40);
+            this.txtPN_HoldTime.Name = "txtPN_HoldTime";
+            this.txtPN_HoldTime.Size = new System.Drawing.Size(90, 22);
+            this.txtPN_HoldTime.TabIndex = 1;
+            this.txtPN_HoldTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            //
+            // lblPN_Timeout
+            //
+            this.lblPN_Timeout.AutoSize = true;
+            this.lblPN_Timeout.ForeColor = System.Drawing.Color.White;
+            this.lblPN_Timeout.Location = new System.Drawing.Point(115, 20);
+            this.lblPN_Timeout.Name = "lblPN_Timeout";
+            this.lblPN_Timeout.Size = new System.Drawing.Size(51, 15);
+            this.lblPN_Timeout.TabIndex = 2;
+            this.lblPN_Timeout.Text = "Timeout";
+            //
+            // txtPN_Timeout
+            //
+            this.txtPN_Timeout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtPN_Timeout.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtPN_Timeout.ForeColor = System.Drawing.Color.White;
+            this.txtPN_Timeout.Location = new System.Drawing.Point(115, 40);
+            this.txtPN_Timeout.Name = "txtPN_Timeout";
+            this.txtPN_Timeout.Size = new System.Drawing.Size(90, 22);
+            this.txtPN_Timeout.TabIndex = 3;
+            this.txtPN_Timeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            //
+            // lblPN_PollInterval
+            //
+            this.lblPN_PollInterval.AutoSize = true;
+            this.lblPN_PollInterval.ForeColor = System.Drawing.Color.White;
+            this.lblPN_PollInterval.Location = new System.Drawing.Point(220, 20);
+            this.lblPN_PollInterval.Name = "lblPN_PollInterval";
+            this.lblPN_PollInterval.Size = new System.Drawing.Size(72, 15);
+            this.lblPN_PollInterval.TabIndex = 4;
+            this.lblPN_PollInterval.Text = "PollInterval";
+            //
+            // txtPN_PollInterval
+            //
+            this.txtPN_PollInterval.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtPN_PollInterval.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtPN_PollInterval.ForeColor = System.Drawing.Color.White;
+            this.txtPN_PollInterval.Location = new System.Drawing.Point(220, 40);
+            this.txtPN_PollInterval.Name = "txtPN_PollInterval";
+            this.txtPN_PollInterval.Size = new System.Drawing.Size(90, 22);
+            this.txtPN_PollInterval.TabIndex = 5;
+            this.txtPN_PollInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            //
             // panelRight
             //
             this.panelRight.Controls.Add(this.grpSequence);
@@ -881,6 +969,8 @@ namespace VisionAlignChamber.Views.Controls
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
             this.panelLeft.ResumeLayout(false);
+            this.grpPNCheck.ResumeLayout(false);
+            this.grpPNCheck.PerformLayout();
             this.grpVisionScan.ResumeLayout(false);
             this.grpVisionScan.PerformLayout();
             this.grpTheta.ResumeLayout(false);
@@ -968,6 +1058,15 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TextBox txtScanStepAngle;
         private System.Windows.Forms.Label lblScanImageCount;
         private System.Windows.Forms.TextBox txtScanImageCount;
+
+        // PN Check
+        private System.Windows.Forms.GroupBox grpPNCheck;
+        private System.Windows.Forms.Label lblPN_HoldTime;
+        private System.Windows.Forms.TextBox txtPN_HoldTime;
+        private System.Windows.Forms.Label lblPN_Timeout;
+        private System.Windows.Forms.TextBox txtPN_Timeout;
+        private System.Windows.Forms.Label lblPN_PollInterval;
+        private System.Windows.Forms.TextBox txtPN_PollInterval;
 
         // Sequence Preview
         private System.Windows.Forms.GroupBox grpSequence;

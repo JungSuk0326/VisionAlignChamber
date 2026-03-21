@@ -73,6 +73,11 @@ namespace VisionAlignChamber.Views.Controls
                 txtScanStepAngle.Text = _param.ScanStepAngle.ToString();
                 txtScanImageCount.Text = _param.ScanImageCount.ToString();
 
+                // PN Check
+                txtPN_HoldTime.Text = _param.PNHoldTime.ToString();
+                txtPN_Timeout.Text = _param.PNTimeout.ToString();
+                txtPN_PollInterval.Text = _param.PNPollInterval.ToString();
+
                 // Axis Motion Parameters
                 txtChuckZ_Vel.Text = _param.WedgeUpDown.Velocity.ToString();
                 txtChuckZ_Acc.Text = _param.WedgeUpDown.Accel.ToString();
@@ -161,6 +166,16 @@ namespace VisionAlignChamber.Views.Controls
 
                 _param.ScanStepAngle = scanStepAngle;
                 _param.ScanImageCount = scanImageCount;
+
+                // PN Check
+                if (int.TryParse(txtPN_HoldTime.Text, out int pnHoldTime) &&
+                    int.TryParse(txtPN_Timeout.Text, out int pnTimeout) &&
+                    int.TryParse(txtPN_PollInterval.Text, out int pnPollInterval))
+                {
+                    _param.PNHoldTime = pnHoldTime;
+                    _param.PNTimeout = pnTimeout;
+                    _param.PNPollInterval = pnPollInterval;
+                }
 
                 // Axis Motion Parameters
                 if (double.TryParse(txtChuckZ_Vel.Text, out double czVel) &&

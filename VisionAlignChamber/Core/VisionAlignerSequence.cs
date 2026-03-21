@@ -717,8 +717,9 @@ namespace VisionAlignChamber.Core
                 // 현재 위치를 0으로 리셋
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
 
-                // Eddy 측정값 (Scan 중 병렬로 측정)
+                // Eddy 측정값 / PN 판정값 (Scan 중 병렬로 측정)
                 double eddyAverage = 0;
+                int pnValue = 2; // 기본값: 판정 불가
 
                 // 시뮬레이션 모드: 폴더에서 이미지 로드
                 if (AppSettings.SimulationMode)
@@ -743,103 +744,41 @@ namespace VisionAlignChamber.Core
 
                     LogManager.Sequence.Info($"이미지 {_vision.ImageCount}개 로드 완료");
 
-                    // 시뮬레이션 Eddy 값
+                    // 시뮬레이션 Eddy / PN 값
                     eddyAverage = AppSettings.SimulationEddyValue;
+                    pnValue = AppSettings.SimulationPNValue;
                 }
                 else
                 {
+                    _vision.SetLightOn();
                     // 실제 하드웨어 모드: (AngleStep 이동 → Trigger+Capture) × ImageCount
                     // 0° → 15° → 30° → ... → 345° → 360° (총 24회)
 
                     // 스캔 전 TrigLive 비활성화 (수동 Trigger 모드)
                     _vision.SetTrigLive(false);
 
-                    // Eddy 병렬 측정 태스크: 0°와 180° 시점에서 GetData
+                    // Scan + Eddy + PN Check 병렬 실행
                     bool eddyEnabled = _eddy != null && _eddy.IsConnected;
-                    double eddyAt0 = 0;
-                    double eddyAt180 = 0;
+                    var scanTask = RunScanLoopAsync(imageCount, stepAngle);
+                    var eddyTask = RunEddyMeasureAsync(eddyEnabled);
+                    var pnTask = RunPNCheckAsync();
 
-                    // Scan 태스크
-                    Task<bool> scanTask = Task.Run(async () =>
-                    {
-                        for (int i = 0; i < imageCount; i++)
-                        {
-                            _cts.Token.ThrowIfCancellationRequested();
-
-                            // AngleStep 만큼 이동
-                            double targetAngle = stepAngle * (i + 1);
-
-                            if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
-                            {
-                                SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
-                                return false;
-                            }
-
-                            // 모터 안정화 대기
-                            await Task.Delay(100, _cts.Token);
-
-                            // 카메라 Trigger + GrabDone 대기 + Aligner에 이미지 추가
-                            if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
-                            {
-                                SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
-                                return false;
-                            }
-
-                            LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
-                        }
-                        return true;
-                    });
-
-                    // Eddy 측정 태스크: 위치 폴링으로 0° 출발 시점과 180° 통과 시점에서 측정
-                    Task eddyTask = Task.Run(async () =>
-                    {
-                        if (!eddyEnabled) return;
-
-                        try
-                        {
-                            // 0° 시점 측정 (회전 시작 전 현재 위치)
-                            eddyAt0 = _eddy.GetData();
-                            LogManager.Sequence.Info($"Eddy GetData at 0°: {eddyAt0:F4}");
-
-                            // 180° 통과 감지: 위치가 180°를 넘는 순간 측정
-                            bool passed180 = false;
-                            while (!passed180 && !_cts.Token.IsCancellationRequested)
-                            {
-                                await Task.Delay(50, _cts.Token);
-                                double currentPos = _motion.GetPosition(VAMotionAxis.ChuckRotation);
-
-                                if (currentPos >= 180.0)
-                                {
-                                    eddyAt180 = _eddy.GetData();
-                                    passed180 = true;
-                                    LogManager.Sequence.Info($"Eddy GetData at 180° (pos: {currentPos:F1}°): {eddyAt180:F4}");
-                                }
-                            }
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            // 취소 시 무시
-                        }
-                        catch (Exception ex)
-                        {
-                            LogManager.Sequence.Warn($"Eddy 측정 태스크 오류: {ex.Message}");
-                        }
-                    });
-
-                    // Scan + Eddy 병렬 실행
-                    await Task.WhenAll(scanTask, eddyTask);
+                    await Task.WhenAll(scanTask, eddyTask, pnTask);
 
                     if (!scanTask.Result)
                         return false;
 
                     // Eddy 평균값 계산
-                    if (eddyEnabled)
+                    if (eddyEnabled && eddyTask.Result != null)
                     {
-                        eddyAverage = Math.Round((eddyAt0 + eddyAt180) / 2.0, 1);
-                        LogManager.Sequence.Info($"Eddy Average: {eddyAverage:F1} (0°: {eddyAt0:F4}, 180°: {eddyAt180:F4})");
+                        eddyAverage = eddyTask.Result.Value;
+                        LogManager.Sequence.Info($"Eddy Average: {eddyAverage:F1}");
                     }
-                }
 
+                    // PN 결과 저장
+                    pnValue = pnTask.Result;
+                }
+                _vision.SetLightOff();
                 // 360° 회전 완료 후 현재 위치를 0으로 리셋
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
                 LogManager.Sequence.Info("Chuck 위치 0으로 리셋");
@@ -863,16 +802,159 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Eddy 측정값을 Vision 결과에 저장
+                // Eddy / PN 측정값을 Vision 결과에 저장
                 _visionResult.EddyValue = eddyAverage;
+                _visionResult.PNValue = pnValue;
 
-                LogManager.Sequence.Info($"Vision Result - Radius: {_visionResult.Radius:F3}, AbsAngle: {_visionResult.AbsAngle:F3}, Eddy: {eddyAverage:F1}");
+                LogManager.Sequence.Info($"Vision Result - Radius: {_visionResult.Radius:F3}, AbsAngle: {_visionResult.AbsAngle:F3}, Eddy: {eddyAverage:F1}, PN: {(pnValue == 1 ? "P" : pnValue == 0 ? "N" : "?")}");
                 return true;
             }
             catch (Exception ex)
             {
                 SetError($"Scan 스텝 실패: {ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Scan 루프 태스크: AngleStep 이동 → Trigger+Capture 반복
+        /// </summary>
+        private async Task<bool> RunScanLoopAsync(int imageCount, double stepAngle)
+        {
+            for (int i = 0; i < imageCount; i++)
+            {
+                _cts.Token.ThrowIfCancellationRequested();
+
+                double targetAngle = stepAngle * (i + 1);
+
+                if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                {
+                    SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
+                    return false;
+                }
+
+                // 모터 안정화 대기
+                await Task.Delay(100, _cts.Token);
+
+                if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
+                {
+                    SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
+                    return false;
+                }
+
+                LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Eddy 측정 태스크: 0° 시점과 180° 통과 시점에서 GetData, 평균값 반환
+        /// </summary>
+        /// <returns>평균값 (소수점 1자리), Eddy 미사용 시 null</returns>
+        private async Task<double?> RunEddyMeasureAsync(bool eddyEnabled)
+        {
+            if (!eddyEnabled) return null;
+
+            try
+            {
+                // 0° 시점 측정 (회전 시작 전)
+                double eddyAt0 = _eddy.GetData();
+                LogManager.Sequence.Info($"Eddy GetData at 0°: {eddyAt0:F4}");
+
+                // 180° 통과 감지: 위치가 180°를 넘는 순간 측정
+                double eddyAt180 = 0;
+                while (!_cts.Token.IsCancellationRequested)
+                {
+                    await Task.Delay(50, _cts.Token);
+                    double currentPos = _motion.GetPosition(VAMotionAxis.ChuckRotation);
+
+                    if (currentPos >= 180.0)
+                    {
+                        eddyAt180 = _eddy.GetData();
+                        LogManager.Sequence.Info($"Eddy GetData at 180° (pos: {currentPos:F1}°): {eddyAt180:F4}");
+                        break;
+                    }
+                }
+
+                double average = Math.Round((eddyAt0 + eddyAt180) / 2.0, 1);
+                return average;
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Sequence.Warn($"Eddy 측정 태스크 오류: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// PN Check 태스크: PNSwitch1 ON → P/N 상태 1초 유지 확인 → 결과 반환
+        /// </summary>
+        /// <returns>1=P, 0=N, 2=판정불가(타임아웃)</returns>
+        private async Task<int> RunPNCheckAsync()
+        {
+            if (_io == null) return 2;
+
+            try
+            {
+                // PN Switch 1 ON
+                _io.SetPNSwitch1(true);
+                LogManager.Sequence.Info("PN Check: Switch1 ON");
+
+                int timeoutMs = _param.PNTimeout;
+                int pollInterval = _param.PNPollInterval;
+                int holdRequiredMs = _param.PNHoldTime;
+
+                int holdTimeP = 0;
+                int holdTimeN = 0;
+                int elapsed = 0;
+
+                while (elapsed < timeoutMs && !_cts.Token.IsCancellationRequested)
+                {
+                    await Task.Delay(pollInterval, _cts.Token);
+                    elapsed += pollInterval;
+
+                    bool p = _io.IsPNCheckP();
+                    bool n = _io.IsPNCheckN();
+
+                    // P 유지 카운트
+                    holdTimeP = p ? holdTimeP + pollInterval : 0;
+                    // N 유지 카운트
+                    holdTimeN = n ? holdTimeN + pollInterval : 0;
+
+                    if (holdTimeP >= holdRequiredMs)
+                    {
+                        _io.SetPNSwitch1(false);
+                        LogManager.Sequence.Info($"PN Check: P 확정 ({holdTimeP}ms 유지)");
+                        return 1;
+                    }
+
+                    if (holdTimeN >= holdRequiredMs)
+                    {
+                        _io.SetPNSwitch1(false);
+                        LogManager.Sequence.Info($"PN Check: N 확정 ({holdTimeN}ms 유지)");
+                        return 0;
+                    }
+                }
+
+                // 타임아웃: 판정 불가
+                _io.SetPNSwitch1(false);
+                LogManager.Sequence.Warn("PN Check: 타임아웃 - 판정 불가");
+                return 2;
+            }
+            catch (OperationCanceledException)
+            {
+                _io?.SetPNSwitch1(false);
+                return 2;
+            }
+            catch (Exception ex)
+            {
+                _io?.SetPNSwitch1(false);
+                LogManager.Sequence.Warn($"PN Check 오류: {ex.Message}");
+                return 2;
             }
         }
 

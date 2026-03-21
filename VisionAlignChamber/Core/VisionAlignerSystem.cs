@@ -9,6 +9,7 @@ using VisionAlignChamber.Database;
 using VisionAlignChamber.Interlock;
 using VisionAlignChamber.Log;
 using VisionAlignChamber.Models;
+using System.Net.Configuration;
 
 namespace VisionAlignChamber.Core
 {
@@ -695,6 +696,11 @@ namespace VisionAlignChamber.Core
                 // 시퀀스 비동기 실행
                 // TODO: isFlat 판단 로직 (레시피에서 결정)
                 bool isFlat = false;
+                if (cmd.SetRecipeInfo != null) 
+                {
+                    isFlat = cmd.SetRecipeInfo.Type.Equals(RecipeEvalType.Flat) ? true : false;
+                }
+
                 bool result = await _sequence.RunSequenceAsync(isFlat);
 
                 if (!result && _sequence.State != VisionAlignerSequence.SequenceState.Aborted)
@@ -1029,6 +1035,9 @@ namespace VisionAlignChamber.Core
                         _sequence.Stop();
                     }
 
+                    // SystemStatus를 Error로 전환
+                    AppState.Current.SystemStatus = SystemStatus.Error;
+
                     LogManager.System.Error(
                         $"[{severity}] 시스템 정지 - [{alarm.Definition.Code}] {alarm.Definition.Name}: " +
                         $"{alarm.AdditionalMessage ?? alarm.Definition.Description}");
@@ -1064,7 +1073,7 @@ namespace VisionAlignChamber.Core
             // CTC로 알람 전달 (모든 Severity)
             try
             {
-                _ctcComm?.SendAlarm(
+                 _ctcComm?.SendAlarm(
                     alarm.Definition.Id,
                     alarm.Definition.Name,
                     alarm.AdditionalMessage ?? alarm.Definition.Description);

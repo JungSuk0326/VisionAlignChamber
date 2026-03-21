@@ -237,6 +237,11 @@ namespace VisionAlignChamber.Config
         public double ScanStepAngle { get; set; }  // 스캔 시 스텝 각도
         public int ScanImageCount { get; set; }    // 스캔 이미지 수
 
+        // PN Check Parameters (ms)
+        public int PNHoldTime { get; set; }     // 판정 유지 시간
+        public int PNTimeout { get; set; }      // 판정 타임아웃
+        public int PNPollInterval { get; set; } // 폴링 인터벌
+
         #endregion
 
         #region Position Set Properties
@@ -435,6 +440,11 @@ namespace VisionAlignChamber.Config
             ScanStepAngle = GetDouble("VisionScan", "StepAngle", 15);
             ScanImageCount = GetInt("VisionScan", "ImageCount", 24);
 
+            // PN Check Parameters
+            PNHoldTime = GetInt("PNCheck", "HoldTime", 1000);
+            PNTimeout = GetInt("PNCheck", "Timeout", 5000);
+            PNPollInterval = GetInt("PNCheck", "PollInterval", 50);
+
             System.Diagnostics.Debug.WriteLine($"TeachingParameter loaded from: {ParameterFilePath}");
         }
 
@@ -506,6 +516,11 @@ namespace VisionAlignChamber.Config
             // Vision Scan Parameters
             WriteValue("VisionScan", "StepAngle", ScanStepAngle.ToString());
             WriteValue("VisionScan", "ImageCount", ScanImageCount.ToString());
+
+            // PN Check Parameters
+            WriteValue("PNCheck", "HoldTime", PNHoldTime.ToString());
+            WriteValue("PNCheck", "Timeout", PNTimeout.ToString());
+            WriteValue("PNCheck", "PollInterval", PNPollInterval.ToString());
 
             System.Diagnostics.Debug.WriteLine($"TeachingParameter saved to: {ParameterFilePath}");
         }
@@ -601,6 +616,15 @@ Home=0
 [VisionScan]
 StepAngle=15
 ImageCount=24
+
+;=============================================================================
+; PN Check Parameters (ms)
+;=============================================================================
+
+[PNCheck]
+HoldTime=1000
+Timeout=5000
+PollInterval=50
 ";
             File.WriteAllText(ParameterFilePath, defaultContent, Encoding.UTF8);
             System.Diagnostics.Debug.WriteLine($"Default Parameter.ini created: {ParameterFilePath}");

@@ -790,9 +790,12 @@ namespace VisionAlignChamber.Views
             lblWaferStatus.ForeColor = isWaferExist ? Color.LimeGreen : Color.Gray;
             lblWaferStatus.BackColor = isWaferExist ? Color.FromArgb(0, 80, 0) : Color.FromArgb(60, 60, 60);
 
-            // 웨이퍼 없으면 디스플레이 이미지 클리어
+            // 웨이퍼 없으면 디스플레이 이미지 클리어 (SequenceResultImage도 null로 해야 타이머에서 복원 안됨)
             if (!isWaferExist)
             {
+                if (_viewModel != null)
+                    _viewModel.SequenceResultImage = null;
+
                 var old = picVisionDisplay.Image;
                 picVisionDisplay.Image = null;
                 old?.Dispose();

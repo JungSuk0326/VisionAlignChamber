@@ -445,6 +445,9 @@ namespace VisionAlignChamber.Config
             PNTimeout = GetInt("PNCheck", "Timeout", 5000);
             PNPollInterval = GetInt("PNCheck", "PollInterval", 50);
 
+            // 기존 파일에 누락된 섹션이 있으면 기본값으로 기록
+            EnsureSectionExists();
+
             System.Diagnostics.Debug.WriteLine($"TeachingParameter loaded from: {ParameterFilePath}");
         }
 
@@ -631,6 +634,23 @@ PollInterval=50
         }
 
         #endregion
+
+        /// <summary>
+        /// 기존 Parameter.ini에 누락된 섹션이 있으면 현재 값(기본값)을 기록
+        /// 새 섹션이 코드에 추가되었지만 기존 파일에 없는 경우를 자동 보정
+        /// </summary>
+        private void EnsureSectionExists()
+        {
+            // [PNCheck] 섹션 존재 여부 확인 (키 값이 비어있으면 섹션이 없는 것)
+            string testValue = ReadValue("PNCheck", "HoldTime", "");
+            if (string.IsNullOrEmpty(testValue))
+            {
+                WriteValue("PNCheck", "HoldTime", PNHoldTime.ToString());
+                WriteValue("PNCheck", "Timeout", PNTimeout.ToString());
+                WriteValue("PNCheck", "PollInterval", PNPollInterval.ToString());
+                System.Diagnostics.Debug.WriteLine("EnsureSectionExists: [PNCheck] section created with defaults.");
+            }
+        }
 
         #region INI File Helpers
 

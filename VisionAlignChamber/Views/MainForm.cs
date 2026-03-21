@@ -48,6 +48,8 @@ namespace VisionAlignChamber.Views
         // CTC 통신
         private CTCCommController _ctcController;
 
+        //센터라인 표시 유무
+        private bool isCenterLine = false; 
         #endregion
 
         #region Constructor
@@ -61,6 +63,9 @@ namespace VisionAlignChamber.Views
             InitializeTimer();
             BindViewModel();
             InitializeAlarmIndicator();
+
+            picVisionDisplay.Paint += new PaintEventHandler(pictureBox_Paint);
+
         }
 
         #endregion
@@ -784,6 +789,14 @@ namespace VisionAlignChamber.Views
             lblWaferStatus.Text = isWaferExist ? "ON" : "OFF";
             lblWaferStatus.ForeColor = isWaferExist ? Color.LimeGreen : Color.Gray;
             lblWaferStatus.BackColor = isWaferExist ? Color.FromArgb(0, 80, 0) : Color.FromArgb(60, 60, 60);
+
+            // 웨이퍼 없으면 디스플레이 이미지 클리어
+            if (!isWaferExist)
+            {
+                var old = picVisionDisplay.Image;
+                picVisionDisplay.Image = null;
+                old?.Dispose();
+            }
         }
 
         /// <summary>
@@ -922,5 +935,30 @@ namespace VisionAlignChamber.Views
 
         #endregion
 
+        private void pictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            if (isCenterLine == false) return;
+            // 펜 객체 생성 (빨간색, 두께 2 픽셀)
+            using (Pen pen = new Pen(Color.Blue, 1))
+            {
+                // PictureBox의 중앙 좌표 계산
+                int centerX = picVisionDisplay.Width / 2;
+                int centerY = picVisionDisplay.Height / 2;
+
+                // DashStyle 속성을 Dash로 설정하여 점선으로 만듭니다.
+                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+
+                // PictureBox의 크기를 기준으로 시작점과 끝점 좌표 설정
+                // 가로선: (0, centerY)에서 (Width, centerY)까지
+                e.Graphics.DrawLine(pen, 0, centerY, picVisionDisplay.Width, centerY);
+
+                // 세로선: (centerX, 0)에서 (centerX, Height)까지
+                e.Graphics.DrawLine(pen, centerX, 0, centerX, picVisionDisplay.Height);
+            }
+        }
+        private void lblVisionInfo_DoubleClick(object sender, EventArgs e)
+        {
+            isCenterLine = isCenterLine == true ? false : true;
+        }
     }
 }

@@ -84,6 +84,7 @@ namespace VisionAlignChamber.Views
             this.tabHistory.SuspendLayout();
             this.tabControlHistory.SuspendLayout();
             this.tabResult.SuspendLayout();
+            this.tabAlarm.SuspendLayout();
             this.tabLog.SuspendLayout();
             this.tabMaint.SuspendLayout();
             this.tabControlMaint.SuspendLayout();
@@ -153,6 +154,7 @@ namespace VisionAlignChamber.Views
             this.lblVisionInfo.TabIndex = 1;
             this.lblVisionInfo.Text = "Vision Display";
             this.lblVisionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblVisionInfo.DoubleClick += new System.EventHandler(this.lblVisionInfo_DoubleClick);
             // 
             // panelRight
             // 
@@ -244,7 +246,7 @@ namespace VisionAlignChamber.Views
             this.resultHistoryPanel.TabIndex = 0;
             // 
             // tabAlarm
-            //
+            // 
             this.tabAlarm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.tabAlarm.Controls.Add(this.alarmHistoryPanel);
             this.tabAlarm.Location = new System.Drawing.Point(4, 26);
@@ -253,9 +255,9 @@ namespace VisionAlignChamber.Views
             this.tabAlarm.Size = new System.Drawing.Size(780, 637);
             this.tabAlarm.TabIndex = 1;
             this.tabAlarm.Text = "Alarm";
-            //
+            // 
             // alarmHistoryPanel
-            //
+            // 
             this.alarmHistoryPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.alarmHistoryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.alarmHistoryPanel.Location = new System.Drawing.Point(3, 3);
@@ -754,6 +756,7 @@ namespace VisionAlignChamber.Views
             this.tabHistory.ResumeLayout(false);
             this.tabControlHistory.ResumeLayout(false);
             this.tabResult.ResumeLayout(false);
+            this.tabAlarm.ResumeLayout(false);
             this.tabLog.ResumeLayout(false);
             this.tabMaint.ResumeLayout(false);
             this.tabControlMaint.ResumeLayout(false);

@@ -629,11 +629,11 @@ namespace VisionAlignChamber.Core
         {
             try
             {
-                if (_isInitialized)
-                {
-                    _ctcComm?.SendResponse(cmd.Command, true, "Already initialized");
-                    return;
-                }
+                //if (_isInitialized)
+                //{
+                //    _ctcComm?.SendResponse(cmd.Command, true, "Already initialized");
+                //    return;
+                //}
 
                 AppState.Current.SystemStatus = SystemStatus.Running;
 
@@ -642,6 +642,7 @@ namespace VisionAlignChamber.Core
                 if (result)
                 {
                     _ctcComm?.SendResponse(cmd.Command, true);
+                    AppState.Current.SystemStatus = SystemStatus.Idle;                    
                 }
                 else
                 {
@@ -660,12 +661,12 @@ namespace VisionAlignChamber.Core
         {
             try
             {
-                // 사전 조건 체크
-                if (!_isInitialized)
-                {
-                    _ctcComm?.SendResponse(cmd.Command, false, "Not initialized");
-                    return;
-                }
+                //// 사전 조건 체크 -> 주석
+                //if (!_isInitialized)
+                //{
+                //    _ctcComm?.SendResponse(cmd.Command, false, "Not initialized");
+                //    return;
+                //}
 
                 if (AppState.Current.SystemStatus == SystemStatus.Running)
                 {
@@ -889,6 +890,10 @@ namespace VisionAlignChamber.Core
 
             // EventManager로 시퀀스 완료 이벤트 발행 (UI 갱신용)
             EventManager.Publish(EventManager.SequenceCompleted, result);
+            //if (AppState.Current.SystemMode == SystemMode.Auto)
+            //{
+            //    SetCTCTransferStatus(CTCTransferStatus.GetReady, result);
+            //}
         }
 
         /// <summary>

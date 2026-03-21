@@ -258,8 +258,7 @@ namespace VisionAlignChamber.Core
                 State = SequenceState.Completed;
                 LogManager.Sequence.Info("시퀀스 완료");
 
-                // CTC 상태: 측정 완료 - 웨이퍼 가져갈 수 있음
-                RequestTransferStatusChange(CTCTransferStatus.GetReady);
+
 
                 // 결과 이미지를 공용 디스플레이에 발행 (_isFlat 기준)
                 var resultImg = _vision?.GetResultImage(_isFlat);
@@ -267,6 +266,9 @@ namespace VisionAlignChamber.Core
                     EventManager.Publish(EventManager.DisplayImageChanged, resultImg);
 
                 SequenceCompleted?.Invoke(this, _visionResult);
+
+                // CTC 상태: 측정 완료 - 웨이퍼 가져갈 수 있음
+                RequestTransferStatusChange(CTCTransferStatus.GetReady);
                 return true;
             }
             catch (OperationCanceledException)
@@ -427,6 +429,8 @@ namespace VisionAlignChamber.Core
                 // Lift Pin Vacuum ON / Blow OFF (핀 올림 → 로봇이 웨이퍼 놓을 위치)
                 _io.SetLiftPinBlow(false);
                 _io.SetLiftPinVacuum(true);
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(false);
 
                 /* Wafer Exist Check*/
 
@@ -491,6 +495,8 @@ namespace VisionAlignChamber.Core
                 // Lift Pin Vacuum OFF / Blow ON (웨이퍼를 핀 위로 올림 → 로봇이 가져갈 위치)
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(true);
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(false);
 
                 LogManager.Sequence.Info("PrepareForGet 완료");
                 return true;
@@ -931,6 +937,8 @@ namespace VisionAlignChamber.Core
                 // 3. 센터 정렬 (LiftPin 위에서 에어 센터링)
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(true);
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(false) ;
 
                 double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset;
                 double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset;
@@ -940,6 +948,12 @@ namespace VisionAlignChamber.Core
                     SetError("Center Align 이동 실패");
                     return false;
                 }
+
+                // 3. 센터 정렬 (LiftPin 위에서 에어 센터링)
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(false);
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(false);
 
                 LogManager.Sequence.Info($"Center Align 완료 - CenterL: {centerL:F3}, CenterR: {centerR:F3}");
                 return true;

@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using VisionAlignChamber.ViewModels;
 using VisionAlignChamber.Database;
@@ -51,6 +53,7 @@ namespace VisionAlignChamber.Views.Controls
                 btnWeek.Click += (s, e) => _viewModel.WeekCommand.Execute(null);
                 btnMonth.Click += (s, e) => _viewModel.MonthCommand.Execute(null);
                 btnAll.Click += (s, e) => _viewModel.AllCommand.Execute(null);
+                btnExport.Click += btnExport_Click;
 
                 // 라디오 버튼 이벤트
                 rbAll.CheckedChanged += OnWaferTypeChanged;
@@ -122,6 +125,52 @@ namespace VisionAlignChamber.Views.Controls
                 _viewModel.WaferTypeFilter = 1;
             else if (rbFlat.Checked)
                 _viewModel.WaferTypeFilter = 2;
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            if (dgvResults.Rows.Count == 0)
+            {
+                MessageBox.Show("내보낼 결과 데이터가 없습니다.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var dialog = new SaveFileDialog())
+            {
+                dialog.Filter = "CSV 파일 (*.csv)|*.csv";
+                dialog.FileName = $"ResultHistory_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var sb = new StringBuilder();
+
+                        // Header
+                        var headers = new string[dgvResults.Columns.Count];
+                        for (int i = 0; i < dgvResults.Columns.Count; i++)
+                            headers[i] = dgvResults.Columns[i].HeaderText;
+                        sb.AppendLine(string.Join(",", headers));
+
+                        // Data rows
+                        foreach (DataGridViewRow row in dgvResults.Rows)
+                        {
+                            if (row.IsNewRow) continue;
+                            var values = new string[row.Cells.Count];
+                            for (int i = 0; i < row.Cells.Count; i++)
+                                values[i] = row.Cells[i].Value?.ToString() ?? "";
+                            sb.AppendLine(string.Join(",", values));
+                        }
+
+                        File.WriteAllText(dialog.FileName, sb.ToString(), Encoding.UTF8);
+                        MessageBox.Show($"CSV 파일이 저장되었습니다.\n{dialog.FileName}", "완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"CSV 저장 실패: {ex.Message}", "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         #endregion

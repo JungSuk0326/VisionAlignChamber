@@ -45,6 +45,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblRateValue = new System.Windows.Forms.Label();
             this.lblAvgOffsetLabel = new System.Windows.Forms.Label();
             this.lblAvgOffsetValue = new System.Windows.Forms.Label();
+            this.btnExport = new System.Windows.Forms.Button();
             this.grpFilter.SuspendLayout();
             this.tableLayoutFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
@@ -91,6 +92,7 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayoutFilter.Controls.Add(this.btnWeek, 6, 0);
             this.tableLayoutFilter.Controls.Add(this.btnMonth, 7, 0);
             this.tableLayoutFilter.Controls.Add(this.btnAll, 8, 0);
+            this.tableLayoutFilter.Controls.Add(this.btnExport, 9, 0);
             this.tableLayoutFilter.Controls.Add(this.lblWaferType, 0, 1);
             this.tableLayoutFilter.Controls.Add(this.rbAll, 1, 1);
             this.tableLayoutFilter.Controls.Add(this.rbNotch, 2, 1);
@@ -199,6 +201,17 @@ namespace VisionAlignChamber.Views.Controls
             this.btnAll.TabIndex = 8;
             this.btnAll.Text = "전체";
             this.btnAll.UseVisualStyleBackColor = true;
+            //
+            // btnExport
+            //
+            this.btnExport.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnExport.ForeColor = System.Drawing.Color.Black;
+            this.btnExport.Location = new System.Drawing.Point(573, 3);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(44, 23);
+            this.btnExport.TabIndex = 14;
+            this.btnExport.Text = "CSV";
+            this.btnExport.UseVisualStyleBackColor = true;
             //
             // lblWaferType
             //
@@ -528,6 +541,7 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.Button btnWeek;
         private System.Windows.Forms.Button btnMonth;
         private System.Windows.Forms.Button btnAll;
+        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Label lblWaferType;
         private System.Windows.Forms.RadioButton rbAll;
         private System.Windows.Forms.RadioButton rbNotch;

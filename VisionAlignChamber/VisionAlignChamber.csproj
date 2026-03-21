@@ -295,6 +295,9 @@
     <EmbeddedResource Include="Views\Controls\MainTabPanel.resx">
       <DependentUpon>MainTabPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\ResultHistoryPanel.resx">
+      <DependentUpon>ResultHistoryPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\SetUpPanel.resx">
       <DependentUpon>SetUpPanel.cs</DependentUpon>
     </EmbeddedResource>

@@ -1037,6 +1037,14 @@ namespace VisionAlignChamber.Core
                 _io.SetLiftPinVacuum(true);
                 _io.SetLiftPinBlow(false);
 
+                //if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                //{
+                //    SetError("Center Align 이동 실패");
+                //    return false;
+                //}
+
+
+
                 // Chuck Z Down (하강 → 웨이퍼가 LiftPin에 안착)
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
@@ -1053,8 +1061,8 @@ namespace VisionAlignChamber.Core
                 double LetfMax = 23.0;
                 double RightMax = 23.0;
 
-                double positionL = _param.CenterL_MinCtr + (LetfMax - _param.CenterL_MinCtr - _visionResult.Wafer.TotalOffset - 0.02);
-                double positionR = _param.CenterL_MinCtr + (RightMax- _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + 0.02);
+                double positionR = _param.CenterR_MinCtr + (RightMax- _param.CenterR_MinCtr - _visionResult.Wafer.TotalOffset - 0.02);
+                double positionL = _param.CenterL_MinCtr + (LetfMax- _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + 0.02);
                 //double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + _visionResult.Wafer.Radius + 0.02;
                 //double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset - _visionResult.Wafer.Radius - 0.02;
 

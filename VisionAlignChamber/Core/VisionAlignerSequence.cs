@@ -7,6 +7,7 @@ using VisionAlignChamber.Vision;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
 using VisionAlignChamber.Log;
+using NLog.LayoutRenderers.Wrappers;
 
 namespace VisionAlignChamber.Core
 {
@@ -1049,16 +1050,21 @@ namespace VisionAlignChamber.Core
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(false) ;
 
-                double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + _visionResult.Wafer.Radius + 0.02;
-                double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset - _visionResult.Wafer.Radius - 0.02;
+                double LetfMax = 23.0;
+                double RightMax = 23.0;
 
-                if (!await _motion.CenteringStagesMoveSyncAsync(centerL, centerR, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                double positionL = _param.CenterL_MinCtr + (LetfMax - _param.CenterL_MinCtr - _visionResult.Wafer.TotalOffset - 0.02);
+                double positionR = _param.CenterL_MinCtr + (RightMax- _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + 0.02);
+                //double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + _visionResult.Wafer.Radius + 0.02;
+                //double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset - _visionResult.Wafer.Radius - 0.02;
+
+                if (!await _motion.CenteringStagesMoveSyncAsync(positionL, positionR, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("Center Align 이동 실패");
                     return false;
                 }
 
-                if (!await _motion.CenteringStagesMoveSyncAsync(centerL - _visionResult.Wafer.TotalOffset, centerR + _visionResult.Wafer.TotalOffset, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                if (!await _motion.CenteringStagesMoveSyncAsync(positionL - _visionResult.Wafer.TotalOffset, positionR + _visionResult.Wafer.TotalOffset, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("Center Align 이동 실패");
                     return false;
@@ -1093,7 +1099,7 @@ namespace VisionAlignChamber.Core
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
 
 
-                LogManager.Sequence.Info($"Center Align 완료 - CenterL: {centerL:F3}, CenterR: {centerR:F3}");
+                LogManager.Sequence.Info($"Center Align 완료 - CenterL: {positionL:F3}, CenterR: {positionR:F3}");
                 return true;
             }
             catch (Exception ex)

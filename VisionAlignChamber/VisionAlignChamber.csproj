@@ -353,15 +353,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- DLL 파일 복사 설정 (실행 파일과 같은 경로에 복사) -->
-    <!-- 아진 모션 컨트롤러 DLL -->
-    <Content Include="Hardware\Ajin\DLLs\AXL.dll">
-      <Link>AXL.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Hardware\Ajin\DLLs\EzBasicAxl.dll">
-      <Link>EzBasicAxl.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <!-- 아진 모션 컨트롤러 DLL: Settings.ini의 외부 경로(AXL_Path, EzBasicAxl_Path)에서 로드 -->
     <!-- Vision DLL -->
     <Content Include="Vision\eMotion\DLLs\eMotionAlign.dll">
       <Link>eMotionAlign.dll</Link>

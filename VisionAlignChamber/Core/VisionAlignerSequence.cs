@@ -428,7 +428,7 @@ namespace VisionAlignChamber.Core
 
                 // Lift Pin Vacuum ON / Blow OFF (핀 올림 → 로봇이 웨이퍼 놓을 위치)
                 _io.SetLiftPinBlow(false);
-                _io.SetLiftPinVacuum(true);
+                _io.SetLiftPinVacuum(false);
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(false);
 
@@ -497,6 +497,14 @@ namespace VisionAlignChamber.Core
                 _io.SetLiftPinBlow(true);
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(false);
+
+                await Task.Delay(1000);
+
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(false);
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(false);
+
 
                 LogManager.Sequence.Info("PrepareForGet 완료");
                 return true;
@@ -993,14 +1001,33 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // 1. Theta 정렬 (척 위에서 AbsAngle 만큼 회전)
-                if (!await _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                // 1. Theta 정렬 — 편심 벡터를 X축에 일치시키기 위한 회전
+                // Scan 완료 후 현재 위치 = 0° (절대 위치 제어)
+                double cx = _visionResult.Wafer.CenterX;
+                double cy = _visionResult.Wafer.CenterY;
+                double atan2Deg = Math.Atan2(cy, cx) * 180.0 / Math.PI;
+
+                double thetaAlign = atan2Deg;
+                //if (cx >= 0 && cy >= 0)        // Q1
+                //    thetaAlign = atan2Deg;
+                //else if (cx < 0 && cy >= 0)    // Q2
+                //    thetaAlign = atan2Deg;
+                //else if (cx < 0 && cy < 0)     // Q3
+                //    thetaAlign = atan2Deg;
+                //else                           // Q4
+                //    thetaAlign = atan2Deg;
+
+                LogManager.Sequence.Info($"Theta Align 계산 - Cx: {cx:F3}, Cy: {cy:F3}, atan2: {atan2Deg:F3}°, θalign: {thetaAlign:F3}°");
+
+                if (!await _motion.ChuckRotateAbsoluteAsync(thetaAlign, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
                     SetError("Theta Align 이동 실패");
                     return false;
                 }
 
-                LogManager.Sequence.Info($"Theta Align 완료 - AbsAngle: {_visionResult.AbsAngle:F3}°");
+                _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
+
+                LogManager.Sequence.Info($"Theta Align 완료 - θalign: {thetaAlign:F3}°");
 
                 // 2. 웨이퍼를 Chuck → LiftPin으로 이동
                 // Chuck 해제, LiftPin 받을 준비
@@ -1022,10 +1049,16 @@ namespace VisionAlignChamber.Core
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(false) ;
 
-                double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset;
-                double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset;
+                double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + _visionResult.Wafer.Radius + 0.02;
+                double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset - _visionResult.Wafer.Radius - 0.02;
 
                 if (!await _motion.CenteringStagesMoveSyncAsync(centerL, centerR, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                {
+                    SetError("Center Align 이동 실패");
+                    return false;
+                }
+
+                if (!await _motion.CenteringStagesMoveSyncAsync(centerL - _visionResult.Wafer.TotalOffset, centerR + _visionResult.Wafer.TotalOffset, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
                     SetError("Center Align 이동 실패");
                     return false;
@@ -1034,8 +1067,31 @@ namespace VisionAlignChamber.Core
                 // 3. 센터 정렬 (LiftPin 위에서 에어 센터링)
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(false);
-                _io.SetChuckVacuum(false);
+                _io.SetChuckVacuum(true);
                 _io.SetChuckBlow(false);
+
+
+                if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                {
+                    SetError("Center Align 이동 실패");
+                    return false;
+                }
+
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
+                {
+                    SetError("Chuck Z up 이동 실패");
+                    return false;
+                }
+
+                double findNotchAngle = _visionResult.AbsAngle - thetaAlign; 
+                if (!await _motion.ChuckRotateAbsoluteAsync(findNotchAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                {
+                    SetError("Theta Align 이동 실패");
+                    return false;
+                }
+
+                _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
+
 
                 LogManager.Sequence.Info($"Center Align 완료 - CenterL: {centerL:F3}, CenterR: {centerR:F3}");
                 return true;

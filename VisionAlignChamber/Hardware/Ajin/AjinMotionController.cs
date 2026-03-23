@@ -4,6 +4,7 @@ using System.IO;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Hardware.Common;
 using VisionAlignChamber.Config;
+using System.ComponentModel;
 
 namespace VisionAlignChamber.Hardware.Ajin
 {
@@ -40,20 +41,24 @@ namespace VisionAlignChamber.Hardware.Ajin
 
             try
             {
+                //int result1 = CAXL.AxlIsOpened();
+                //if (result1 == 0)
+                //{
+                    
+                //}
                 // 라이브러리 열기
-                uint result = CAXL.AxlOpen(7);
+                uint result = CAXL.AxlOpenNoReset(7);
                 if (result != AjinErrorCode.AXT_RT_SUCCESS && result != AjinErrorCode.AXT_RT_OPEN_ALREADY)
                 {
                     throw new MotionException(result, $"AxlOpen failed: {AjinErrorCode.GetErrorMessage(result)}");
                 }
-                
+
                 //먼저 이더켓 개통 한 쪽에서 mot 파일 로드 하도록
-                if(result == AjinErrorCode.AXT_RT_SUCCESS)
+                if (result == AjinErrorCode.AXT_RT_SUCCESS)
                 {
                     LoadMotionParameterFile();
                 }
                 // 모션 파라미터 파일 로드 (.mot)
-                
 
                 // 모션 모듈 존재 확인
                 uint isMotion = 0;

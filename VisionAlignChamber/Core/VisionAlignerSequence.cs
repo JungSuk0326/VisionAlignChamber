@@ -989,8 +989,7 @@ namespace VisionAlignChamber.Core
         // }
 
         /// <summary>
-        /// Step 6: ALIGN - 센터링 + Theta 정렬
-        /// ChuckZ=Down, Center=Radius, Theta=AbsAngle
+        /// Step 6: ALIGN - Theta 편심 보정 → 센터링 → Notch 정렬
         /// </summary>
         private async Task<bool> ExecuteAlignAsync()
         {
@@ -1002,23 +1001,16 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // 1. Theta 정렬 — 편심 벡터를 X축에 일치시키기 위한 회전
-                // Scan 완료 후 현재 위치 = 0° (절대 위치 제어)
                 double cx = _visionResult.Wafer.CenterX;
                 double cy = _visionResult.Wafer.CenterY;
+                double d = _visionResult.Wafer.TotalOffset;  // √(Cx² + Cy²)
                 double atan2Deg = Math.Atan2(cy, cx) * 180.0 / Math.PI;
 
+                // ── Step 1: Theta 정렬 (편심 벡터 → X축 정렬) ──
+                // Scan 완료 후 현재 위치 = 0° (절대 위치 제어)
                 double thetaAlign = atan2Deg;
-                //if (cx >= 0 && cy >= 0)        // Q1
-                //    thetaAlign = atan2Deg;
-                //else if (cx < 0 && cy >= 0)    // Q2
-                //    thetaAlign = atan2Deg;
-                //else if (cx < 0 && cy < 0)     // Q3
-                //    thetaAlign = atan2Deg;
-                //else                           // Q4
-                //    thetaAlign = atan2Deg;
 
-                LogManager.Sequence.Info($"Theta Align 계산 - Cx: {cx:F3}, Cy: {cy:F3}, atan2: {atan2Deg:F3}°, θalign: {thetaAlign:F3}°");
+                LogManager.Sequence.Info($"Theta Align 계산 - Cx: {cx:F3}, Cy: {cy:F3}, d: {d:F3}, atan2: {atan2Deg:F3}°, θalign: {thetaAlign:F3}°");
 
                 if (!await _motion.ChuckRotateAbsoluteAsync(thetaAlign, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
@@ -1027,87 +1019,83 @@ namespace VisionAlignChamber.Core
                 }
 
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
-
                 LogManager.Sequence.Info($"Theta Align 완료 - θalign: {thetaAlign:F3}°");
 
-                // 2. 웨이퍼를 Chuck → LiftPin으로 이동
-                // Chuck 해제, LiftPin 받을 준비
+                // ── Step 2: Chuck → LiftPin 이동 ──
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(true);
                 _io.SetLiftPinVacuum(true);
                 _io.SetLiftPinBlow(false);
 
-                //if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                //{
-                //    SetError("Center Align 이동 실패");
-                //    return false;
-                //}
-
-
-
-                // Chuck Z Down (하강 → 웨이퍼가 LiftPin에 안착)
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     SetError("Chuck Z Down 이동 실패");
                     return false;
                 }
 
-                // 3. 센터 정렬 (LiftPin 위에서 에어 센터링)
+                // ── Step 3: 센터 정렬 (LiftPin 위 에어 센터링) ──
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(true);
                 _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(false) ;
+                _io.SetChuckBlow(false);
 
-                double LetfMax = 23.0;
-                double RightMax = 23.0;
 
-                double positionR = _param.CenterR_MinCtr + (RightMax- _param.CenterR_MinCtr - _visionResult.Wafer.TotalOffset - 0.02);
-                double positionL = _param.CenterL_MinCtr + (LetfMax- _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + 0.02);
-                //double centerL = _param.CenterL_MinCtr + _visionResult.Wafer.TotalOffset + _visionResult.Wafer.Radius + 0.02;
-                //double centerR = _param.CenterR_MinCtr + _visionResult.Wafer.TotalOffset - _visionResult.Wafer.Radius - 0.02;
+                //파라미터 항목으로 뺄 것\
+                double leftMax = 23.0;
+                double rightMax = 23.0;
+                
+                
+                double positionL = _param.CenterL_MinCtr + (leftMax - _param.CenterL_MinCtr + d + 0.02);
+                double positionR = _param.CenterR_MinCtr + (rightMax - _param.CenterR_MinCtr - d - 0.02);
 
+                // 롤러 접근 (웨이퍼 에지까지)
                 if (!await _motion.CenteringStagesMoveSyncAsync(positionL, positionR, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
-                    SetError("Center Align 이동 실패");
+                    SetError("Center Align 접근 실패");
                     return false;
                 }
 
-                if (!await _motion.CenteringStagesMoveSyncAsync(positionL - _visionResult.Wafer.TotalOffset, positionR + _visionResult.Wafer.TotalOffset, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                // 센터 보정 (편심량 d 만큼 밀어서 중심 맞춤)
+                if (!await _motion.CenteringStagesMoveSyncAsync(positionL - d, positionR + d, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
-                    SetError("Center Align 이동 실패");
+                    SetError("Center Align 보정 실패");
                     return false;
                 }
 
-                // 3. 센터 정렬 (LiftPin 위에서 에어 센터링)
+                LogManager.Sequence.Info($"Center Align 완료 - L: {positionL:F3}→{positionL - d:F3}, R: {positionR:F3}→{positionR + d:F3}");
+
+                // ── Step 3-1: Chuck 복귀 및 센터링 해제 ──
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(false);
                 _io.SetChuckVacuum(true);
                 _io.SetChuckBlow(false);
 
-
                 if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
-                    SetError("Center Align 이동 실패");
+                    SetError("Centering Open 실패");
                     return false;
                 }
 
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
-                    SetError("Chuck Z up 이동 실패");
+                    SetError("Chuck Z Up 이동 실패");
                     return false;
                 }
 
-                double findNotchAngle = _visionResult.AbsAngle - thetaAlign; 
-                if (!await _motion.ChuckRotateAbsoluteAsync(findNotchAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                // ── Step 4: Notch 정렬 (θnotch = AbsAngle - θalign) ──
+                double thetaNotch = _visionResult.AbsAngle - thetaAlign;
+
+                LogManager.Sequence.Info($"Notch Align 계산 - AbsAngle: {_visionResult.AbsAngle:F3}°, θalign: {thetaAlign:F3}°, θnotch: {thetaNotch:F3}°");
+
+                if (!await _motion.ChuckRotateAbsoluteAsync(thetaNotch, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
-                    SetError("Theta Align 이동 실패");
+                    SetError("Notch Align 이동 실패");
                     return false;
                 }
 
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
+                LogManager.Sequence.Info($"Notch Align 완료 - θnotch: {thetaNotch:F3}°");
 
-
-                LogManager.Sequence.Info($"Center Align 완료 - CenterL: {positionL:F3}, CenterR: {positionR:F3}");
                 return true;
             }
             catch (Exception ex)

@@ -772,6 +772,8 @@ namespace VisionAlignChamber.ViewModels
             try
             {
                 bool success = _vision.Trigger();
+                if (success)
+                    EventManager.Publish(EventManager.DisplayImageChanged, null);
                 StatusMessage = success ? "Trigger 실행" : "Trigger 실패";
             }
             catch (Exception ex)

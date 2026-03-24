@@ -675,8 +675,8 @@ namespace VisionAlignChamber.Vision
                     Found = result.TestEnd,
                     Index1st = result.Index1st,
                     Index2nd = result.Index2nd,
-                    OffAngle = result.OffAngle,
-                    AbsAngle = result.AbsAngle,
+                    OffAngle = result.Angle,
+                    AbsAngle = result.Angle,
                     Width = result.Width,
                     Height = result.Height,
                     Wafer = new WaferInfo
@@ -797,6 +797,7 @@ namespace VisionAlignChamber.Vision
                 setting.ImageCount = imageCnt;
                 setting.PerPixel = perPixel;
                 setting.NoisePixel = noisePixel;
+                //setting.NotchOffset : default = 0.4
                 // DLL에 SetConfig 메서드가 있으면 호출 시도
                 _aligner.SetConfig(setting, false);
                 // 참고: DLL의 SettingInfo 구조체와 호환되어야 함

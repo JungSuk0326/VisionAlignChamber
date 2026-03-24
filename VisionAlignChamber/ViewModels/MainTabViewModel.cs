@@ -6,6 +6,7 @@ using System.Windows.Input;
 using VisionAlignChamber.ViewModels.Base;
 using VisionAlignChamber.Models;
 using VisionAlignChamber.Core;
+using System.Threading.Tasks;
 
 namespace VisionAlignChamber.ViewModels
 {
@@ -313,9 +314,9 @@ namespace VisionAlignChamber.ViewModels
             _totalStopwatch.Restart();
             _elapsedTimer.Start();
 
-            // 시퀀스 시작 (비동기) - isFlat, skipEddy 파라미터 전달
+            // 시퀀스 시작 (비동기) - UI 스레드 블록 방지를 위해 Task.Run 사용
             bool isFlat = !IsNotchType;
-            await _sequence.RunSequenceAsync(isFlat, SkipEddy);
+            await Task.Run(() => _sequence.RunSequenceAsync(isFlat, SkipEddy));
         }
 
         private void ExecuteStop()

@@ -836,6 +836,12 @@ namespace VisionAlignChamber.Core
 
                 double targetAngle = stepAngle * (i + 1);
 
+                if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
+                {
+                    SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
+                    return false;
+                }
+
                 if (!await _motion.ChuckRotateAbsoluteAsync(targetAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
                     SetError($"Scan 이동 실패 (Image {i + 1}/{imageCount}, Target: {targetAngle:F1}°)");
@@ -845,11 +851,11 @@ namespace VisionAlignChamber.Core
                 // 모터 안정화 대기
                 await Task.Delay(100, _cts.Token);
 
-                if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
-                {
-                    SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
-                    return false;
-                }
+                //if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
+                //{
+                //    SetError($"이미지 획득 실패 (Image {i + 1}/{imageCount}, Angle: {targetAngle:F1}°)");
+                //    return false;
+                //}
 
                 LogManager.Sequence.Debug($"Scan {i + 1}/{imageCount} - Angle: {targetAngle:F1}°");
             }
@@ -1012,7 +1018,7 @@ namespace VisionAlignChamber.Core
 
                 LogManager.Sequence.Info($"Theta Align 계산 - Cx: {cx:F3}, Cy: {cy:F3}, d: {d:F3}, atan2: {atan2Deg:F3}°, θalign: {thetaAlign:F3}°");
 
-                if (!await _motion.ChuckRotateAbsoluteAsync(thetaAlign, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                if (!await _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
                     SetError("Theta Align 이동 실패");
                     return false;
@@ -1024,7 +1030,12 @@ namespace VisionAlignChamber.Core
                 // ── Step 2: Chuck → LiftPin 이동 ──
                 _io.SetChuckVacuum(false);
                 _io.SetChuckBlow(true);
-                _io.SetLiftPinVacuum(true);
+
+                await Task.Delay(100);
+
+                _io.SetChuckVacuum(false);
+                _io.SetChuckBlow(false);
+                _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(false);
 
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
@@ -1033,68 +1044,68 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // ── Step 3: 센터 정렬 (LiftPin 위 에어 센터링) ──
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(true);
-                _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(false);
+                //// ── Step 3: 센터 정렬 (LiftPin 위 에어 센터링) ──
+                //_io.SetLiftPinVacuum(false);
+                //_io.SetLiftPinBlow(false);
+                //_io.SetChuckVacuum(false);
+                //_io.SetChuckBlow(false);
 
 
-                //파라미터 항목으로 뺄 것\
-                double leftMax = 23.0;
-                double rightMax = 23.0;
+                ////파라미터 항목으로 뺄 것\
+                //double leftMax = 23.0;
+                //double rightMax = 23.0;
                 
                 
-                double positionL = _param.CenterL_MinCtr + (leftMax - _param.CenterL_MinCtr + d + 0.02);
-                double positionR = _param.CenterR_MinCtr + (rightMax - _param.CenterR_MinCtr - d - 0.02);
+                //double positionL = _param.CenterL_MinCtr + (leftMax - _param.CenterL_MinCtr + d + 0.02);
+                //double positionR = _param.CenterR_MinCtr + (rightMax - _param.CenterR_MinCtr - d - 0.02);
 
-                // 롤러 접근 (웨이퍼 에지까지)
-                if (!await _motion.CenteringStagesMoveSyncAsync(positionL, positionR, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                {
-                    SetError("Center Align 접근 실패");
-                    return false;
-                }
+                //// 롤러 접근 (웨이퍼 에지까지)
+                //if (!await _motion.CenteringStagesMoveSyncAsync(positionL, positionR, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                //{
+                //    SetError("Center Align 접근 실패");
+                //    return false;
+                //}
 
-                // 센터 보정 (편심량 d 만큼 밀어서 중심 맞춤)
-                if (!await _motion.CenteringStagesMoveSyncAsync(positionL - d, positionR + d, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                {
-                    SetError("Center Align 보정 실패");
-                    return false;
-                }
+                //// 센터 보정 (편심량 d 만큼 밀어서 중심 맞춤)
+                //if (!await _motion.CenteringStagesMoveSyncAsync(positionL - d, positionR + d, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                //{
+                //    SetError("Center Align 보정 실패");
+                //    return false;
+                //}
 
-                LogManager.Sequence.Info($"Center Align 완료 - L: {positionL:F3}→{positionL - d:F3}, R: {positionR:F3}→{positionR + d:F3}");
+                //LogManager.Sequence.Info($"Center Align 완료 - L: {positionL:F3}→{positionL - d:F3}, R: {positionR:F3}→{positionR + d:F3}");
 
-                // ── Step 3-1: Chuck 복귀 및 센터링 해제 ──
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(false);
-                _io.SetChuckVacuum(true);
-                _io.SetChuckBlow(false);
+                //// ── Step 3-1: Chuck 복귀 및 센터링 해제 ──
+                //_io.SetLiftPinVacuum(false);
+                //_io.SetLiftPinBlow(false);
+                //_io.SetChuckVacuum(true);
+                //_io.SetChuckBlow(false);
 
-                if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                {
-                    SetError("Centering Open 실패");
-                    return false;
-                }
+                //if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
+                //{
+                //    SetError("Centering Open 실패");
+                //    return false;
+                //}
 
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
-                {
-                    SetError("Chuck Z Up 이동 실패");
-                    return false;
-                }
+                //if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
+                //{
+                //    SetError("Chuck Z Up 이동 실패");
+                //    return false;
+                //}
 
-                // ── Step 4: Notch 정렬 (θnotch = AbsAngle - θalign) ──
-                double thetaNotch = _visionResult.AbsAngle - thetaAlign;
+                //// ── Step 4: Notch 정렬 (θnotch = AbsAngle - θalign) ──
+                //double thetaNotch = _visionResult.AbsAngle - thetaAlign;
 
-                LogManager.Sequence.Info($"Notch Align 계산 - AbsAngle: {_visionResult.AbsAngle:F3}°, θalign: {thetaAlign:F3}°, θnotch: {thetaNotch:F3}°");
+                //LogManager.Sequence.Info($"Notch Align 계산 - AbsAngle: {_visionResult.AbsAngle:F3}°, θalign: {thetaAlign:F3}°, θnotch: {thetaNotch:F3}°");
 
-                if (!await _motion.ChuckRotateAbsoluteAsync(thetaNotch, _param.ChuckRotation.Velocity, ct: _cts.Token))
-                {
-                    SetError("Notch Align 이동 실패");
-                    return false;
-                }
+                //if (!await _motion.ChuckRotateAbsoluteAsync(thetaNotch, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                //{
+                //    SetError("Notch Align 이동 실패");
+                //    return false;
+                //}
 
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
-                LogManager.Sequence.Info($"Notch Align 완료 - θnotch: {thetaNotch:F3}°");
+                LogManager.Sequence.Info($"Notch Align 완료 - θnotch: {_visionResult.AbsAngle:F3}°");
 
                 return true;
             }

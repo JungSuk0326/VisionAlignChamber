@@ -953,6 +953,8 @@ namespace VisionAlignChamber.Views
 
                 // PictureBox의 크기를 기준으로 시작점과 끝점 좌표 설정
                 // 가로선: (0, centerY)에서 (Width, centerY)까지
+                e.Graphics.DrawLine(pen, 0, centerY-10, picVisionDisplay.Width, centerY-10);
+                e.Graphics.DrawLine(pen, 0, centerY-20, picVisionDisplay.Width, centerY-20);
                 e.Graphics.DrawLine(pen, 0, centerY, picVisionDisplay.Width, centerY);
 
                 // 세로선: (centerX, 0)에서 (centerX, Height)까지

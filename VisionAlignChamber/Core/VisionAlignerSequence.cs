@@ -724,7 +724,7 @@ namespace VisionAlignChamber.Core
 
                 // Vision 이미지 클리어
                 _vision.ClearImages();
-                _vision.SetSettings(stepAngle, imageCount);
+                _vision.SetSettings(stepAngle, imageCount, _param.ScanWidthOffset);
                 // 현재 위치를 0으로 리셋
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
 

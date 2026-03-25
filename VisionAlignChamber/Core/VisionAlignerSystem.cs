@@ -307,11 +307,6 @@ namespace VisionAlignChamber.Core
                 return false;
             }
 
-            if (_motion.IsInitialized)
-            {
-                return true;
-            }
-
             if (!_motion.Initialize())
             {
                 LastError = "모션 컨트롤러 초기화 실패";
@@ -339,11 +334,6 @@ namespace VisionAlignChamber.Core
                 return false;
             }
 
-            if (_io.IsInitialized)
-            {
-                return true;
-            }
-
             if (!_io.Initialize())
             {
                 LastError = "디지털 IO 초기화 실패";
@@ -365,11 +355,6 @@ namespace VisionAlignChamber.Core
             {
                 LastError = "Vision 모듈을 사용할 수 없습니다.";
                 return false;
-            }
-
-            if (_vision.IsInitialized)
-            {
-                return true;
             }
 
             if (!_vision.Initialize())

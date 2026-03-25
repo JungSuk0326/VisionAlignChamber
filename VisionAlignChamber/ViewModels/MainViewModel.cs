@@ -372,10 +372,10 @@ namespace VisionAlignChamber.ViewModels
             // 시스템 명령 (Local 상태에서만)
             InitializeSystemCommand = new RelayCommand(
                 ExecuteInitializeSystem,
-                () => IsLocalControl && !IsInitialized);
+                () => IsLocalControl);
             HomeAllCommand = new RelayCommand(
                 ExecuteHomeAll,
-                () => IsLocalControl && IsInitialized && !IsHomed);
+                () => IsLocalControl && IsInitialized);
             EmergencyStopCommand = new RelayCommand(ExecuteEmergencyStop); // EMO는 항상 가능
             ResetAlarmCommand = new RelayCommand(
                 ExecuteResetAlarm,

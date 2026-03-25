@@ -614,7 +614,7 @@ namespace VisionAlignChamber.Core
             {
                 // Lift Pin Vacuum OFF / Blow ON (에어로 웨이퍼가 미끄러지며 센터링)
                 _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(true);
+                _io.SetLiftPinBlow(false);
 
                 // Centering MinCtr (L/R 동시)
                 if (!await _motion.CenteringStagesMoveSyncAsync(
@@ -721,6 +721,13 @@ namespace VisionAlignChamber.Core
                 double stepAngle = _overrideStepAngle ?? _param.ScanStepAngle;
                 _overrideImageCount = null;
                 _overrideStepAngle = null;
+
+                _io.SetChuckVacuum(true);
+                _io.SetChuckBlow(false);
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(false);
+
+                await Task.Delay(100);
 
                 // Vision 이미지 클리어
                 _vision.ClearImages();

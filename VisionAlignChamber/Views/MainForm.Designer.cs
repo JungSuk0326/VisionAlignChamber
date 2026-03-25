@@ -56,6 +56,8 @@ namespace VisionAlignChamber.Views
             this.lblWaferStatus = new System.Windows.Forms.Label();
             this.lblCTCLabel = new System.Windows.Forms.Label();
             this.lblCTCStatus = new System.Windows.Forms.Label();
+            this.lblInitIndicator = new System.Windows.Forms.Label();
+            this.lblHomeIndicator = new System.Windows.Forms.Label();
             this.btnResetAlarm = new System.Windows.Forms.Button();
             this.btnHomeAll = new System.Windows.Forms.Button();
             this.btnInitialize = new System.Windows.Forms.Button();
@@ -465,6 +467,8 @@ namespace VisionAlignChamber.Views
             this.panelTop.Controls.Add(this.lblWaferStatus);
             this.panelTop.Controls.Add(this.lblCTCLabel);
             this.panelTop.Controls.Add(this.lblCTCStatus);
+            this.panelTop.Controls.Add(this.lblInitIndicator);
+            this.panelTop.Controls.Add(this.lblHomeIndicator);
             this.panelTop.Controls.Add(this.btnResetAlarm);
             this.panelTop.Controls.Add(this.btnHomeAll);
             this.panelTop.Controls.Add(this.btnInitialize);
@@ -540,6 +544,26 @@ namespace VisionAlignChamber.Views
             this.lblCTCStatus.Size = new System.Drawing.Size(98, 19);
             this.lblCTCStatus.TabIndex = 13;
             this.lblCTCStatus.Text = "Disconnected";
+            // 
+            // lblInitIndicator
+            // 
+            this.lblInitIndicator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblInitIndicator.ForeColor = System.Drawing.Color.Gray;
+            this.lblInitIndicator.Location = new System.Drawing.Point(1094, 12);
+            this.lblInitIndicator.Name = "lblInitIndicator";
+            this.lblInitIndicator.Size = new System.Drawing.Size(70, 17);
+            this.lblInitIndicator.TabIndex = 20;
+            this.lblInitIndicator.Text = "INIT: ●";
+            // 
+            // lblHomeIndicator
+            // 
+            this.lblHomeIndicator.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblHomeIndicator.ForeColor = System.Drawing.Color.Gray;
+            this.lblHomeIndicator.Location = new System.Drawing.Point(1094, 32);
+            this.lblHomeIndicator.Name = "lblHomeIndicator";
+            this.lblHomeIndicator.Size = new System.Drawing.Size(70, 17);
+            this.lblHomeIndicator.TabIndex = 21;
+            this.lblHomeIndicator.Text = "HOME: ●";
             // 
             // btnResetAlarm
             // 
@@ -810,6 +834,8 @@ namespace VisionAlignChamber.Views
         private System.Windows.Forms.Button btnInitialize;
         private System.Windows.Forms.Button btnHomeAll;
         private System.Windows.Forms.Button btnResetAlarm;
+        private System.Windows.Forms.Label lblInitIndicator;
+        private System.Windows.Forms.Label lblHomeIndicator;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblSystemStatus;
         private System.Windows.Forms.Label label2;

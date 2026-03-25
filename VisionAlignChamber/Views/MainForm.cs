@@ -522,9 +522,13 @@ namespace VisionAlignChamber.Views
             bool isLocal = _viewModel.IsLocalControl;
 
             // 시스템 버튼 (Local 모드에서만 활성화)
-            btnInitialize.Enabled = isLocal && !_viewModel.IsInitialized;
-            btnHomeAll.Enabled = isLocal && _viewModel.IsInitialized && !_viewModel.IsHomed;
+            btnInitialize.Enabled = isLocal;
+            btnHomeAll.Enabled = isLocal && _viewModel.IsInitialized;
             btnResetAlarm.Enabled = isLocal && _viewModel.HasActiveAlarm;
+
+            // INIT / HOME 인디케이터 업데이트
+            lblInitIndicator.ForeColor = _viewModel.IsInitialized ? Color.LimeGreen : Color.Gray;
+            lblHomeIndicator.ForeColor = _viewModel.IsHomed ? Color.LimeGreen : Color.Gray;
 
             // 제어권 전환 (Local/Remote)
             // Local 버튼: Locked 상태가 아니면 항상 활성화
@@ -842,11 +846,35 @@ namespace VisionAlignChamber.Views
 
         private void btnInitialize_Click(object sender, EventArgs e)
         {
+            if (_viewModel?.IsInitialized == true)
+            {
+                var result = MessageBox.Show(
+                    "이미 초기화 되었습니다. 다시 초기화 하시겠습니까?",
+                    "초기화 확인",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result != DialogResult.Yes)
+                    return;
+            }
+
             _viewModel?.InitializeSystemCommand?.Execute(null);
         }
 
         private void btnHomeAll_Click(object sender, EventArgs e)
         {
+            if (_viewModel?.IsHomed == true)
+            {
+                var result = MessageBox.Show(
+                    "이미 Home 완료 상태입니다. 다시 Home을 실행하시겠습니까?",
+                    "Home 확인",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result != DialogResult.Yes)
+                    return;
+            }
+
             _viewModel?.HomeAllCommand?.Execute(null);
         }
 

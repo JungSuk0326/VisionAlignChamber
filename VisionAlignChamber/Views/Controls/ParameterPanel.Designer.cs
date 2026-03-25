@@ -67,8 +67,8 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCenterL_Dec = new System.Windows.Forms.Label();
             this.txtCenterL_Dec = new System.Windows.Forms.TextBox();
             this.grpChuckZ = new System.Windows.Forms.GroupBox();
-            this.lblChuckZ_Eddy = new System.Windows.Forms.Label();
-            this.txtChuckZ_Eddy = new System.Windows.Forms.TextBox();
+            this.lblChuckZ_Vacuum = new System.Windows.Forms.Label();
+            this.txtChuckZ_Vacuum = new System.Windows.Forms.TextBox();
             this.lblChuckZ_Vision = new System.Windows.Forms.Label();
             this.txtChuckZ_Vision = new System.Windows.Forms.TextBox();
             this.lblChuckZ_Down = new System.Windows.Forms.Label();
@@ -144,8 +144,8 @@ namespace VisionAlignChamber.Views.Controls
             //
             // grpChuckZ
             //
-            this.grpChuckZ.Controls.Add(this.lblChuckZ_Eddy);
-            this.grpChuckZ.Controls.Add(this.txtChuckZ_Eddy);
+            this.grpChuckZ.Controls.Add(this.lblChuckZ_Vacuum);
+            this.grpChuckZ.Controls.Add(this.txtChuckZ_Vacuum);
             this.grpChuckZ.Controls.Add(this.lblChuckZ_Vision);
             this.grpChuckZ.Controls.Add(this.txtChuckZ_Vision);
             this.grpChuckZ.Controls.Add(this.lblChuckZ_Down);
@@ -208,27 +208,27 @@ namespace VisionAlignChamber.Views.Controls
             this.txtChuckZ_Vision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtChuckZ_Vision.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
-            // lblChuckZ_Eddy
+            // lblChuckZ_Vacuum
             //
-            this.lblChuckZ_Eddy.AutoSize = true;
-            this.lblChuckZ_Eddy.ForeColor = System.Drawing.Color.White;
-            this.lblChuckZ_Eddy.Location = new System.Drawing.Point(220, 25);
-            this.lblChuckZ_Eddy.Name = "lblChuckZ_Eddy";
-            this.lblChuckZ_Eddy.Size = new System.Drawing.Size(34, 15);
-            this.lblChuckZ_Eddy.TabIndex = 4;
-            this.lblChuckZ_Eddy.Text = "Eddy";
+            this.lblChuckZ_Vacuum.AutoSize = true;
+            this.lblChuckZ_Vacuum.ForeColor = System.Drawing.Color.White;
+            this.lblChuckZ_Vacuum.Location = new System.Drawing.Point(220, 25);
+            this.lblChuckZ_Vacuum.Name = "lblChuckZ_Vacuum";
+            this.lblChuckZ_Vacuum.Size = new System.Drawing.Size(34, 15);
+            this.lblChuckZ_Vacuum.TabIndex = 4;
+            this.lblChuckZ_Vacuum.Text = "Vacuum";
             //
-            // txtChuckZ_Eddy
+            // txtChuckZ_Vacuum
             //
-            this.txtChuckZ_Eddy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.txtChuckZ_Eddy.Font = new System.Drawing.Font("Consolas", 9F);
-            this.txtChuckZ_Eddy.ForeColor = System.Drawing.Color.White;
-            this.txtChuckZ_Eddy.Location = new System.Drawing.Point(220, 45);
-            this.txtChuckZ_Eddy.Name = "txtChuckZ_Eddy";
-            this.txtChuckZ_Eddy.Size = new System.Drawing.Size(90, 22);
-            this.txtChuckZ_Eddy.TabIndex = 5;
-            this.txtChuckZ_Eddy.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtChuckZ_Eddy.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.txtChuckZ_Vacuum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtChuckZ_Vacuum.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtChuckZ_Vacuum.ForeColor = System.Drawing.Color.White;
+            this.txtChuckZ_Vacuum.Location = new System.Drawing.Point(220, 45);
+            this.txtChuckZ_Vacuum.Name = "txtChuckZ_Vacuum";
+            this.txtChuckZ_Vacuum.Size = new System.Drawing.Size(90, 22);
+            this.txtChuckZ_Vacuum.TabIndex = 5;
+            this.txtChuckZ_Vacuum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtChuckZ_Vacuum.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // lblChuckZ_Vel
             //
@@ -1032,8 +1032,8 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TextBox txtChuckZ_Down;
         private System.Windows.Forms.Label lblChuckZ_Vision;
         private System.Windows.Forms.TextBox txtChuckZ_Vision;
-        private System.Windows.Forms.Label lblChuckZ_Eddy;
-        private System.Windows.Forms.TextBox txtChuckZ_Eddy;
+        private System.Windows.Forms.Label lblChuckZ_Vacuum;
+        private System.Windows.Forms.TextBox txtChuckZ_Vacuum;
         private System.Windows.Forms.Label lblChuckZ_Vel;
         private System.Windows.Forms.TextBox txtChuckZ_Vel;
         private System.Windows.Forms.Label lblChuckZ_Acc;

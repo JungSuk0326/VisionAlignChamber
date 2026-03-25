@@ -56,7 +56,7 @@ namespace VisionAlignChamber.Views.Controls
                 // Chuck Z
                 txtChuckZ_Down.Text = _param.ChuckZ_Down.ToString();
                 txtChuckZ_Vision.Text = _param.ChuckZ_Vision.ToString();
-                txtChuckZ_Eddy.Text = _param.ChuckZ_Eddy.ToString();
+                txtChuckZ_Vacuum.Text = _param.ChuckZ_Vacuum.ToString();
 
                 // Centering L
                 txtCenterL_Open.Text = _param.CenterL_Open.ToString();
@@ -115,7 +115,7 @@ namespace VisionAlignChamber.Views.Controls
                 // Chuck Z
                 if (!double.TryParse(txtChuckZ_Down.Text, out double chuckZDown) ||
                     !double.TryParse(txtChuckZ_Vision.Text, out double chuckZVision) ||
-                    !double.TryParse(txtChuckZ_Eddy.Text, out double chuckZEddy))
+                    !double.TryParse(txtChuckZ_Vacuum.Text, out double chuckZVacuum))
                 {
                     MessageBox.Show("Chuck Z 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -156,7 +156,7 @@ namespace VisionAlignChamber.Views.Controls
                 // 검증 통과 후 파라미터에 반영
                 _param.ChuckZ_Down = chuckZDown;
                 _param.ChuckZ_Vision = chuckZVision;
-                _param.ChuckZ_Eddy = chuckZEddy;
+                _param.ChuckZ_Vacuum = chuckZVacuum;
 
                 _param.CenterL_Open = centerLOpen;
                 _param.CenterL_MinCtr = centerLMinCtr;
@@ -251,7 +251,7 @@ namespace VisionAlignChamber.Views.Controls
             {
                 if (!TryParseText(txtChuckZ_Down, out double chuckZDown) ||
                     !TryParseText(txtChuckZ_Vision, out double chuckZVision) ||
-                    !TryParseText(txtChuckZ_Eddy, out double chuckZEddy) ||
+                    !TryParseText(txtChuckZ_Vacuum, out double chuckZVacuum) ||
                     !TryParseText(txtCenterL_Open, out double centerLOpen) ||
                     !TryParseText(txtCenterL_MinCtr, out double centerLMinCtr) ||
                     !TryParseText(txtCenterR_Open, out double centerROpen) ||
@@ -274,9 +274,9 @@ namespace VisionAlignChamber.Views.Controls
                 // Step 5: Center(Radius)
                 dgvSequence.Rows.Add("5", "Center(Radius)", chuckZDown, "Radius", "Radius", thetaHome);
                 // Step 6: Eddy
-                dgvSequence.Rows.Add("6", "Eddy", chuckZEddy, centerLOpen, centerROpen, thetaHome);
+                dgvSequence.Rows.Add("6", "Eddy", chuckZVacuum, centerLOpen, centerROpen, thetaHome);
                 // Step 7: ThetaAlign
-                dgvSequence.Rows.Add("7", "ThetaAlign", chuckZEddy, centerLOpen, centerROpen, "AbsAngle");
+                dgvSequence.Rows.Add("7", "ThetaAlign", chuckZVacuum, centerLOpen, centerROpen, "AbsAngle");
                 // Step 8: Release
                 dgvSequence.Rows.Add("8", "Release", chuckZDown, centerLOpen, centerROpen, "HOLD");
             }

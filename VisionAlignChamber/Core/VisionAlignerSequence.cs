@@ -427,11 +427,8 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Lift Pin Vacuum ON / Blow OFF (핀 올림 → 로봇이 웨이퍼 놓을 위치)
-                _io.SetLiftPinBlow(false);
-                _io.SetLiftPinVacuum(false);
-                _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(false);
+                // 전체 해제 (로봇이 웨이퍼 놓을 위치)
+                ReleaseAll();
 
                 /* Wafer Exist Check*/
 
@@ -493,18 +490,9 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Lift Pin Vacuum OFF / Blow ON (웨이퍼를 핀 위로 올림 → 로봇이 가져갈 위치)
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(true);
-                _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(false);
-
-                await Task.Delay(1000);
-
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(false);
-                _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(false);
+                // LiftPin 해제 (Blow로 웨이퍼 올린 후 OFF)
+                await ReleaseLiftPinAsync(1000);
+                ReleaseAll();
 
 
                 LogManager.Sequence.Info("PrepareForGet 완료");
@@ -612,9 +600,8 @@ namespace VisionAlignChamber.Core
         {
             try
             {
-                // Lift Pin Vacuum OFF / Blow ON (에어로 웨이퍼가 미끄러지며 센터링)
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(false);
+                // LiftPin 해제, Chuck도 안전 상태 확보
+                ReleaseAll();
 
                 // Centering MinCtr (L/R 동시)
                 if (!await _motion.CenteringStagesMoveSyncAsync(
@@ -653,20 +640,24 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
-                // Chuck Z Vision (상승하면서 LiftPin 위 웨이퍼를 Chuck으로 안착)
+                // Chuck Z Vacuum  (상승하면서 LiftPin 위 웨이퍼 직전까지 이동)
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Vacuum, _param.WedgeUpDown.Velocity, ct: _cts.Token))
+                {
+                    SetError("Chuck Z Vision 이동 실패");
+                    return false;
+                }
+
+                // Chuck 흡착 + LiftPin 해제
+                HoldChuck();
+
+                await Task.Delay(500);
+
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Vision, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     SetError("Chuck Z Vision 이동 실패");
                     return false;
                 }
 
-                // Chuck Vacuum ON / Blow OFF (척 흡착 준비)
-                _io.SetChuckVacuum(true);
-                _io.SetChuckBlow(false);
-
-                // Lift Pin Vacuum OFF / Blow OFF (핀 해제)
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(false);
 
                 // Vision Light ON (LfineLight 조명 제어)
                 _vision?.SetLightOn();
@@ -722,12 +713,10 @@ namespace VisionAlignChamber.Core
                 _overrideImageCount = null;
                 _overrideStepAngle = null;
 
-                _io.SetChuckVacuum(true);
-                _io.SetChuckBlow(false);
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(false);
+                // Chuck 흡착 상태 확보 (스캔 중 웨이퍼 고정)
+                HoldChuck();
 
-                await Task.Delay(100);
+                await Task.Delay(500);
 
                 // Vision 이미지 클리어
                 _vision.ClearImages();
@@ -1021,6 +1010,10 @@ namespace VisionAlignChamber.Core
                 double d = _visionResult.Wafer.TotalOffset;  // √(Cx² + Cy²)
                 double atan2Deg = Math.Atan2(cy, cx) * 180.0 / Math.PI;
 
+                HoldChuck();
+
+                await Task.Delay(200);
+
                 // ── Step 1: Theta 정렬 (편심 벡터 → X축 정렬) ──
                 // Scan 완료 후 현재 위치 = 0° (절대 위치 제어)
                 double thetaAlign = atan2Deg;
@@ -1037,13 +1030,7 @@ namespace VisionAlignChamber.Core
                 LogManager.Sequence.Info($"Theta Align 완료 - θalign: {thetaAlign:F3}°");
 
                 // ── Step 2: Chuck → LiftPin 이동 ──
-                _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(true);
-
-                await Task.Delay(100);
-
-                _io.SetChuckVacuum(false);
-                _io.SetChuckBlow(false);
+                await ReleaseChuckAsync();
                 _io.SetLiftPinVacuum(false);
                 _io.SetLiftPinBlow(false);
 
@@ -1052,66 +1039,6 @@ namespace VisionAlignChamber.Core
                     SetError("Chuck Z Down 이동 실패");
                     return false;
                 }
-
-                //// ── Step 3: 센터 정렬 (LiftPin 위 에어 센터링) ──
-                //_io.SetLiftPinVacuum(false);
-                //_io.SetLiftPinBlow(false);
-                //_io.SetChuckVacuum(false);
-                //_io.SetChuckBlow(false);
-
-
-                ////파라미터 항목으로 뺄 것\
-                //double leftMax = 23.0;
-                //double rightMax = 23.0;
-                
-                
-                //double positionL = _param.CenterL_MinCtr + (leftMax - _param.CenterL_MinCtr + d + 0.02);
-                //double positionR = _param.CenterR_MinCtr + (rightMax - _param.CenterR_MinCtr - d - 0.02);
-
-                //// 롤러 접근 (웨이퍼 에지까지)
-                //if (!await _motion.CenteringStagesMoveSyncAsync(positionL, positionR, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                //{
-                //    SetError("Center Align 접근 실패");
-                //    return false;
-                //}
-
-                //// 센터 보정 (편심량 d 만큼 밀어서 중심 맞춤)
-                //if (!await _motion.CenteringStagesMoveSyncAsync(positionL - d, positionR + d, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                //{
-                //    SetError("Center Align 보정 실패");
-                //    return false;
-                //}
-
-                //LogManager.Sequence.Info($"Center Align 완료 - L: {positionL:F3}→{positionL - d:F3}, R: {positionR:F3}→{positionR + d:F3}");
-
-                //// ── Step 3-1: Chuck 복귀 및 센터링 해제 ──
-                //_io.SetLiftPinVacuum(false);
-                //_io.SetLiftPinBlow(false);
-                //_io.SetChuckVacuum(true);
-                //_io.SetChuckBlow(false);
-
-                //if (!await _motion.CenteringStagesMoveSyncAsync(_param.CenterL_Open, _param.CenterR_Open, _param.CenteringStage1.Velocity, ct: _cts.Token))
-                //{
-                //    SetError("Centering Open 실패");
-                //    return false;
-                //}
-
-                //if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
-                //{
-                //    SetError("Chuck Z Up 이동 실패");
-                //    return false;
-                //}
-
-                //// ── Step 4: Notch 정렬 (θnotch = AbsAngle - θalign) ──
-                //double thetaNotch = _visionResult.AbsAngle - thetaAlign;
-
-                //LogManager.Sequence.Info($"Notch Align 계산 - AbsAngle: {_visionResult.AbsAngle:F3}°, θalign: {thetaAlign:F3}°, θnotch: {thetaNotch:F3}°");
-
-                //if (!await _motion.ChuckRotateAbsoluteAsync(thetaNotch, _param.ChuckRotation.Velocity, ct: _cts.Token))
-                //{
-                //    SetError("Notch Align 이동 실패");
-                //    return false;
-                //}
 
                 _motion.SetPosition(VAMotionAxis.ChuckRotation, 0);
                 LogManager.Sequence.Info($"Notch Align 완료 - θnotch: {_visionResult.AbsAngle:F3}°");
@@ -1143,7 +1070,7 @@ namespace VisionAlignChamber.Core
                 }
 
                 // Chuck Z Eddy
-                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Eddy, _param.WedgeUpDown.Velocity, ct: _cts.Token))
+                if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Vacuum, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
                     SetError("Chuck Z Eddy 이동 실패");
                     return false;
@@ -1193,6 +1120,63 @@ namespace VisionAlignChamber.Core
             LogManager.Sequence.Error($"Error [{alarmCode}]: {message}");
             ErrorOccurred?.Invoke(this, new SequenceErrorEventArgs(alarmCode, message));
         }
+
+        #region IO Helpers
+
+        /// <summary>
+        /// Chuck 흡착 (Blow OFF → Vacuum ON)
+        /// </summary>
+        private void HoldChuck()
+        {
+            _io.SetChuckBlow(false);
+            _io.SetChuckVacuum(true);
+            _io.SetLiftPinVacuum(false);
+            _io.SetLiftPinBlow(false);
+        }
+
+        /// <summary>
+        /// Chuck 해제 (Vacuum OFF → Blow ON → Delay → Blow OFF)
+        /// </summary>
+        private async Task ReleaseChuckAsync(int blowDurationMs = 100)
+        {
+            _io.SetChuckVacuum(false);
+            _io.SetChuckBlow(true);
+            await Task.Delay(blowDurationMs);
+            _io.SetChuckBlow(false);
+        }
+
+        /// <summary>
+        /// LiftPin 흡착 (Blow OFF → Vacuum ON)
+        /// </summary>
+        private void HoldLiftPin()
+        {
+            _io.SetLiftPinBlow(false);
+            _io.SetLiftPinVacuum(true);
+        }
+
+        /// <summary>
+        /// LiftPin 해제 (Vacuum OFF → Blow ON → Delay → Blow OFF)
+        /// </summary>
+        private async Task ReleaseLiftPinAsync(int blowDurationMs = 100)
+        {
+            _io.SetLiftPinVacuum(false);
+            _io.SetLiftPinBlow(true);
+            await Task.Delay(blowDurationMs);
+            _io.SetLiftPinBlow(false);
+        }
+
+        /// <summary>
+        /// 전체 Vacuum/Blow OFF
+        /// </summary>
+        private void ReleaseAll()
+        {
+            _io.SetChuckVacuum(false);
+            _io.SetChuckBlow(false);
+            _io.SetLiftPinVacuum(false);
+            _io.SetLiftPinBlow(false);
+        }
+
+        #endregion
 
         /// <summary>
         /// CTC Transfer 상태 변경 요청 발생

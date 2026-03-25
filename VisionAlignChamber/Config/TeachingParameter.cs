@@ -220,7 +220,7 @@ namespace VisionAlignChamber.Config
         // Chuck Z 포지션 (Axis 0)
         public double ChuckZ_Down { get; set; }
         public double ChuckZ_Vision { get; set; }
-        public double ChuckZ_Eddy { get; set; }
+        public double ChuckZ_Vacuum { get; set; }
 
         // Centering L 포지션 (Axis 1)
         public double CenterL_Open { get; set; }
@@ -348,7 +348,7 @@ namespace VisionAlignChamber.Config
             {
                 return new PositionSet("EDDY")
                 {
-                    ChuckZ = new AxisPosition(ChuckZ_Eddy, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
+                    ChuckZ = new AxisPosition(ChuckZ_Vacuum, WedgeUpDown.Velocity, WedgeUpDown.Accel, WedgeUpDown.Decel),
                     CenteringL = new AxisPosition(CenterL_Open, CenteringStage1.Velocity, CenteringStage1.Accel, CenteringStage1.Decel),
                     CenteringR = new AxisPosition(CenterR_Open, CenteringStage2.Velocity, CenteringStage2.Accel, CenteringStage2.Decel),
                     Theta = new AxisPosition(Theta_Home, ChuckRotation.Velocity, ChuckRotation.Accel, ChuckRotation.Decel)
@@ -424,7 +424,7 @@ namespace VisionAlignChamber.Config
             // Chuck Z
             ChuckZ_Down = GetDouble("ChuckZ", "Down", 0);
             ChuckZ_Vision = GetDouble("ChuckZ", "Vision", 100000);
-            ChuckZ_Eddy = GetDouble("ChuckZ", "Eddy", 50000);
+            ChuckZ_Vacuum = GetDouble("ChuckZ", "Vacuum", 50000);
 
             // Centering L
             CenterL_Open = GetDouble("CenteringL", "Open", 0);
@@ -505,7 +505,7 @@ namespace VisionAlignChamber.Config
             // Chuck Z
             WriteValue("ChuckZ", "Down", ChuckZ_Down.ToString());
             WriteValue("ChuckZ", "Vision", ChuckZ_Vision.ToString());
-            WriteValue("ChuckZ", "Eddy", ChuckZ_Eddy.ToString());
+            WriteValue("ChuckZ", "Vacuum", ChuckZ_Vacuum.ToString());
 
             // Centering L
             WriteValue("CenteringL", "Open", CenterL_Open.ToString());
@@ -599,7 +599,7 @@ CenteringStage_2_JogDecel=4
 ; Chuck Z Axis (Axis 0) Positions [pulse]
 Down=0
 Vision=100000
-Eddy=50000
+Vacuum=50000
 
 [CenteringL]
 ; Centering L Axis (Axis 2) Positions [pulse]

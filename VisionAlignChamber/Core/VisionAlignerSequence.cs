@@ -642,13 +642,7 @@ namespace VisionAlignChamber.Core
         {
             try
             {
-                // Chuck Vacuum ON / Blow OFF (척 흡착 준비)
-                _io.SetChuckVacuum(true);
-                _io.SetChuckBlow(false);
 
-                // Lift Pin Vacuum OFF / Blow OFF (핀 해제)
-                _io.SetLiftPinVacuum(false);
-                _io.SetLiftPinBlow(false);
 
                 // Centering Open
                 if (!await _motion.CenteringStagesMoveSyncAsync(
@@ -665,6 +659,14 @@ namespace VisionAlignChamber.Core
                     SetError("Chuck Z Vision 이동 실패");
                     return false;
                 }
+
+                // Chuck Vacuum ON / Blow OFF (척 흡착 준비)
+                _io.SetChuckVacuum(true);
+                _io.SetChuckBlow(false);
+
+                // Lift Pin Vacuum OFF / Blow OFF (핀 해제)
+                _io.SetLiftPinVacuum(false);
+                _io.SetLiftPinBlow(false);
 
                 // Vision Light ON (LfineLight 조명 제어)
                 _vision?.SetLightOn();

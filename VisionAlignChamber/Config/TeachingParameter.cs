@@ -236,6 +236,7 @@ namespace VisionAlignChamber.Config
         // Vision Scan Parameters
         public double ScanStepAngle { get; set; }  // 스캔 시 스텝 각도
         public int ScanImageCount { get; set; }    // 스캔 이미지 수
+        public double ScanWidthOffset { get; set; } // Width Offset
 
         // PN Check Parameters (ms)
         public int PNHoldTime { get; set; }     // 판정 유지 시간
@@ -439,6 +440,7 @@ namespace VisionAlignChamber.Config
             // Vision Scan Parameters
             ScanStepAngle = GetDouble("VisionScan", "StepAngle", 15);
             ScanImageCount = GetInt("VisionScan", "ImageCount", 24);
+            ScanWidthOffset = GetDouble("VisionScan", "WidthOffset", 0.4);
 
             // PN Check Parameters
             PNHoldTime = GetInt("PNCheck", "HoldTime", 1000);
@@ -519,6 +521,7 @@ namespace VisionAlignChamber.Config
             // Vision Scan Parameters
             WriteValue("VisionScan", "StepAngle", ScanStepAngle.ToString());
             WriteValue("VisionScan", "ImageCount", ScanImageCount.ToString());
+            WriteValue("VisionScan", "WidthOffset", ScanWidthOffset.ToString());
 
             // PN Check Parameters
             WriteValue("PNCheck", "HoldTime", PNHoldTime.ToString());
@@ -619,6 +622,7 @@ Home=0
 [VisionScan]
 StepAngle=15
 ImageCount=24
+WidthOffset=0.4
 
 ;=============================================================================
 ; PN Check Parameters (ms)
@@ -641,14 +645,20 @@ PollInterval=50
         /// </summary>
         private void EnsureSectionExists()
         {
-            // [PNCheck] 섹션 존재 여부 확인 (키 값이 비어있으면 섹션이 없는 것)
-            string testValue = ReadValue("PNCheck", "HoldTime", "");
-            if (string.IsNullOrEmpty(testValue))
+            // [PNCheck] 섹션 존재 여부 확인
+            if (string.IsNullOrEmpty(ReadValue("PNCheck", "HoldTime", "")))
             {
                 WriteValue("PNCheck", "HoldTime", PNHoldTime.ToString());
                 WriteValue("PNCheck", "Timeout", PNTimeout.ToString());
                 WriteValue("PNCheck", "PollInterval", PNPollInterval.ToString());
                 System.Diagnostics.Debug.WriteLine("EnsureSectionExists: [PNCheck] section created with defaults.");
+            }
+
+            // [VisionScan] WidthOffset 키 누락 확인
+            if (string.IsNullOrEmpty(ReadValue("VisionScan", "WidthOffset", "")))
+            {
+                WriteValue("VisionScan", "WidthOffset", ScanWidthOffset.ToString());
+                System.Diagnostics.Debug.WriteLine("EnsureSectionExists: [VisionScan] WidthOffset created with default.");
             }
         }
 

@@ -350,6 +350,9 @@ namespace VisionAlignChamber.Core
                 return false;
             }
 
+            // 초기화 직후 모든 Output OFF (안전 상태 확보)
+            _io.AllOutputOff();
+
             return true;
         }
 

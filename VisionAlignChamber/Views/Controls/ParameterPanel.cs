@@ -72,6 +72,7 @@ namespace VisionAlignChamber.Views.Controls
                 // Vision Scan
                 txtScanStepAngle.Text = _param.ScanStepAngle.ToString();
                 txtScanImageCount.Text = _param.ScanImageCount.ToString();
+                txtScanWidthOffset.Text = _param.ScanWidthOffset.ToString();
 
                 // PN Check
                 txtPN_HoldTime.Text = _param.PNHoldTime.ToString();
@@ -145,7 +146,8 @@ namespace VisionAlignChamber.Views.Controls
 
                 // Vision Scan
                 if (!double.TryParse(txtScanStepAngle.Text, out double scanStepAngle) ||
-                    !int.TryParse(txtScanImageCount.Text, out int scanImageCount))
+                    !int.TryParse(txtScanImageCount.Text, out int scanImageCount) ||
+                    !double.TryParse(txtScanWidthOffset.Text, out double scanWidthOffset))
                 {
                     MessageBox.Show("Vision Scan 값이 올바르지 않습니다.", "입력 오류", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -166,6 +168,7 @@ namespace VisionAlignChamber.Views.Controls
 
                 _param.ScanStepAngle = scanStepAngle;
                 _param.ScanImageCount = scanImageCount;
+                _param.ScanWidthOffset = scanWidthOffset;
 
                 // PN Check
                 if (int.TryParse(txtPN_HoldTime.Text, out int pnHoldTime) &&

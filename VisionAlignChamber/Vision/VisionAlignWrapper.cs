@@ -779,7 +779,7 @@ namespace VisionAlignChamber.Vision
         /// 비전 설정 변경
         /// DLL의 SetConfig 메서드 사용 (가능한 경우)
         /// </summary>
-        public bool SetSettings(double angleStep, int imageCnt, double waferRadius = 150.0, double perPixel = 130.0, int noisePixel = 30)
+        public bool SetSettings(double angleStep, int imageCnt, double notchOffset = 0.4, double waferRadius = 150.0, double perPixel = 130.0, int noisePixel = 30)
         {
             if (!CheckInitialized()) return false;
 
@@ -797,6 +797,7 @@ namespace VisionAlignChamber.Vision
                 setting.ImageCount = imageCnt;
                 setting.PerPixel = perPixel;
                 setting.NoisePixel = noisePixel;
+                setting.NotchOffset = notchOffset;
                 //setting.NotchOffset : default = 0.4
                 // DLL에 SetConfig 메서드가 있으면 호출 시도
                 _aligner.SetConfig(setting, false);

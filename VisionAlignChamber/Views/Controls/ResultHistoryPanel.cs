@@ -223,6 +223,8 @@ namespace VisionAlignChamber.Views.Controls
                     result.TotalOffset.ToString("F3"),
                     result.CenterX.ToString("F3"),
                     result.CenterY.ToString("F3"),
+                    result.Width.ToString("F3"),
+                    result.Height.ToString("F3"),
                     result.EddyValue.ToString("F2"),
                     result.PNText
                 };

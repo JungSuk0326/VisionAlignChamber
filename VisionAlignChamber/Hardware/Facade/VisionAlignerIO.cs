@@ -87,6 +87,17 @@ namespace VisionAlignChamber.Hardware.Facade
             return _dio.ReadOutputBit(ch.ModuleNo, ch.Channel);
         }
 
+        /// <summary>
+        /// 모든 Output을 OFF
+        /// </summary>
+        public void AllOutputOff()
+        {
+            foreach (VADigitalOutput output in Enum.GetValues(typeof(VADigitalOutput)))
+            {
+                SetOutput(output, false);
+            }
+        }
+
         #endregion
 
         #region Wafer Sensor

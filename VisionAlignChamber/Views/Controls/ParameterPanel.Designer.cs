@@ -33,6 +33,8 @@ namespace VisionAlignChamber.Views.Controls
             this.txtScanImageCount = new System.Windows.Forms.TextBox();
             this.lblScanStepAngle = new System.Windows.Forms.Label();
             this.txtScanStepAngle = new System.Windows.Forms.TextBox();
+            this.lblScanWidthOffset = new System.Windows.Forms.Label();
+            this.txtScanWidthOffset = new System.Windows.Forms.TextBox();
             this.grpTheta = new System.Windows.Forms.GroupBox();
             this.lblTheta_Home = new System.Windows.Forms.Label();
             this.txtTheta_Home = new System.Windows.Forms.TextBox();
@@ -662,6 +664,8 @@ namespace VisionAlignChamber.Views.Controls
             //
             // grpVisionScan
             //
+            this.grpVisionScan.Controls.Add(this.lblScanWidthOffset);
+            this.grpVisionScan.Controls.Add(this.txtScanWidthOffset);
             this.grpVisionScan.Controls.Add(this.lblScanImageCount);
             this.grpVisionScan.Controls.Add(this.txtScanImageCount);
             this.grpVisionScan.Controls.Add(this.lblScanStepAngle);
@@ -717,6 +721,28 @@ namespace VisionAlignChamber.Views.Controls
             this.txtScanImageCount.TabIndex = 3;
             this.txtScanImageCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtScanImageCount.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            //
+            // lblScanWidthOffset
+            //
+            this.lblScanWidthOffset.AutoSize = true;
+            this.lblScanWidthOffset.ForeColor = System.Drawing.Color.White;
+            this.lblScanWidthOffset.Location = new System.Drawing.Point(220, 20);
+            this.lblScanWidthOffset.Name = "lblScanWidthOffset";
+            this.lblScanWidthOffset.Size = new System.Drawing.Size(80, 15);
+            this.lblScanWidthOffset.TabIndex = 4;
+            this.lblScanWidthOffset.Text = "Width Offset";
+            //
+            // txtScanWidthOffset
+            //
+            this.txtScanWidthOffset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.txtScanWidthOffset.Font = new System.Drawing.Font("Consolas", 9F);
+            this.txtScanWidthOffset.ForeColor = System.Drawing.Color.White;
+            this.txtScanWidthOffset.Location = new System.Drawing.Point(220, 40);
+            this.txtScanWidthOffset.Name = "txtScanWidthOffset";
+            this.txtScanWidthOffset.Size = new System.Drawing.Size(90, 22);
+            this.txtScanWidthOffset.TabIndex = 5;
+            this.txtScanWidthOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtScanWidthOffset.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             //
             // grpPNCheck
             //
@@ -1058,6 +1084,8 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.TextBox txtScanStepAngle;
         private System.Windows.Forms.Label lblScanImageCount;
         private System.Windows.Forms.TextBox txtScanImageCount;
+        private System.Windows.Forms.Label lblScanWidthOffset;
+        private System.Windows.Forms.TextBox txtScanWidthOffset;
 
         // PN Check
         private System.Windows.Forms.GroupBox grpPNCheck;

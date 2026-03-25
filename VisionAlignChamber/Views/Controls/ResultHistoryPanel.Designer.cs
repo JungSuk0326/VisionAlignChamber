@@ -34,6 +34,8 @@ namespace VisionAlignChamber.Views.Controls
             this.colTotalOffset = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCenterX = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCenterY = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEddyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpStatistics = new System.Windows.Forms.GroupBox();
@@ -293,6 +295,8 @@ namespace VisionAlignChamber.Views.Controls
             this.colTotalOffset,
             this.colCenterX,
             this.colCenterY,
+            this.colWidth,
+            this.colHeight,
             this.colEddyValue,
             this.colPN});
             this.dgvResults.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -361,9 +365,23 @@ namespace VisionAlignChamber.Views.Controls
             this.colCenterY.Name = "colCenterY";
             this.colCenterY.ReadOnly = true;
             this.colCenterY.Width = 80;
-            // 
+            //
+            // colWidth
+            //
+            this.colWidth.HeaderText = "Width";
+            this.colWidth.Name = "colWidth";
+            this.colWidth.ReadOnly = true;
+            this.colWidth.Width = 70;
+            //
+            // colHeight
+            //
+            this.colHeight.HeaderText = "Height";
+            this.colHeight.Name = "colHeight";
+            this.colHeight.ReadOnly = true;
+            this.colHeight.Width = 70;
+            //
             // colEddyValue
-            // 
+            //
             this.colEddyValue.HeaderText = "Eddy";
             this.colEddyValue.Name = "colEddyValue";
             this.colEddyValue.ReadOnly = true;
@@ -556,6 +574,8 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.DataGridViewTextBoxColumn colTotalOffset;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCenterX;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCenterY;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colWidth;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHeight;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEddyValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPN;
         private System.Windows.Forms.GroupBox grpStatistics;

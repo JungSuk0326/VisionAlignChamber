@@ -678,7 +678,8 @@ namespace VisionAlignChamber.Vision
                     OffAngle = result.Angle,
                     AbsAngle = result.Angle,
                     Width = result.Width,
-                    Height = result.Height,
+                    Height = result.Height,        
+                    Radius = result.Wafer.Radius,
                     Wafer = new WaferInfo
                     {
                         CenterX = result.Wafer.CenterX,

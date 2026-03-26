@@ -55,7 +55,7 @@ namespace VisionAlignChamber.Models
         /// <summary>
         /// Centering용 Radius (= Wafer.TotalOffset)
         /// </summary>
-        public double Radius => Wafer.TotalOffset;
+        public double Radius;
 
         /// <summary>
         /// Eddy Current 측정값

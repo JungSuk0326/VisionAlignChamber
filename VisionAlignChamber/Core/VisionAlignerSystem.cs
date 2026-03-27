@@ -630,18 +630,23 @@ namespace VisionAlignChamber.Core
 
                 AppState.Current.SystemStatus = SystemStatus.Running;
 
-                bool result = InitializeAll();
-                result = HomeAll();
-                if (result)
-                {
-                    _ctcComm?.SendResponse(cmd.Command, true);
-                    AppState.Current.SystemStatus = SystemStatus.Idle;                    
-                }
-                else
+                if (!InitializeAll())
                 {
                     _ctcComm?.SendResponse(cmd.Command, false, LastError ?? "Initialize failed");
                     AppState.Current.SystemStatus = SystemStatus.Error;
+                    return;
                 }
+
+                if (!HomeAll())
+                {
+                    _ctcComm?.SendResponse(cmd.Command, false, LastError ?? "HomeAll failed");
+                    AppState.Current.SystemStatus = SystemStatus.Error;
+                    return;
+                }
+
+                AppState.Current.IsHomed = true;
+                _ctcComm?.SendResponse(cmd.Command, true);
+                AppState.Current.SystemStatus = SystemStatus.Idle;
             }
             catch (Exception ex)
             {

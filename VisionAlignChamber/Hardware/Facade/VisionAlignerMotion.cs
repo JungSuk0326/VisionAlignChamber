@@ -709,6 +709,25 @@ namespace VisionAlignChamber.Hardware.Facade
             return wait1.Result && wait2.Result;
         }
 
+        /// <summary>
+        /// 두 Centering Stage 동시 이동 (비동기) - Task.Run 병렬 실행 버전
+        /// AxmMovePos가 블로킹이므로 각 축을 별도 스레드에서 실행하여 동시 이동
+        /// </summary>
+        public async Task<bool> CenteringStagesMoveSyncAsync2(double position1, double position2, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        {
+            var task1 = Task.Run(() => CenteringStage1Move(position1, velocity), ct);
+            var task2 = Task.Run(() => CenteringStage2Move(position2, velocity), ct);
+
+            await Task.WhenAll(task1, task2);
+
+            var wait1 = WaitForDoneAsync(VAMotionAxis.CenteringStage_1, timeoutMs, ct);
+            var wait2 = WaitForDoneAsync(VAMotionAxis.CenteringStage_2, timeoutMs, ct);
+
+            await Task.WhenAll(wait1, wait2);
+
+            return wait1.Result && wait2.Result;
+        }
+
         #endregion
 
         #region All Axis Control

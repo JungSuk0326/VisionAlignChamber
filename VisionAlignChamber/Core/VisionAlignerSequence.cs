@@ -413,7 +413,7 @@ namespace VisionAlignChamber.Core
                 LogManager.Sequence.Info("PrepareForPut 시작");
 
                 // Centering Open
-                if (!await _motion.CenteringStagesMoveSyncAsync(
+                if (!await _motion.CenteringStagesMoveSyncAsync2(
                     _param.CenterL_Open, _param.CenterR_Open,
                     _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
@@ -476,7 +476,7 @@ namespace VisionAlignChamber.Core
                 LogManager.Sequence.Info("PrepareForGet 시작");
 
                 // Centering Open
-                if (!await _motion.CenteringStagesMoveSyncAsync(
+                if (!await _motion.CenteringStagesMoveSyncAsync2(
                     _param.CenterL_Open, _param.CenterR_Open,
                     _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
@@ -607,7 +607,7 @@ namespace VisionAlignChamber.Core
                 ReleaseAll();
 
                 // Centering MinCtr (L/R 동시)
-                if (!await _motion.CenteringStagesMoveSyncAsync(
+                if (!await _motion.CenteringStagesMoveSyncAsync2(
                     _param.CenterL_MinCtr, _param.CenterR_MinCtr,
                     _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
@@ -635,7 +635,7 @@ namespace VisionAlignChamber.Core
 
 
                 // Centering Open
-                if (!await _motion.CenteringStagesMoveSyncAsync(
+                if (!await _motion.CenteringStagesMoveSyncAsync2(
                     _param.CenterL_Open, _param.CenterR_Open,
                     _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {
@@ -1064,7 +1064,7 @@ namespace VisionAlignChamber.Core
             try
             {
                 // Centering Open
-                if (!await _motion.CenteringStagesMoveSyncAsync(
+                if (!await _motion.CenteringStagesMoveSyncAsync2(
                     _param.CenterL_Open, _param.CenterR_Open,
                     _param.CenteringStage1.Velocity, ct: _cts.Token))
                 {

@@ -353,34 +353,28 @@ namespace VisionAlignChamber.ViewModels
 
         private void HandleStepChanged(VisionAlignerSequence.SequenceStep newStep)
         {
-            // 이전 스텝 완료 처리
+            // 이전 스텝 완료 처리 (StepNumber로 검색)
             if (CurrentStep != VisionAlignerSequence.SequenceStep.Idle &&
                 CurrentStep != VisionAlignerSequence.SequenceStep.Complete &&
                 CurrentStep != VisionAlignerSequence.SequenceStep.Error)
             {
-                int prevIndex = (int)CurrentStep - 1;
-                if (prevIndex >= 0 && prevIndex < Steps.Count)
+                var prevStep = FindStep((int)CurrentStep);
+                if (prevStep != null && prevStep.Status == StepStatus.Running)
                 {
-                    var prevStep = Steps[prevIndex];
-                    if (prevStep.Status == StepStatus.Running)
-                    {
-                        prevStep.Complete(_stepStopwatch.Elapsed.TotalSeconds);
-                    }
+                    prevStep.Complete(_stepStopwatch.Elapsed.TotalSeconds);
                 }
             }
 
             CurrentStep = newStep;
 
-            // 새 스텝 시작 처리
+            // 새 스텝 시작 처리 (StepNumber로 검색)
             if (newStep != VisionAlignerSequence.SequenceStep.Idle &&
                 newStep != VisionAlignerSequence.SequenceStep.Complete &&
                 newStep != VisionAlignerSequence.SequenceStep.Error)
             {
-                int newIndex = (int)newStep - 1;
-                if (newIndex >= 0 && newIndex < Steps.Count)
+                var step = FindStep((int)newStep);
+                if (step != null)
                 {
-                    var step = Steps[newIndex];
-
                     // Eddy 스킵 체크
                     if (newStep == VisionAlignerSequence.SequenceStep.Eddy && SkipEddy)
                     {
@@ -394,8 +388,22 @@ namespace VisionAlignChamber.ViewModels
                 }
 
                 // 진행률 계산
-                UpdateProgress(newIndex);
+                int stepIndex = step != null ? Steps.IndexOf(step) : -1;
+                UpdateProgress(stepIndex);
             }
+        }
+
+        /// <summary>
+        /// StepNumber로 Steps 컬렉션에서 해당 스텝 검색
+        /// </summary>
+        private StepStatusInfo FindStep(int stepNumber)
+        {
+            foreach (var step in Steps)
+            {
+                if (step.StepNumber == stepNumber)
+                    return step;
+            }
+            return null;
         }
 
         private void OnStateChanged(object sender, VisionAlignerSequence.SequenceState newState)

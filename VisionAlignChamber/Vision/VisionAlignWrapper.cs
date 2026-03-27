@@ -126,7 +126,7 @@ namespace VisionAlignChamber.Vision
                 // 기본 설정값 사용 (DLL에서 Setting 프로퍼티 사용)
                 _settings = new VisionSettings
                 {
-                    WaferRadius = 150.0,
+                    WaferRadius = 150.7,
                     AngleStep = 15.0,
                     PerPixel = 131.0,
                     ImageCount = 30

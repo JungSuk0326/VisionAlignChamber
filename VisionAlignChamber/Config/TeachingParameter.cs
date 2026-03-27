@@ -424,7 +424,7 @@ namespace VisionAlignChamber.Config
             // Chuck Z
             ChuckZ_Down = GetDouble("ChuckZ", "Down", 0);
             ChuckZ_Vision = GetDouble("ChuckZ", "Vision", 100000);
-            ChuckZ_Vacuum = GetDouble("ChuckZ", "Vacuum", 50000);
+            ChuckZ_Vacuum = GetDouble("ChuckZ", "Vacuum", 34000);
 
             // Centering L
             CenterL_Open = GetDouble("CenteringL", "Open", 0);
@@ -599,7 +599,7 @@ CenteringStage_2_JogDecel=4
 ; Chuck Z Axis (Axis 0) Positions [pulse]
 Down=0
 Vision=100000
-Vacuum=50000
+Vacuum=34000
 
 [CenteringL]
 ; Centering L Axis (Axis 2) Positions [pulse]

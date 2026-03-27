@@ -10,6 +10,7 @@ using VisionAlignChamber.Interlock;
 using VisionAlignChamber.Log;
 using VisionAlignChamber.Models;
 using System.Net.Configuration;
+using System.Threading.Tasks;
 
 namespace VisionAlignChamber.Core
 {
@@ -285,7 +286,7 @@ namespace VisionAlignChamber.Core
                 {
                     EventManager.Publish(EventManager.SystemInitialized, this);
                 }
-
+                _ = _sequence.ReleaseChuckAsync();
                 return anySuccess;
             }
             catch (Exception ex)
@@ -312,6 +313,9 @@ namespace VisionAlignChamber.Core
                 LastError = "모션 컨트롤러 초기화 실패";
                 return false;
             }
+
+            // 모든 축 서보 알람 클리어
+            _motion.ClearAlarmAll();
 
             // 모든 축 서보 ON
             if (!_motion.ServoOnAll())

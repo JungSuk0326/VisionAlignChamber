@@ -226,9 +226,9 @@ namespace VisionAlignChamber.ViewModels
                 new StepStatusInfo { StepNumber = 1, StepName = "PreCenter", Description = "Pre-Centering" },
                 new StepStatusInfo { StepNumber = 2, StepName = "Ready", Description = "스캔 준비" },
                 //new StepStatusInfo { StepNumber = 3, StepName = "ScanStart", Description = "스캔 시작 위치" },
-                new StepStatusInfo { StepNumber = 3, StepName = "Scan", Description = "Vision 스캔" },
+                new StepStatusInfo { StepNumber = 4, StepName = "Scan", Description = "Vision 스캔" },
                 //new StepStatusInfo { StepNumber = 5, StepName = "Rewind", Description = "Theta Rewind" },
-                new StepStatusInfo { StepNumber = 4, StepName = "Align", Description = "Theta 정렬" },
+                new StepStatusInfo { StepNumber = 6, StepName = "Align", Description = "Theta 정렬" }
                 //new StepStatusInfo { StepNumber = 7, StepName = "Eddy", Description = "Eddy Current 측정" }
             };
 

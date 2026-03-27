@@ -37,6 +37,7 @@ namespace VisionAlignChamber.Core
             Eddy = 7,         // Step 7: Eddy Current 측정
             Complete = 8,     // 완료
             Error = -1        // 에러
+
         }
 
         /// <summary>
@@ -483,6 +484,8 @@ namespace VisionAlignChamber.Core
                     return false;
                 }
 
+                await ReleaseChuckAsync(100);
+
                 // Chuck Z Down
                 if (!await _motion.WedgeStageMoveAsync(_param.ChuckZ_Down, _param.WedgeUpDown.Velocity, ct: _cts.Token))
                 {
@@ -491,7 +494,7 @@ namespace VisionAlignChamber.Core
                 }
 
                 // LiftPin 해제 (Blow로 웨이퍼 올린 후 OFF)
-                await ReleaseLiftPinAsync(1000);
+
                 ReleaseAll();
 
 
@@ -1137,7 +1140,7 @@ namespace VisionAlignChamber.Core
         /// <summary>
         /// Chuck 해제 (Vacuum OFF → Blow ON → Delay → Blow OFF)
         /// </summary>
-        private async Task ReleaseChuckAsync(int blowDurationMs = 100)
+        public async Task ReleaseChuckAsync(int blowDurationMs = 100)
         {
             _io.SetChuckVacuum(false);
             _io.SetChuckBlow(true);

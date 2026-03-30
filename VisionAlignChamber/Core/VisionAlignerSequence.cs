@@ -1021,9 +1021,16 @@ namespace VisionAlignChamber.Core
                 // Scan 완료 후 현재 위치 = 0° (절대 위치 제어)
                 double thetaAlign = atan2Deg;
 
-                LogManager.Sequence.Info($"Theta Align 계산 - Cx: {cx:F3}, Cy: {cy:F3}, d: {d:F3}, atan2: {atan2Deg:F3}°, θalign: {thetaAlign:F3}°");
+                // 최단 경로 계산: -180° ~ +180° 범위로 정규화
+                double rotateAngle = _visionResult.AbsAngle;
+                if (rotateAngle > 180.0)
+                    rotateAngle -= 360.0;
+                else if (rotateAngle < -180.0)
+                    rotateAngle += 360.0;
 
-                if (!await _motion.ChuckRotateAbsoluteAsync(_visionResult.AbsAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
+                LogManager.Sequence.Info($"Theta Align 계산 - Cx: {cx:F3}, Cy: {cy:F3}, d: {d:F3}, atan2: {atan2Deg:F3}°, θalign: {thetaAlign:F3}°, AbsAngle: {_visionResult.AbsAngle:F3}° → rotateAngle: {rotateAngle:F3}°");
+
+                if (!await _motion.ChuckRotateAbsoluteAsync(rotateAngle, _param.ChuckRotation.Velocity, ct: _cts.Token))
                 {
                     SetError("Theta Align 이동 실패");
                     return false;

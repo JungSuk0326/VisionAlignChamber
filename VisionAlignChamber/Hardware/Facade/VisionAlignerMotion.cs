@@ -410,15 +410,27 @@ namespace VisionAlignChamber.Hardware.Facade
         }
 
         /// <summary>
-        /// 절대 위치 이동 (비동기) - 이동 완료까지 대기
+        /// 절대 위치 이동 (비동기) - Task.Run 블로킹 해제 + WaitForDone 안전장치
         /// </summary>
         public async Task<bool> MoveAbsoluteAsync(VAMotionAxis axis, double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
         {
-            if (!MoveAbsolute(axis, position, velocity))
+            bool moveResult = await Task.Run(() => MoveAbsolute(axis, position, velocity), ct);
+            if (!moveResult)
                 return false;
 
             return await WaitForDoneAsync(axis, timeoutMs, ct);
         }
+
+        ///// <summary>
+        ///// 절대 위치 이동 (비동기) - 기존 버전 (블로킹)
+        ///// </summary>
+        //public async Task<bool> MoveAbsoluteAsync_Original(VAMotionAxis axis, double position, double? velocity = null, int timeoutMs = 30000, CancellationToken ct = default)
+        //{
+        //    if (!MoveAbsolute(axis, position, velocity))
+        //        return false;
+        //
+        //    return await WaitForDoneAsync(axis, timeoutMs, ct);
+        //}
 
         /// <summary>
         /// 상대 위치 이동 (비동기) - 이동 완료까지 대기

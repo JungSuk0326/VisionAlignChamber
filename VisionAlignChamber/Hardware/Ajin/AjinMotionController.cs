@@ -75,10 +75,11 @@ namespace VisionAlignChamber.Hardware.Ajin
                     throw new MotionException(result, $"AxmInfoGetAxisCount failed: {AjinErrorCode.GetErrorMessage(result)}");
                 }
 
-                // 축 파라미터 초기화
+                // 축 파라미터 초기화 + 절대 좌표 모드 설정
                 for (int i = 0; i < _axisCount; i++)
                 {
                     _axisParameters[i] = new AxisParameter { AxisNo = i, Name = $"Axis{i}" };
+                    CAXM.AxmMotSetAbsRelMode(i, 0); // POS_ABS_MODE
                 }
 
                 _isInitialized = true;
@@ -283,9 +284,7 @@ namespace VisionAlignChamber.Hardware.Ajin
             if (!CheckInitialized()) return false;
             if (!CheckAxisNo(axisNo)) return false;
 
-            // 절대 좌표 모드 설정
-            CAXM.AxmMotSetAbsRelMode(axisNo, 0); // POS_ABS_MODE = 0
-
+            // 절대 좌표 모드는 Initialize에서 설정 완료
             uint result = CAXM.AxmMovePos(axisNo, position, velocity, accel, decel);
             return AjinErrorCode.IsSuccess(result);
         }
@@ -298,10 +297,10 @@ namespace VisionAlignChamber.Hardware.Ajin
             if (!CheckInitialized()) return false;
             if (!CheckAxisNo(axisNo)) return false;
 
-            // 상대 좌표 모드 설정
-            CAXM.AxmMotSetAbsRelMode(axisNo, 1); // POS_REL_MODE = 1
-
+            // 상대 이동 시에만 모드 전환 → 완료 후 절대 모드 복원
+            CAXM.AxmMotSetAbsRelMode(axisNo, 1); // POS_REL_MODE
             uint result = CAXM.AxmMovePos(axisNo, distance, velocity, accel, decel);
+            CAXM.AxmMotSetAbsRelMode(axisNo, 0); // POS_ABS_MODE 복원
             return AjinErrorCode.IsSuccess(result);
         }
 

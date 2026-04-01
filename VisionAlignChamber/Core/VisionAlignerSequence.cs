@@ -850,7 +850,7 @@ namespace VisionAlignChamber.Core
                 }
 
                 // 모터 안정화 대기
-                await Task.Delay(100, _cts.Token);
+                await Task.Delay(50, _cts.Token);
 
                 //if (!await _vision.TriggerAndCaptureAsync(_cts.Token))
                 //{

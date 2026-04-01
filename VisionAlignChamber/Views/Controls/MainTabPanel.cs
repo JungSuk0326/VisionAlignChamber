@@ -287,7 +287,7 @@ namespace VisionAlignChamber.Views.Controls
                 lblEddyValue.Text = $"{result.EddyValue:F2}";
 
                 // P/N
-                lblPNValue.Text = result.PNValue == 1 ? "P" : "N";
+                lblPNValue.Text = result.PNValue == 1 ? "P" : result.PNValue == 0 ? "N" : "Fail";
                 lblPNValue.ForeColor = result.PNValue == 1 ? Color.Lime : Color.Orange;
             }
             else

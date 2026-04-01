@@ -960,7 +960,8 @@ namespace VisionAlignChamber.Core
                 Width = result.Width,
                 Height = result.Height,
                 Eddy = result.EddyValue,
-                PN = result.PNValue.Equals(1) ? true : false, 
+                PN = result.PNValue.Equals(1) ? 1 : 
+                         result.PNValue.Equals(2) ? 2 : 0, 
                 // TODO: CenterX, CenterY, ThetaOffset 등 결과 데이터 추가 필요
                 // ResultObject 확장 또는 별도 전송 방식 필요
             };

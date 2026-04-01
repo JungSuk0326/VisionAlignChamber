@@ -6,6 +6,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
 using VisionAlignChamber.Config;
+using VisionAlignChamber.Core;
 using VisionAlignChamber.Interfaces;
 using VisionAlignChamber.Models;
 using static System.Net.Mime.MediaTypeNames;
@@ -402,14 +403,20 @@ namespace VisionAlignChamber.Vision
                 _imageCount++;
                 _inspectionComplete = false;
 
-                // 캡처된 이미지를 디스플레이에 표시 (new Bitmap으로 독립 복사본 생성)
-                lock (_imageLock)
+                // Local일 때만 캡처 이미지 디스플레이 (비동기, CTC 모드에서는 스킵)
+                if (AppState.Current.ControlAuthority == ControlAuthority.Local)
                 {
                     var srcImage = _grabber.GetImage();
                     if (srcImage != null)
                     {
-                        var capturedImage = new Bitmap(srcImage);
-                        ImageCaptured?.Invoke(capturedImage);
+                        _ = Task.Run(() =>
+                        {
+                            lock (_imageLock)
+                            {
+                                var capturedImage = new Bitmap(srcImage);
+                                ImageCaptured?.Invoke(capturedImage);
+                            }
+                        });
                     }
                 }
 

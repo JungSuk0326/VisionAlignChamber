@@ -34,6 +34,7 @@ namespace VisionAlignChamber.Views.Controls
             this.colTotalOffset = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCenterX = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCenterY = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRadius = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEddyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -295,6 +296,7 @@ namespace VisionAlignChamber.Views.Controls
             this.colTotalOffset,
             this.colCenterX,
             this.colCenterY,
+            this.colRadius,
             this.colWidth,
             this.colHeight,
             this.colEddyValue,
@@ -365,6 +367,13 @@ namespace VisionAlignChamber.Views.Controls
             this.colCenterY.Name = "colCenterY";
             this.colCenterY.ReadOnly = true;
             this.colCenterY.Width = 80;
+            //
+            // colRadius
+            //
+            this.colRadius.HeaderText = "Radius";
+            this.colRadius.Name = "colRadius";
+            this.colRadius.ReadOnly = true;
+            this.colRadius.Width = 70;
             //
             // colWidth
             //
@@ -574,6 +583,7 @@ namespace VisionAlignChamber.Views.Controls
         private System.Windows.Forms.DataGridViewTextBoxColumn colTotalOffset;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCenterX;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCenterY;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRadius;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWidth;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHeight;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEddyValue;

@@ -405,18 +405,24 @@ namespace VisionAlignChamber.Vision
 
                 // Local일 때만 캡처 이미지 디스플레이 (비동기, CTC 모드에서는 스킵)
                 if (AppState.Current.ControlAuthority == ControlAuthority.Local)
-                {
-                    var srcImage = _grabber.GetImage();
-                    if (srcImage != null)
-                    {
-                        _ = Task.Run(() =>
+                {          
+                        lock (_imageLock)
                         {
-                            lock (_imageLock)
+                            var srcImage = _grabber.GetImage();
+                            if (srcImage != null)
                             {
                                 var capturedImage = new Bitmap(srcImage);
                                 ImageCaptured?.Invoke(capturedImage);
                             }
-                        });
+
+                        //_ = Task.Run(() =>
+                        //{
+                        //    lock (_imageLock)
+                        //    {
+                        //        var capturedImage = new Bitmap(srcImage);
+                        //        ImageCaptured?.Invoke(capturedImage);
+                        //    }
+                        //});
                     }
                 }
 

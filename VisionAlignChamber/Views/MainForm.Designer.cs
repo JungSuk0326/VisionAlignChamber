@@ -617,7 +617,7 @@ namespace VisionAlignChamber.Views
             this.btnEmergencyStop.Name = "btnEmergencyStop";
             this.btnEmergencyStop.Size = new System.Drawing.Size(120, 40);
             this.btnEmergencyStop.TabIndex = 0;
-            this.btnEmergencyStop.Text = "EMO";
+            this.btnEmergencyStop.Text = "Stop";
             this.btnEmergencyStop.UseVisualStyleBackColor = false;
             this.btnEmergencyStop.Click += new System.EventHandler(this.btnEmergencyStop_Click);
             // 

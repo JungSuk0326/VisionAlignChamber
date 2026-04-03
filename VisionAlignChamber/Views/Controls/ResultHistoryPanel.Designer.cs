@@ -19,12 +19,12 @@ namespace VisionAlignChamber.Views.Controls
             this.btnWeek = new System.Windows.Forms.Button();
             this.btnMonth = new System.Windows.Forms.Button();
             this.btnAll = new System.Windows.Forms.Button();
-            this.btnExport = new System.Windows.Forms.Button();
             this.lblWaferType = new System.Windows.Forms.Label();
             this.rbAll = new System.Windows.Forms.RadioButton();
             this.rbNotch = new System.Windows.Forms.RadioButton();
             this.rbFlat = new System.Windows.Forms.RadioButton();
             this.chkValidOnly = new System.Windows.Forms.CheckBox();
+            this.btnExport = new System.Windows.Forms.Button();
             this.dgvResults = new System.Windows.Forms.DataGridView();
             this.colNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMeasuredTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -99,8 +99,8 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayoutFilter.Controls.Add(this.rbAll, 1, 1);
             this.tableLayoutFilter.Controls.Add(this.rbNotch, 2, 1);
             this.tableLayoutFilter.Controls.Add(this.rbFlat, 4, 1);
-            this.tableLayoutFilter.Controls.Add(this.chkValidOnly, 6, 1);
             this.tableLayoutFilter.Controls.Add(this.btnExport, 11, 1);
+            this.tableLayoutFilter.Controls.Add(this.chkValidOnly, 7, 1);
             this.tableLayoutFilter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutFilter.Location = new System.Drawing.Point(8, 22);
             this.tableLayoutFilter.Name = "tableLayoutFilter";
@@ -205,17 +205,6 @@ namespace VisionAlignChamber.Views.Controls
             this.btnAll.Text = "전체";
             this.btnAll.UseVisualStyleBackColor = true;
             // 
-            // btnExport
-            // 
-            this.btnExport.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnExport.ForeColor = System.Drawing.Color.Black;
-            this.btnExport.Location = new System.Drawing.Point(633, 33);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(62, 23);
-            this.btnExport.TabIndex = 14;
-            this.btnExport.Text = "Export";
-            this.btnExport.UseVisualStyleBackColor = true;
-            // 
             // lblWaferType
             // 
             this.lblWaferType.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -272,12 +261,24 @@ namespace VisionAlignChamber.Views.Controls
             this.chkValidOnly.AutoSize = true;
             this.tableLayoutFilter.SetColumnSpan(this.chkValidOnly, 3);
             this.chkValidOnly.ForeColor = System.Drawing.Color.White;
-            this.chkValidOnly.Location = new System.Drawing.Point(423, 37);
+            this.chkValidOnly.Location = new System.Drawing.Point(473, 37);
             this.chkValidOnly.Name = "chkValidOnly";
             this.chkValidOnly.Size = new System.Drawing.Size(88, 16);
             this.chkValidOnly.TabIndex = 13;
             this.chkValidOnly.Text = "유효 결과만";
             this.chkValidOnly.UseVisualStyleBackColor = true;
+            this.chkValidOnly.Visible = false;
+            // 
+            // btnExport
+            // 
+            this.btnExport.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnExport.ForeColor = System.Drawing.Color.Black;
+            this.btnExport.Location = new System.Drawing.Point(633, 33);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(62, 23);
+            this.btnExport.TabIndex = 14;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
             // 
             // dgvResults
             // 
@@ -367,30 +368,30 @@ namespace VisionAlignChamber.Views.Controls
             this.colCenterY.Name = "colCenterY";
             this.colCenterY.ReadOnly = true;
             this.colCenterY.Width = 80;
-            //
+            // 
             // colRadius
-            //
+            // 
             this.colRadius.HeaderText = "Radius";
             this.colRadius.Name = "colRadius";
             this.colRadius.ReadOnly = true;
             this.colRadius.Width = 70;
-            //
+            // 
             // colWidth
-            //
+            // 
             this.colWidth.HeaderText = "Width";
             this.colWidth.Name = "colWidth";
             this.colWidth.ReadOnly = true;
             this.colWidth.Width = 70;
-            //
+            // 
             // colHeight
-            //
+            // 
             this.colHeight.HeaderText = "Height";
             this.colHeight.Name = "colHeight";
             this.colHeight.ReadOnly = true;
             this.colHeight.Width = 70;
-            //
+            // 
             // colEddyValue
-            //
+            // 
             this.colEddyValue.HeaderText = "Eddy";
             this.colEddyValue.Name = "colEddyValue";
             this.colEddyValue.ReadOnly = true;
@@ -475,6 +476,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblValidLabel.Size = new System.Drawing.Size(33, 12);
             this.lblValidLabel.TabIndex = 2;
             this.lblValidLabel.Text = "유효:";
+            this.lblValidLabel.Visible = false;
             // 
             // lblValidValue
             // 
@@ -487,6 +489,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblValidValue.Size = new System.Drawing.Size(16, 17);
             this.lblValidValue.TabIndex = 3;
             this.lblValidValue.Text = "0";
+            this.lblValidValue.Visible = false;
             // 
             // lblRateLabel
             // 
@@ -498,6 +501,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblRateLabel.Size = new System.Drawing.Size(45, 12);
             this.lblRateLabel.TabIndex = 4;
             this.lblRateLabel.Text = "유효율:";
+            this.lblRateLabel.Visible = false;
             // 
             // lblRateValue
             // 
@@ -510,6 +514,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblRateValue.Size = new System.Drawing.Size(32, 17);
             this.lblRateValue.TabIndex = 5;
             this.lblRateValue.Text = "0 %";
+            this.lblRateValue.Visible = false;
             // 
             // lblAvgOffsetLabel
             // 
@@ -521,6 +526,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblAvgOffsetLabel.Size = new System.Drawing.Size(65, 12);
             this.lblAvgOffsetLabel.TabIndex = 6;
             this.lblAvgOffsetLabel.Text = "평균Offset:";
+            this.lblAvgOffsetLabel.Visible = false;
             // 
             // lblAvgOffsetValue
             // 
@@ -533,6 +539,7 @@ namespace VisionAlignChamber.Views.Controls
             this.lblAvgOffsetValue.Size = new System.Drawing.Size(72, 17);
             this.lblAvgOffsetValue.TabIndex = 7;
             this.lblAvgOffsetValue.Text = "0.000 mm";
+            this.lblAvgOffsetValue.Visible = false;
             // 
             // ResultHistoryPanel
             // 

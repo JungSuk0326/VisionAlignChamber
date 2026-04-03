@@ -49,7 +49,12 @@ namespace VisionAlignChamber.Views
         private CTCCommController _ctcController;
 
         //센터라인 표시 유무
-        private bool isCenterLine = false; 
+        private bool isCenterLine = false;
+
+        // 트레이 아이콘
+        private NotifyIcon _notifyIcon;
+        private ContextMenuStrip _trayMenu;
+        private bool _isRealClose = false;  // 진짜 종료 여부
         #endregion
 
         #region Constructor
@@ -66,6 +71,42 @@ namespace VisionAlignChamber.Views
 
             picVisionDisplay.Paint += new PaintEventHandler(pictureBox_Paint);
 
+            InitializeTrayIcon();
+        }
+
+        #endregion
+
+        #region Tray Icon
+
+        private void InitializeTrayIcon()
+        {
+            // 컨텍스트 메뉴
+            _trayMenu = new ContextMenuStrip();
+            _trayMenu.Items.Add("열기", null, (s, e) => ShowFromTray());
+            _trayMenu.Items.Add(new ToolStripSeparator());
+            _trayMenu.Items.Add("종료", null, (s, e) =>
+            {
+                _isRealClose = true;
+                this.Close();
+            });
+
+            // NotifyIcon
+            _notifyIcon = new NotifyIcon
+            {
+                Icon = System.Drawing.SystemIcons.Application,
+                Text = "Vision Align Chamber",
+                ContextMenuStrip = _trayMenu,
+                Visible = true
+            };
+
+            _notifyIcon.DoubleClick += (s, e) => ShowFromTray();
+        }
+
+        private void ShowFromTray()
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
         }
 
         #endregion
@@ -931,6 +972,20 @@ namespace VisionAlignChamber.Views
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // X 버튼 → 트레이로 숨기기 (진짜 종료가 아닌 경우)
+            if (!_isRealClose)
+            {
+                e.Cancel = true;
+                this.Hide();
+                _notifyIcon?.ShowBalloonTip(1000, "Vision Align Chamber", "백그라운드에서 실행 중입니다.", ToolTipIcon.Info);
+                return;
+            }
+
+            // 트레이 아이콘 정리
+            _notifyIcon.Visible = false;
+            _notifyIcon?.Dispose();
+            _trayMenu?.Dispose();
+
             // 알람 깜빡임 타이머 정지
             timerAlarmBlink?.Stop();
 

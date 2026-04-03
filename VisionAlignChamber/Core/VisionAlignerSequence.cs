@@ -218,7 +218,7 @@ namespace VisionAlignChamber.Core
 
             try
             {
-                LogManager.Sequence.Info($"시퀀스 시작 (Type: {(isFlat ? "Flat" : "Notch")}, SkipEddy: {skipEddy})");
+                LogManager.Sequence.Info($"시퀀스 시작 (Type: {(isFlat ? "Flat" : "Notch")}");
 
                 // Step 1: PreCenter
                 if (!await ExecuteStepAsync(SequenceStep.PreCenter, ExecutePreCenterAsync))

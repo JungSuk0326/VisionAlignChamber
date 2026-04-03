@@ -44,13 +44,13 @@ namespace VisionAlignChamber.Views.Controls
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.lblProgress = new System.Windows.Forms.Label();
             this.grpControl = new System.Windows.Forms.GroupBox();
+            this.rbFlat = new System.Windows.Forms.RadioButton();
+            this.rbNotch = new System.Windows.Forms.RadioButton();
+            this.lblWaferType = new System.Windows.Forms.Label();
             this.chkSkipEddy = new System.Windows.Forms.CheckBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
-            this.lblWaferType = new System.Windows.Forms.Label();
-            this.rbNotch = new System.Windows.Forms.RadioButton();
-            this.rbFlat = new System.Windows.Forms.RadioButton();
             this.grpSequence.SuspendLayout();
             this.grpResult.SuspendLayout();
             this.tableLayoutResult.SuspendLayout();
@@ -60,9 +60,9 @@ namespace VisionAlignChamber.Views.Controls
             this.panelProgress.SuspendLayout();
             this.grpControl.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // grpSequence
-            //
+            // 
             this.grpSequence.Controls.Add(this.listSteps);
             this.grpSequence.ForeColor = System.Drawing.Color.White;
             this.grpSequence.Location = new System.Drawing.Point(12, 9);
@@ -73,9 +73,9 @@ namespace VisionAlignChamber.Views.Controls
             this.grpSequence.TabIndex = 0;
             this.grpSequence.TabStop = false;
             this.grpSequence.Text = "시퀀스 진행 상황";
-            //
+            // 
             // listSteps
-            //
+            // 
             this.listSteps.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colIcon,
             this.colNo,
@@ -94,34 +94,34 @@ namespace VisionAlignChamber.Views.Controls
             this.listSteps.TabIndex = 0;
             this.listSteps.UseCompatibleStateImageBehavior = false;
             this.listSteps.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // colIcon
-            //
+            // 
             this.colIcon.Text = "";
             this.colIcon.Width = 30;
-            //
+            // 
             // colNo
-            //
+            // 
             this.colNo.Text = "No";
             this.colNo.Width = 35;
-            //
+            // 
             // colName
-            //
+            // 
             this.colName.Text = "스텝";
             this.colName.Width = 80;
-            //
+            // 
             // colDescription
-            //
+            // 
             this.colDescription.Text = "설명";
             this.colDescription.Width = 130;
-            //
+            // 
             // colStatus
-            //
+            // 
             this.colStatus.Text = "상태";
             this.colStatus.Width = 90;
-            //
+            // 
             // grpResult
-            //
+            // 
             this.grpResult.Controls.Add(this.tableLayoutResult);
             this.grpResult.ForeColor = System.Drawing.Color.White;
             this.grpResult.Location = new System.Drawing.Point(12, 210);
@@ -132,9 +132,9 @@ namespace VisionAlignChamber.Views.Controls
             this.grpResult.TabIndex = 3;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "측정 결과";
-            //
+            // 
             // tableLayoutResult
-            //
+            // 
             this.tableLayoutResult.ColumnCount = 6;
             this.tableLayoutResult.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 55F));
             this.tableLayoutResult.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
@@ -163,9 +163,9 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayoutResult.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutResult.Size = new System.Drawing.Size(435, 80);
             this.tableLayoutResult.TabIndex = 0;
-            //
+            // 
             // lblAngleLabel
-            //
+            // 
             this.lblAngleLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblAngleLabel.AutoSize = true;
             this.lblAngleLabel.ForeColor = System.Drawing.Color.Silver;
@@ -174,136 +174,136 @@ namespace VisionAlignChamber.Views.Controls
             this.lblAngleLabel.Size = new System.Drawing.Size(37, 12);
             this.lblAngleLabel.TabIndex = 0;
             this.lblAngleLabel.Text = "Angle";
-            //
+            // 
             // lblAngleValue
-            //
+            // 
             this.lblAngleValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblAngleValue.AutoSize = true;
             this.lblAngleValue.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
             this.lblAngleValue.ForeColor = System.Drawing.Color.Cyan;
-            this.lblAngleValue.Location = new System.Drawing.Point(58, 12);
+            this.lblAngleValue.Location = new System.Drawing.Point(58, 11);
             this.lblAngleValue.Name = "lblAngleValue";
             this.lblAngleValue.Size = new System.Drawing.Size(24, 17);
             this.lblAngleValue.TabIndex = 1;
             this.lblAngleValue.Text = "--";
-            //
+            // 
             // lblCenterLabel
-            //
+            // 
             this.lblCenterLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCenterLabel.AutoSize = true;
             this.lblCenterLabel.ForeColor = System.Drawing.Color.Silver;
-            this.lblCenterLabel.Location = new System.Drawing.Point(131, 14);
+            this.lblCenterLabel.Location = new System.Drawing.Point(151, 14);
             this.lblCenterLabel.Name = "lblCenterLabel";
             this.lblCenterLabel.Size = new System.Drawing.Size(42, 12);
             this.lblCenterLabel.TabIndex = 2;
             this.lblCenterLabel.Text = "Center";
-            //
+            // 
             // lblCenterValue
-            //
+            // 
             this.lblCenterValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCenterValue.AutoSize = true;
             this.lblCenterValue.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
             this.lblCenterValue.ForeColor = System.Drawing.Color.Cyan;
-            this.lblCenterValue.Location = new System.Drawing.Point(186, 12);
+            this.lblCenterValue.Location = new System.Drawing.Point(206, 11);
             this.lblCenterValue.Name = "lblCenterValue";
             this.lblCenterValue.Size = new System.Drawing.Size(24, 17);
             this.lblCenterValue.TabIndex = 3;
             this.lblCenterValue.Text = "--";
-            //
+            // 
             // lblOffsetLabel
-            //
+            // 
             this.lblOffsetLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblOffsetLabel.AutoSize = true;
             this.lblOffsetLabel.ForeColor = System.Drawing.Color.Silver;
-            this.lblOffsetLabel.Location = new System.Drawing.Point(259, 14);
+            this.lblOffsetLabel.Location = new System.Drawing.Point(299, 14);
             this.lblOffsetLabel.Name = "lblOffsetLabel";
             this.lblOffsetLabel.Size = new System.Drawing.Size(37, 12);
             this.lblOffsetLabel.TabIndex = 4;
             this.lblOffsetLabel.Text = "Offset";
-            //
+            // 
             // lblOffsetValue
-            //
+            // 
             this.lblOffsetValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblOffsetValue.AutoSize = true;
             this.lblOffsetValue.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
             this.lblOffsetValue.ForeColor = System.Drawing.Color.Cyan;
-            this.lblOffsetValue.Location = new System.Drawing.Point(304, 12);
+            this.lblOffsetValue.Location = new System.Drawing.Point(344, 11);
             this.lblOffsetValue.Name = "lblOffsetValue";
             this.lblOffsetValue.Size = new System.Drawing.Size(24, 17);
             this.lblOffsetValue.TabIndex = 5;
             this.lblOffsetValue.Text = "--";
-            //
+            // 
             // lblSizeLabel
-            //
+            // 
             this.lblSizeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblSizeLabel.AutoSize = true;
             this.lblSizeLabel.ForeColor = System.Drawing.Color.Silver;
             this.lblSizeLabel.Location = new System.Drawing.Point(3, 54);
             this.lblSizeLabel.Name = "lblSizeLabel";
-            this.lblSizeLabel.Size = new System.Drawing.Size(27, 12);
+            this.lblSizeLabel.Size = new System.Drawing.Size(30, 12);
             this.lblSizeLabel.TabIndex = 6;
             this.lblSizeLabel.Text = "Size";
-            //
+            // 
             // lblSizeValue
-            //
+            // 
             this.lblSizeValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblSizeValue.AutoSize = true;
             this.lblSizeValue.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
             this.lblSizeValue.ForeColor = System.Drawing.Color.Cyan;
-            this.lblSizeValue.Location = new System.Drawing.Point(58, 52);
+            this.lblSizeValue.Location = new System.Drawing.Point(58, 51);
             this.lblSizeValue.Name = "lblSizeValue";
             this.lblSizeValue.Size = new System.Drawing.Size(24, 17);
             this.lblSizeValue.TabIndex = 7;
             this.lblSizeValue.Text = "--";
-            //
+            // 
             // lblEddyLabel
-            //
+            // 
             this.lblEddyLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblEddyLabel.AutoSize = true;
             this.lblEddyLabel.ForeColor = System.Drawing.Color.Silver;
-            this.lblEddyLabel.Location = new System.Drawing.Point(131, 54);
+            this.lblEddyLabel.Location = new System.Drawing.Point(151, 54);
             this.lblEddyLabel.Name = "lblEddyLabel";
-            this.lblEddyLabel.Size = new System.Drawing.Size(33, 12);
+            this.lblEddyLabel.Size = new System.Drawing.Size(34, 12);
             this.lblEddyLabel.TabIndex = 8;
             this.lblEddyLabel.Text = "Eddy";
-            //
+            // 
             // lblEddyValue
-            //
+            // 
             this.lblEddyValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblEddyValue.AutoSize = true;
             this.lblEddyValue.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
             this.lblEddyValue.ForeColor = System.Drawing.Color.Cyan;
-            this.lblEddyValue.Location = new System.Drawing.Point(186, 52);
+            this.lblEddyValue.Location = new System.Drawing.Point(206, 51);
             this.lblEddyValue.Name = "lblEddyValue";
             this.lblEddyValue.Size = new System.Drawing.Size(24, 17);
             this.lblEddyValue.TabIndex = 9;
             this.lblEddyValue.Text = "--";
-            //
+            // 
             // lblPNLabel
-            //
+            // 
             this.lblPNLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblPNLabel.AutoSize = true;
             this.lblPNLabel.ForeColor = System.Drawing.Color.Silver;
-            this.lblPNLabel.Location = new System.Drawing.Point(259, 54);
+            this.lblPNLabel.Location = new System.Drawing.Point(299, 54);
             this.lblPNLabel.Name = "lblPNLabel";
-            this.lblPNLabel.Size = new System.Drawing.Size(26, 12);
+            this.lblPNLabel.Size = new System.Drawing.Size(28, 12);
             this.lblPNLabel.TabIndex = 10;
             this.lblPNLabel.Text = "P/N";
-            //
+            // 
             // lblPNValue
-            //
+            // 
             this.lblPNValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblPNValue.AutoSize = true;
             this.lblPNValue.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
             this.lblPNValue.ForeColor = System.Drawing.Color.Cyan;
-            this.lblPNValue.Location = new System.Drawing.Point(304, 52);
+            this.lblPNValue.Location = new System.Drawing.Point(344, 51);
             this.lblPNValue.Name = "lblPNValue";
             this.lblPNValue.Size = new System.Drawing.Size(24, 17);
             this.lblPNValue.TabIndex = 11;
             this.lblPNValue.Text = "--";
-            //
+            // 
             // grpLog
-            //
+            // 
             this.grpLog.Controls.Add(this.txtSequenceLog);
             this.grpLog.ForeColor = System.Drawing.Color.White;
             this.grpLog.Location = new System.Drawing.Point(12, 316);
@@ -314,9 +314,9 @@ namespace VisionAlignChamber.Views.Controls
             this.grpLog.TabIndex = 4;
             this.grpLog.TabStop = false;
             this.grpLog.Text = "시퀀스 로그";
-            //
+            // 
             // txtSequenceLog
-            //
+            // 
             this.txtSequenceLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.txtSequenceLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtSequenceLog.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -329,9 +329,9 @@ namespace VisionAlignChamber.Views.Controls
             this.txtSequenceLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtSequenceLog.Size = new System.Drawing.Size(715, 130);
             this.txtSequenceLog.TabIndex = 0;
-            //
+            // 
             // grpStatus
-            //
+            // 
             this.grpStatus.Controls.Add(this.tableLayoutStatus);
             this.grpStatus.ForeColor = System.Drawing.Color.White;
             this.grpStatus.Location = new System.Drawing.Point(467, 9);
@@ -342,9 +342,9 @@ namespace VisionAlignChamber.Views.Controls
             this.grpStatus.TabIndex = 1;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "상태 정보";
-            //
+            // 
             // tableLayoutStatus
-            //
+            // 
             this.tableLayoutStatus.ColumnCount = 2;
             this.tableLayoutStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 93F));
             this.tableLayoutStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -368,9 +368,9 @@ namespace VisionAlignChamber.Views.Controls
             this.tableLayoutStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutStatus.Size = new System.Drawing.Size(260, 156);
             this.tableLayoutStatus.TabIndex = 0;
-            //
+            // 
             // lblStatusLabel
-            //
+            // 
             this.lblStatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblStatusLabel.AutoSize = true;
             this.lblStatusLabel.ForeColor = System.Drawing.Color.White;
@@ -380,9 +380,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblStatusLabel.Size = new System.Drawing.Size(33, 12);
             this.lblStatusLabel.TabIndex = 0;
             this.lblStatusLabel.Text = "상태:";
-            //
+            // 
             // lblStatus
-            //
+            // 
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -393,9 +393,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblStatus.Size = new System.Drawing.Size(31, 15);
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "대기";
-            //
+            // 
             // lblCurrentStepLabel
-            //
+            // 
             this.lblCurrentStepLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCurrentStepLabel.AutoSize = true;
             this.lblCurrentStepLabel.ForeColor = System.Drawing.Color.White;
@@ -405,9 +405,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCurrentStepLabel.Size = new System.Drawing.Size(61, 12);
             this.lblCurrentStepLabel.TabIndex = 2;
             this.lblCurrentStepLabel.Text = "현재 스텝:";
-            //
+            // 
             // lblCurrentStep
-            //
+            // 
             this.lblCurrentStep.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCurrentStep.AutoSize = true;
             this.lblCurrentStep.ForeColor = System.Drawing.Color.White;
@@ -417,9 +417,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblCurrentStep.Size = new System.Drawing.Size(29, 12);
             this.lblCurrentStep.TabIndex = 3;
             this.lblCurrentStep.Text = "대기";
-            //
+            // 
             // lblElapsedLabel
-            //
+            // 
             this.lblElapsedLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblElapsedLabel.AutoSize = true;
             this.lblElapsedLabel.ForeColor = System.Drawing.Color.White;
@@ -429,9 +429,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblElapsedLabel.Size = new System.Drawing.Size(61, 12);
             this.lblElapsedLabel.TabIndex = 4;
             this.lblElapsedLabel.Text = "경과 시간:";
-            //
+            // 
             // lblElapsedTime
-            //
+            // 
             this.lblElapsedTime.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblElapsedTime.AutoSize = true;
             this.lblElapsedTime.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -442,9 +442,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblElapsedTime.Size = new System.Drawing.Size(64, 17);
             this.lblElapsedTime.TabIndex = 5;
             this.lblElapsedTime.Text = "00:00.0";
-            //
+            // 
             // lblProgressLabel
-            //
+            // 
             this.lblProgressLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblProgressLabel.AutoSize = true;
             this.lblProgressLabel.ForeColor = System.Drawing.Color.White;
@@ -454,9 +454,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblProgressLabel.Size = new System.Drawing.Size(45, 12);
             this.lblProgressLabel.TabIndex = 6;
             this.lblProgressLabel.Text = "진행률:";
-            //
+            // 
             // panelProgress
-            //
+            // 
             this.panelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.panelProgress.Controls.Add(this.progressBar);
             this.panelProgress.Controls.Add(this.lblProgress);
@@ -465,19 +465,19 @@ namespace VisionAlignChamber.Views.Controls
             this.panelProgress.Name = "panelProgress";
             this.panelProgress.Size = new System.Drawing.Size(159, 21);
             this.panelProgress.TabIndex = 7;
-            //
+            // 
             // progressBar
-            //
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(0, 0);
             this.progressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(115, 21);
             this.progressBar.TabIndex = 0;
-            //
+            // 
             // lblProgress
-            //
+            // 
             this.lblProgress.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblProgress.ForeColor = System.Drawing.Color.Cyan;
             this.lblProgress.Location = new System.Drawing.Point(118, 3);
@@ -487,9 +487,9 @@ namespace VisionAlignChamber.Views.Controls
             this.lblProgress.TabIndex = 1;
             this.lblProgress.Text = "0%";
             this.lblProgress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            //
+            // 
             // grpControl
-            //
+            // 
             this.grpControl.Controls.Add(this.rbFlat);
             this.grpControl.Controls.Add(this.rbNotch);
             this.grpControl.Controls.Add(this.lblWaferType);
@@ -506,9 +506,43 @@ namespace VisionAlignChamber.Views.Controls
             this.grpControl.TabIndex = 2;
             this.grpControl.TabStop = false;
             this.grpControl.Text = "제어";
-            //
+            // 
+            // rbFlat
+            // 
+            this.rbFlat.AutoSize = true;
+            this.rbFlat.ForeColor = System.Drawing.Color.White;
+            this.rbFlat.Location = new System.Drawing.Point(130, 92);
+            this.rbFlat.Name = "rbFlat";
+            this.rbFlat.Size = new System.Drawing.Size(43, 16);
+            this.rbFlat.TabIndex = 6;
+            this.rbFlat.Text = "Flat";
+            this.rbFlat.CheckedChanged += new System.EventHandler(this.rbWaferType_CheckedChanged);
+            // 
+            // rbNotch
+            // 
+            this.rbNotch.AutoSize = true;
+            this.rbNotch.Checked = true;
+            this.rbNotch.ForeColor = System.Drawing.Color.White;
+            this.rbNotch.Location = new System.Drawing.Point(65, 92);
+            this.rbNotch.Name = "rbNotch";
+            this.rbNotch.Size = new System.Drawing.Size(56, 16);
+            this.rbNotch.TabIndex = 5;
+            this.rbNotch.TabStop = true;
+            this.rbNotch.Text = "Notch";
+            this.rbNotch.CheckedChanged += new System.EventHandler(this.rbWaferType_CheckedChanged);
+            // 
+            // lblWaferType
+            // 
+            this.lblWaferType.AutoSize = true;
+            this.lblWaferType.ForeColor = System.Drawing.Color.White;
+            this.lblWaferType.Location = new System.Drawing.Point(18, 94);
+            this.lblWaferType.Name = "lblWaferType";
+            this.lblWaferType.Size = new System.Drawing.Size(38, 12);
+            this.lblWaferType.TabIndex = 4;
+            this.lblWaferType.Text = "Type:";
+            // 
             // chkSkipEddy
-            //
+            // 
             this.chkSkipEddy.AutoSize = true;
             this.chkSkipEddy.ForeColor = System.Drawing.Color.White;
             this.chkSkipEddy.Location = new System.Drawing.Point(18, 72);
@@ -517,10 +551,11 @@ namespace VisionAlignChamber.Views.Controls
             this.chkSkipEddy.Size = new System.Drawing.Size(109, 16);
             this.chkSkipEddy.TabIndex = 3;
             this.chkSkipEddy.Text = "Eddy 스텝 스킵";
+            this.chkSkipEddy.Visible = false;
             this.chkSkipEddy.CheckedChanged += new System.EventHandler(this.chkSkipEddy_CheckedChanged);
-            //
+            // 
             // btnReset
-            //
+            // 
             this.btnReset.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnReset.ForeColor = System.Drawing.Color.Black;
             this.btnReset.Location = new System.Drawing.Point(181, 20);
@@ -531,9 +566,9 @@ namespace VisionAlignChamber.Views.Controls
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            //
+            // 
             // btnStop
-            //
+            // 
             this.btnStop.Enabled = false;
             this.btnStop.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnStop.ForeColor = System.Drawing.Color.Red;
@@ -545,9 +580,9 @@ namespace VisionAlignChamber.Views.Controls
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            //
+            // 
             // btnStart
-            //
+            // 
             this.btnStart.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnStart.ForeColor = System.Drawing.Color.Black;
             this.btnStart.Location = new System.Drawing.Point(18, 20);
@@ -558,43 +593,9 @@ namespace VisionAlignChamber.Views.Controls
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            //
-            // lblWaferType
-            //
-            this.lblWaferType.AutoSize = true;
-            this.lblWaferType.ForeColor = System.Drawing.Color.White;
-            this.lblWaferType.Location = new System.Drawing.Point(18, 94);
-            this.lblWaferType.Name = "lblWaferType";
-            this.lblWaferType.Size = new System.Drawing.Size(37, 12);
-            this.lblWaferType.TabIndex = 4;
-            this.lblWaferType.Text = "Type:";
-            //
-            // rbNotch
-            //
-            this.rbNotch.AutoSize = true;
-            this.rbNotch.Checked = true;
-            this.rbNotch.ForeColor = System.Drawing.Color.White;
-            this.rbNotch.Location = new System.Drawing.Point(65, 92);
-            this.rbNotch.Name = "rbNotch";
-            this.rbNotch.Size = new System.Drawing.Size(57, 16);
-            this.rbNotch.TabIndex = 5;
-            this.rbNotch.TabStop = true;
-            this.rbNotch.Text = "Notch";
-            this.rbNotch.CheckedChanged += new System.EventHandler(this.rbWaferType_CheckedChanged);
-            //
-            // rbFlat
-            //
-            this.rbFlat.AutoSize = true;
-            this.rbFlat.ForeColor = System.Drawing.Color.White;
-            this.rbFlat.Location = new System.Drawing.Point(130, 92);
-            this.rbFlat.Name = "rbFlat";
-            this.rbFlat.Size = new System.Drawing.Size(42, 16);
-            this.rbFlat.TabIndex = 6;
-            this.rbFlat.Text = "Flat";
-            this.rbFlat.CheckedChanged += new System.EventHandler(this.rbWaferType_CheckedChanged);
-            //
+            // 
             // MainTabPanel
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grpLog);
